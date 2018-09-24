@@ -12,6 +12,7 @@ class MyArrayList<E> implements List<E> {
 
     public MyArrayList(int size) {
         objects = new Object[size];
+        System.out.println(objects.length);
         itemCount = 0;
     }
 
@@ -67,7 +68,7 @@ class MyArrayList<E> implements List<E> {
     }
 
     public int size() {
-        return objects.length;
+        return this.itemCount;
     }
 
     public boolean isEmpty() {
@@ -163,7 +164,7 @@ class MyArrayList<E> implements List<E> {
 
         @SuppressWarnings("unchecked")
         public E next() {
-            System.out.println("itemCount = " + itemCount + "; cursor = " + cursor);
+            //System.out.println("itemCount = " + itemCount + "; cursor = " + cursor);
             int i = cursor;
             if (i >= itemCount)
                 throw new NoSuchElementException();
@@ -171,7 +172,7 @@ class MyArrayList<E> implements List<E> {
             if (i >= localObjects.length)
                 throw new ConcurrentModificationException();
             cursor = i + 1;
-            System.out.println("item[" + i + "] = " + localObjects[i]);
+            //System.out.println("item[" + i + "] = " + localObjects[i]);
             return (E) localObjects[lastItem = i];
         }
 
@@ -258,6 +259,14 @@ class MyArrayList<E> implements List<E> {
                 throw new ConcurrentModificationException();
             }
         }
+    }
+
+    public void sort(Comparator<? super E> c) {
+        //final int expectedModCount = modCount;
+        Arrays.sort((E[]) objects, 0, itemCount, c);
+        //if (modCount != expectedModCount)
+            //throw new ConcurrentModificationException();
+        //modCount++;
     }
 }
 /*
