@@ -7,10 +7,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        int size = 50;
-
-        //ArrayList a = new ArrayList(size);
-        //System.out.println(a.size());
+        int size = 5;
 
         MyArrayList a = new MyArrayList(size);
         System.out.println(a.size());
@@ -27,7 +24,6 @@ public class Main {
 
         System.out.println("===array b is empty===");
         MyArrayList b = new MyArrayList(a.size());
-        //ArrayList b = new ArrayList(a.size());
 
         for(int i = 0; i < a.size(); i++) {
             b.add(0);
@@ -43,7 +39,6 @@ public class Main {
                 (o1, o2) -> (int)o2 - (int)o1
                 );
         printList(a);
-
     }
 
     public static <E> void printList(List<E> list)
