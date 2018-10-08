@@ -5,26 +5,22 @@ import java.util.*;
 public class Main {
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) {
-
         System.out.println("Starting pid: " + ManagementFactory.getRuntimeMXBean().getName());
-        HashMap<String, GarbageCollectorInfo> list_gc = new HashMap<String, GarbageCollectorInfo>();
-
         int size = 5 * 1000 * 1000;
         List<Object> array = new ArrayList<Object>();
         while (true)  {
-
-            System.out.println("array sizeof = " + array.size());
-
             for (int i = 0; i < size; i++) {
                 array.add(new String(new char[0]));
             }
-            System.out.println("Created " + size + " objects.");
-
             for (int i = 0; i < size / 2; i++) {
                 array.remove(array.size()-1);
             }
-            System.out.println("array sizeof after remove = " + array.size());
-            printGarbageCollectorInfo(list_gc);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getGarbageCollectorInfo();
         }
     }
 
@@ -43,11 +39,11 @@ public class Main {
             }
         }
 
-        void print() {
+        String print() {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(this._name + " -> Count: ").append(this._count)
-                    .append(", Time (ms): ").append(this._time);
-            System.out.println(stringBuilder);
+                    .append(", Time (ms): ").append(this._time).append(" ; ");
+            return stringBuilder.toString();
         }
 
         private String _name;
@@ -57,20 +53,21 @@ public class Main {
     }
 
 
-    public static void printGarbageCollectorInfo(HashMap<String, GarbageCollectorInfo> list_gc) {
-
+    public static void getGarbageCollectorInfo() {
+        HashMap<String, GarbageCollectorInfo> result = new HashMap<>();
         List<GarbageCollectorMXBean> mxBeans = ManagementFactory.getGarbageCollectorMXBeans();
         for (GarbageCollectorMXBean gc : mxBeans) {
-            if (!list_gc.containsKey(gc.getName()))
+            if (!result.containsKey(gc.getName()))
             {
                 GarbageCollectorInfo newItem = new GarbageCollectorInfo(gc.getName());
-                list_gc.put(newItem.getName(),newItem);
+                result.put(newItem.getName(),newItem);
             }
-            list_gc.get(gc.getName()).calculate(gc);
+            result.get(gc.getName()).calculate(gc);
         }
-        for (Map.Entry<String,GarbageCollectorInfo> item : list_gc.entrySet()) {
-            item.getValue().print();
+        StringBuilder str = new StringBuilder();
+        for (Map.Entry<String,GarbageCollectorInfo> item : result.entrySet()) {
+            str.append(item.getValue().print());
         }
+        System.out.println(str);
     }
-
 }
