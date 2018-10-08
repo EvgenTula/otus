@@ -1,5 +1,6 @@
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main {
@@ -68,6 +69,7 @@ public class Main {
         for (Map.Entry<String,GarbageCollectorInfo> item : result.entrySet()) {
             str.append(item.getValue().print());
         }
-        System.out.println(str);
+        String timeStamp = new SimpleDateFormat("dd MM YYYY HH:mm:ss").format(Calendar.getInstance().getTime());
+        System.out.println("[" + timeStamp + "] " + str);
     }
 }
