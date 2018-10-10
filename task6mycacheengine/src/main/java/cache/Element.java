@@ -2,18 +2,23 @@ package cache;
 
 import java.lang.ref.SoftReference;
 
-public class Element<V> {
+public class Element<K, V> {
 
-    private final byte[] array = new byte[1024 * 1024];
+    private final byte[] array = new byte[1024 * 1024 * 1];
 
-    private final SoftReference<V> softReference;
-    private final Runnable destroy;
-    public Element(V val, Runnable destroy) {
-        this.softReference = new SoftReference(val);
-        this.destroy = destroy;
+    private final K key;
+    private final V val;
+    public Element(K key, V val) {
+        this.key = key;
+        this.val = val;
+
     }
 
-    public SoftReference<V> getVal() {
-        return this.softReference;
+    public K getKey() {
+        return this.key;
+    }
+
+    public V getVal() {
+        return this.val;
     }
 }

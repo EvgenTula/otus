@@ -5,12 +5,16 @@ public class Main {
 
         int size = 250;
 
-        CacheEngine<Integer,String> cacheEngine = new CacheEngine<>(size);
+        CacheEngine<Integer,Element<Integer, String>> cacheEngine = new CacheEngine<>(size);
+
+        cacheEngine.printSize();
         for (int i = 0; i < size; i++) {
-            cacheEngine.put(new Element<>(i,"Elemtent " + i));
+            cacheEngine.put(i,new Element<>(i, "Element " + i));
         }
+
         cacheEngine.printSize();
         //System.gc();
-        cacheEngine.printSize();
+        //cacheEngine.printSize();
+        //cacheEngine.dispose();
     }
 }
