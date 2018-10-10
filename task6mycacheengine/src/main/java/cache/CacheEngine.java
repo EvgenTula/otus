@@ -24,30 +24,16 @@ public class CacheEngine<K,V> {
     public void put(K key, V element) {
         if (elements.size() == maxElements) {
             K firstKey = elements.keySet().iterator().next();
-            //SoftReference<V> removeItem = elements.remove(firstKey);
-            //softReferenceList.remove(softReferenceList.stream().filter(i -> i.key == firstKey).findFirst());
-            //softReferenceList.remove(removeItem);
+            elements.remove(firstKey);
         }
         SoftReference<V> softReference = new SoftReference<>(element);
         PhantomReferenceItem<K,V> phantomReferenceItem = new PhantomReferenceItem<>(
                 key,
                 element,
                 referenceQueue,
-                ()-> {
-                    elements.remove(key);
-                    phantomReferencesList.removeIf(i -> i.key.equals(key));
-                    softReferenceList.removeIf(i -> i.equals(softReference));
-                    this.printSize();
-                });
-
-        //SoftReferenceItem<K, V> softReference = new SoftReferenceItem<>(key,element,referenceQueue,()->{ elements.remove(key);
-        //softReferenceList.removeIf(i -> i.key == key);
-        /* softReferenceList.remove(softReferenceList.stream().filter(i -> i.key == key).findFirst()); */
-        //});
-
+                ()-> { elements.remove(key); });
         softReferenceList.add(softReference);
-
-        //phantomReferencesList.add(new PhantomReferenceItem<>(key,element,referenceQueue,()-> { elements.remove(key); this.printSize(); phantomReferencesList.removeIf(i -> i.key.equals(key)); }));
+        phantomReferencesList.add(phantomReferenceItem);
         elements.put(key, softReference);
     }
 
@@ -61,9 +47,7 @@ public class CacheEngine<K,V> {
                 cntValue++;
             }
         }
-
         System.out.println("Map: key = " + cntKey + " ; value = " + cntValue);
-        System.out.println("Soft references: " + softReferenceList.size() + " ; Phantom references: " + phantomReferencesList.size());
     }
 
     public V get(K key) {
@@ -72,22 +56,26 @@ public class CacheEngine<K,V> {
         if (softReferenceElement == null)
         {
             //TODO: Подгрузка объектов из источника
-            //Element<K,V> item = new Element<K, V>;
-            //new Element(element,() -> elements.remove(key)
-            //element = new SoftReference<>(key,(V)("Element " + key));
-            //put(K, element);
-
         }
         return softReferenceElement.get();
     }
 
     public void dispose() {
         elements.clear();
+        for (SoftReference<V> item : softReferenceList) {
+            item.clear();
+        }
         softReferenceList.clear();
-        //phantomReferencesList.clear();
+
+
+        for (PhantomReferenceItem<K,V> item : phantomReferencesList) {
+            item.cleanup();
+            item.clear();
+        }
+        phantomReferencesList.clear();
     }
 
-    private static class PhantomReferenceItem<K,T> extends PhantomReference {
+    private class PhantomReferenceItem<K,T> extends PhantomReference {
         private final K key;
         private final Runnable destroy;
         public PhantomReferenceItem(K key,T obj, ReferenceQueue queue, Runnable destroy) {
@@ -107,7 +95,7 @@ public class CacheEngine<K,V> {
             super.clear();
         }
 
-        public static class ReferenceQueueThread<T> extends Thread {
+        public class ReferenceQueueThread extends Thread {
 
             private final ReferenceQueue referenceQueue;
             private final PhantomReferenceItem phantomReference;
@@ -130,7 +118,7 @@ public class CacheEngine<K,V> {
                     }
                 }
 
-                if (reference instanceof CacheEngine.PhantomReferenceItem) {
+                if (reference instanceof CacheEngine.PhantomReferenceItem && reference != null) {
                     ((PhantomReferenceItem) reference).cleanup();
                 }
             }
