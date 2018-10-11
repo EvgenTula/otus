@@ -1,7 +1,5 @@
 package cache;
 
-import java.lang.ref.SoftReference;
-
 public class Element<K, V> {
 
     private final byte[] array = new byte[1024 * 1024 * 1];
