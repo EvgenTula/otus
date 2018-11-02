@@ -1,24 +1,61 @@
+import java.util.*;
+
 public class Atm {
-    private int cardNum;
-    private int pswd;
-
-    private Card card;
-
-    public Atm(Card card) {
-        this.card = card;
+    private LinkedHashMap<RateСurrency, Integer> stockMoney;
+    private int total_sum = 0;
+    public Atm() {
+        stockMoney = new LinkedHashMap<>();
+        Arrays.stream(RateСurrency.values()).sorted((o1, o2) -> Integer.compare(o2.getVal(), o1.getVal())).forEach(i -> stockMoney.put(i,0));
     }
 
-    public double getCardBalance(int cardPin) {
-        return 0;
-        //if (card.)
+    public void deposit(RateСurrency rateСurrency, int cout) {
+        total_sum += (cout * rateСurrency.getVal());
+        int newCout = stockMoney.get(rateСurrency) + cout;
+        stockMoney.put(rateСurrency,newCout);
+
     }
 
-    public boolean getMoney(double sum) {
-        return false;
+    public boolean withdraw(int sum) {
+        System.out.println("withdraw " + sum + "\n");
+        if (sum < 0) {
+            System.out.println("Illegal argument\nResult: false\n");
+            return  false;
+        }
+        if (sum > total_sum) {
+            System.out.println("So much money\nResult: false\n");
+            return  false;
+        }
+        int original_sum = sum;
+
+        LinkedHashMap<RateСurrency, Integer> withdrawMoney = new LinkedHashMap<>();
+        withdrawMoney.putAll(stockMoney);
+            for (var item : withdrawMoney.entrySet()) {
+                    if (sum / item.getKey().getVal() > 0) {
+                        int i = sum / item.getKey().getVal();
+                        if (i > item.getValue()) {
+                            sum -= item.getValue();
+                            withdrawMoney.put(item.getKey(), 0);
+                        } else {
+                            sum -= i * item.getKey().getVal();
+                            withdrawMoney.put(item.getKey(), item.getValue() - i);
+                        }
+                    }
+                }
+        if (sum != 0) {
+            System.out.println("Not enough currency\n");
+            return  false;
+        }
+        stockMoney.putAll(withdrawMoney);
+        total_sum -= original_sum;
+        return true;
+    }
+
+    public void printStockMoney() {
+        int sum = 0;
+        for (var item : stockMoney.entrySet()) {
+            System.out.println(item.getKey() + "("+item.getKey().getVal() + ") : " + item.getValue());
+            sum += (item.getValue() * item.getKey().getVal());
+        }
+        System.out.println("All sum = " + sum + "\n");
     }
 }
-
-
-
-
-//Номиналы банкнот: 5 000, 2000, 1 000, 500, 200, 100, 50 и 10 рублей. Монеты: 10, 5, 2 и 1 рубль, 50, 10, 5 копеек
