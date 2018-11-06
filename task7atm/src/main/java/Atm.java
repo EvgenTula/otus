@@ -1,18 +1,17 @@
 import java.util.*;
 
 public class Atm {
-    private LinkedHashMap<RateСurrency, Integer> stockMoney;
+    private TreeMap <RateСurrency, Integer> stockMoney;
     private int total_sum = 0;
     public Atm() {
-        stockMoney = new LinkedHashMap<>();
-        Arrays.stream(RateСurrency.values()).sorted((o1, o2) -> Integer.compare(o2.getVal(), o1.getVal())).forEach(i -> stockMoney.put(i,0));
+        stockMoney = new TreeMap<>(Collections.reverseOrder());
+        Arrays.stream(RateСurrency.values()).forEach(i -> stockMoney.put(i,0));
     }
 
     public void deposit(RateСurrency rateСurrency, int cout) {
         total_sum += (cout * rateСurrency.getVal());
         int newCout = stockMoney.get(rateСurrency) + cout;
         stockMoney.put(rateСurrency,newCout);
-
     }
 
     public boolean withdraw(int sum) {

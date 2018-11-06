@@ -12,6 +12,7 @@ public class Main {
         atm.deposit(RateСurrency.FIVETHOUSAND, 5);
 
         atm.printStockMoney();
+
         atm.withdraw(10000);
         atm.printStockMoney();
         atm.withdraw(100);
