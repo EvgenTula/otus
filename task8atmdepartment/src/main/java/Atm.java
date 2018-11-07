@@ -1,9 +1,12 @@
 import java.util.*;
 
-public class Atm {
+public class Atm implements IMemento {
+
     private TreeMap <RateСurrency, Integer> stockMoney;
     private int total_sum = 0;
+
     public Atm() {
+        //this.id = id;
         stockMoney = new TreeMap<>(Collections.reverseOrder());
         Arrays.stream(RateСurrency.values()).forEach(i -> stockMoney.put(i,0));
     }
@@ -56,5 +59,21 @@ public class Atm {
             sum += (item.getValue() * item.getKey().getVal());
         }
         System.out.println("All sum = " + sum + "\n");
+    }
+
+    public int getTotalSum() {
+        return total_sum;
+    }
+
+    public IMemento SaveState() {
+        return this;
+    }
+
+    @Override
+    public void RestoreState(IMemento memento) {
+        if (memento instanceof Atm) {
+            this.stockMoney = ((Atm) memento).stockMoney;
+            this.total_sum = ((Atm)memento).total_sum;
+        }
     }
 }
