@@ -2,13 +2,19 @@ import java.util.*;
 
 public class Atm implements IMemento {
 
+    private int id;
     private TreeMap <RateСurrency, Integer> stockMoney;
     private int total_sum = 0;
 
-    public Atm() {
-        //this.id = id;
-        stockMoney = new TreeMap<>(Collections.reverseOrder());
+    public Atm(int id) {
+        this.id = id;
+        this.stockMoney = new TreeMap<>(Collections.reverseOrder());
         Arrays.stream(RateСurrency.values()).forEach(i -> stockMoney.put(i,0));
+    }
+
+    private Atm(Atm obj) {
+        this.stockMoney = new TreeMap<>(obj.stockMoney);
+        this.total_sum = obj.total_sum;
     }
 
     public void deposit(RateСurrency rateСurrency, int cout) {
@@ -18,7 +24,7 @@ public class Atm implements IMemento {
     }
 
     public boolean withdraw(int sum) {
-        System.out.println("withdraw " + sum + "\n");
+        System.out.println("Atm " + this.id + " withdraw " + sum);
         if (sum < 0) {
             System.out.println("Illegal argument\nResult: false\n");
             return  false;
@@ -49,6 +55,7 @@ public class Atm implements IMemento {
         }
         stockMoney.putAll(withdrawMoney);
         total_sum -= original_sum;
+        this.printStockMoney();
         return true;
     }
 
@@ -58,15 +65,20 @@ public class Atm implements IMemento {
             System.out.println(item.getKey() + "("+item.getKey().getVal() + ") : " + item.getValue());
             sum += (item.getValue() * item.getKey().getVal());
         }
-        System.out.println("All sum = " + sum + "\n");
+        System.out.println("Atm " + this.id + " total sum = " + sum + "\n");
     }
 
     public int getTotalSum() {
         return total_sum;
     }
 
+    @Override
+    protected Atm clone() {
+        return new Atm(this);
+    }
+
     public IMemento SaveState() {
-        return this;
+        return this.clone();
     }
 
     @Override

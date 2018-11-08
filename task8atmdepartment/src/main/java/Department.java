@@ -1,11 +1,8 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Department {
 
-    private HashMap<Atm, IMemento> atmList = null;
-    //private List<Atm> atmList = null;
+    private HashMap<Atm, IMemento> atmList;
 
     public Department() {
         atmList = new HashMap<>();
@@ -15,14 +12,18 @@ public class Department {
         atmList.put(atm, atm.SaveState());
     }
 
-    //public
+    public void RestoreState() {
+        System.out.println("Restore state all atm\n");
+        for (var item : atmList.entrySet()) {
+            item.getKey().RestoreState(item.getValue());
+        }
+    }
 
     public void printTotalSum() {
         int sum = 0;
-        /*
-        for (Atm atm : atmList) {
-            sum += atm.getTotalSum();
-        }*/
-        System.out.println("Departament atm : total sum (" + atmList.size() + ") : " + sum );
+        for (var item : atmList.entrySet()) {
+            sum += item.getKey().getTotalSum();
+        }
+        System.out.println("Departament atm : total sum (" + atmList.size() + ") : " + sum + "\n");
     }
 }

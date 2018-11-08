@@ -1,21 +1,15 @@
-/*Написать приложение ATM Department:
-    • Приложение может содержать несколько ATM
-    • Departmant может собирать сумму остатков со всех ATM
-    • Department может инициировать событие – восстановить состояние всех ATM до начального.
-        (начальные состояния у разных ATM могут быть разными)*/
-
 public class Main {
     public static void main(String[] args) {
 
         Department department = new Department();
 
-        Atm atmMini = new Atm();
+        Atm atmMini = new Atm(1);
         atmMini.deposit(RateСurrency.ONE, 100);
         atmMini.deposit(RateСurrency.FIVE, 100);
         atmMini.deposit(RateСurrency.TEN, 100);
         atmMini.deposit(RateСurrency.HOUNDRED, 5);
 
-        Atm atmMiddle = new Atm();
+        Atm atmMiddle = new Atm(2);
         atmMiddle.deposit(RateСurrency.ONE, 100);
         atmMiddle.deposit(RateСurrency.FIVE, 100);
         atmMiddle.deposit(RateСurrency.TEN, 100);
@@ -23,7 +17,7 @@ public class Main {
         atmMiddle.deposit(RateСurrency.FIVEHOUNDRED, 5);
         atmMiddle.deposit(RateСurrency.THOUSAND, 1);
 
-        Atm atmMax = new Atm();
+        Atm atmMax = new Atm(3);
         atmMax.deposit(RateСurrency.ONE, 100);
         atmMax.deposit(RateСurrency.FIVE, 100);
         atmMax.deposit(RateСurrency.TEN, 100);
@@ -36,18 +30,16 @@ public class Main {
         department.addAtm(atmMiddle);
         department.addAtm(atmMax);
 
-        atmMini.withdraw(10000);
-        atmMini.printStockMoney();
-        atmMini.withdraw(100);
-        atmMini.printStockMoney();
+        atmMax.withdraw(10000);
+        atmMiddle.withdraw(100);
         atmMini.withdraw(10);
-        atmMini.printStockMoney();
-        atmMini.withdraw(1);
-        atmMini.printStockMoney();
-        atmMini.withdraw(10);
-        atmMini.printStockMoney();
+        atmMiddle.withdraw(1);
+        atmMax.withdraw(10);
         atmMini.withdraw(3);
-        atmMini.printStockMoney();
+
+        department.printTotalSum();
+        department.RestoreState();
+        department.printTotalSum();
 
     }
 }
