@@ -1,3 +1,5 @@
+package Atm;
+
 public enum RateСurrency {
 
     ONE(1),

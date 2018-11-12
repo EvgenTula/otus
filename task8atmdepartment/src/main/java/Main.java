@@ -1,7 +1,12 @@
+import Atm.*;
+import Department.*;
+
+import java.util.Random;
+
 public class Main {
     public static void main(String[] args) {
 
-        Department department = new Department();
+        Department department = new Department(new Random().nextInt(10),"main department");
 
         Atm atmMini = new Atm(1);
         atmMini.deposit(RateСurrency.ONE, 100);
@@ -26,9 +31,10 @@ public class Main {
         atmMax.deposit(RateСurrency.THOUSAND, 100);
         atmMax.deposit(RateСurrency.FIVETHOUSAND, 100);
 
-        department.addAtm(atmMini);
-        department.addAtm(atmMiddle);
-        department.addAtm(atmMax);
+        department.registerAtm(atmMini);
+        department.registerAtm(atmMiddle);
+        department.registerAtm(atmMax);
+        department.printAtmListSum();
 
         atmMax.withdraw(10000);
         atmMiddle.withdraw(100);
@@ -37,9 +43,10 @@ public class Main {
         atmMax.withdraw(10);
         atmMini.withdraw(3);
 
-        department.printTotalSum();
+        department.printAtmListSum();
         department.RestoreState();
-        department.printTotalSum();
-
+        department.printAtmListSum();
+        department.unregisterAtm(atmMax);
+        department.printAtmListSum();
     }
 }

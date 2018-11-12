@@ -1,15 +1,26 @@
+package Atm;
+
 import java.util.*;
 
-public class Atm implements IMemento {
+public class Atm implements IMemento, IAtm {
 
     private int id;
     private TreeMap <RateСurrency, Integer> stockMoney;
     private int total_sum = 0;
+    private IMemento defaultState = null;
+    public List<AtmCommand> command = null;
 
     public Atm(int id) {
         this.id = id;
         this.stockMoney = new TreeMap<>(Collections.reverseOrder());
         Arrays.stream(RateСurrency.values()).forEach(i -> stockMoney.put(i,0));
+        command = new ArrayList<AtmCommand>();
+        command.add(new AtmCommandPrintInfo(this));
+        command.add(new AtmCommandPrintStockMoney(this));
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     private Atm(Atm obj) {
@@ -59,6 +70,30 @@ public class Atm implements IMemento {
         return true;
     }
 
+    @Override
+    protected Atm clone() {
+        return new Atm(this);
+    }
+
+    public void SaveState() {
+        defaultState = this.clone();
+    }
+
+    @Override
+    public void RestoreState() {
+        if (defaultState != null && defaultState instanceof Atm) {
+            Atm defaultStateObj = (Atm)defaultState;
+            this.stockMoney = defaultStateObj.stockMoney;
+            this.total_sum = defaultStateObj.total_sum;
+        }
+    }
+
+    @Override
+    public void printAtmInfo() {
+        System.out.println("ATM " + this.getId() + " printing info:\n");
+    }
+
+    @Override
     public void printStockMoney() {
         int sum = 0;
         for (var item : stockMoney.entrySet()) {
@@ -69,23 +104,7 @@ public class Atm implements IMemento {
     }
 
     public int getTotalSum() {
-        return total_sum;
+        return this.total_sum;
     }
 
-    @Override
-    protected Atm clone() {
-        return new Atm(this);
-    }
-
-    public IMemento SaveState() {
-        return this.clone();
-    }
-
-    @Override
-    public void RestoreState(IMemento memento) {
-        if (memento instanceof Atm) {
-            this.stockMoney = ((Atm) memento).stockMoney;
-            this.total_sum = ((Atm)memento).total_sum;
-        }
-    }
 }
