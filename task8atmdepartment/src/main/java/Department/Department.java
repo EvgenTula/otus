@@ -1,6 +1,6 @@
 package Department;
 
-import Atm.Atm;
+import Atm.*;
 
 public class Department {
     IObserver observer = new Observer();
@@ -36,5 +36,11 @@ public class Department {
         observer.printAtmInfo();
         observer.printTotalSum();
     }
+
+    public void executeCommand(Atm atm) {
+        System.out.println("executeCommand: ");
+        ((AtmCommand)observer.doCommand(atm)).doCommand();
+    }
+
 
 }

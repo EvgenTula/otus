@@ -3,7 +3,7 @@ import Atm.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Observer implements IObserver {
+public class Observer<T> implements IObserver<T> {
     List<Atm> atmList = new ArrayList<>();
     @Override
     public void register(Atm atm) {
@@ -28,7 +28,7 @@ public class Observer implements IObserver {
 
     public void printAtmInfo() {
         for (Atm item : atmList) {
-            for (AtmCommand command: item.command) {
+            for (AtmCommand command: item.commandList) {
                 command.doCommand();
             }
         }
@@ -41,4 +41,10 @@ public class Observer implements IObserver {
         }
         System.out.println("Department sum : " + sum);
     }
+
+    @Override
+    public T doCommand(Atm atm) {
+        return (T) atm.command;
+    }
+
 }

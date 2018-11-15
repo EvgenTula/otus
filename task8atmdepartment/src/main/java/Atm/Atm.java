@@ -8,15 +8,17 @@ public class Atm implements IMemento, IAtm {
     private TreeMap <RateСurrency, Integer> stockMoney;
     private int total_sum = 0;
     private IMemento defaultState = null;
-    public List<AtmCommand> command = null;
+    public List<AtmCommand> commandList = null;
+    public AtmCommand command = null;
 
     public Atm(int id) {
         this.id = id;
         this.stockMoney = new TreeMap<>(Collections.reverseOrder());
         Arrays.stream(RateСurrency.values()).forEach(i -> stockMoney.put(i,0));
-        command = new ArrayList<AtmCommand>();
-        command.add(new AtmCommandPrintInfo(this));
-        command.add(new AtmCommandPrintStockMoney(this));
+        commandList = new ArrayList<AtmCommand>();
+        commandList.add(new AtmCommandPrintInfo(this));
+        commandList.add(new AtmCommandPrintStockMoney(this));
+        command = new AtmCommandPrintStockMoney(this);
     }
 
     public int getId() {

@@ -1,3 +1,23 @@
+/*
+Сейчас уже лучше.
+Задание принято.
+
+public interface IObserver {
+    void register(Atm atm);
+    void unregister(Atm atm);
+    void restoreStateAllAtm();
+    void printAtmInfo();
+    void printTotalSum();
+}
+Вариант рабочий.
+На досуге попробуйте его доработать, добавив паттерн "команда", чтобы так получилось.
+public interface IObserver<T> {
+Result<T> doCommand(Atm atm);
+}
+```
+это уже супер будет.
+*/
+
 import Atm.*;
 import Department.*;
 
@@ -48,5 +68,7 @@ public class Main {
         department.printAtmListSum();
         department.unregisterAtm(atmMax);
         department.printAtmListSum();
+
+        department.executeCommand(atmMini);
     }
 }
