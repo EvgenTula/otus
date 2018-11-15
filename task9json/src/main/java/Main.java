@@ -1,13 +1,40 @@
+import TestClass.A;
+import TestClass.B;
+import TestClass.C;
+import com.google.gson.Gson;
+
 import java.lang.reflect.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 
 public class Main {
 
     public static void main(String[] args) {
+
+        Gson gson = new Gson();
+
+        A a = new A(1,"test A");
+        B b = new B(1,"test B", 100);
+        C c = new C(1,"test C", 100);
+        System.out.println(gson.toJson(a));
+        System.out.println(gson.toJson(b));
+        System.out.println(gson.toJson(c));
+
+        System.out.println(gson.toJson(5));
+        System.out.println(gson.toJson("text"));
+        System.out.println(gson.toJson(""));
+        System.out.println(MyJson.toJson("text"));
+        List<Integer> listInteger = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            listInteger.add(new Random().nextInt(10));
+        }
+        System.out.println(gson.toJson(listInteger));
+        System.out.println(gson.toJson('1'));
+        System.out.println(gson.toJson(null));
+        System.out.println(gson.toJson(new Object()));
+/*
         Object obj = new Object();
         System.out.println("Object - " + calcSize(obj));
 
@@ -35,9 +62,9 @@ public class Main {
 
         A objA_link_full = new A(objA_link_null);
         objA_link_full.link = objA_link_full;
-        System.out.println("Obj A link != null - " + calcSize(objA_link_full));
+        System.out.println("Obj A link != null - " + calcSize(objA_link_full));*/
     }
-
+/*
     static long calcSize(Object obj)
     {
         return calcSize(obj, null);
@@ -71,23 +98,7 @@ public class Main {
         }
         return result;
     }
-
-}
-class A
-{
-    public A() {
-        a = 5;
-        b = 10;
-        link = null;
-    }
-    public A(A linkObj) {
-        a = 5;
-        b = 10;
-        link = linkObj;
-    }
-    public int a;
-    public int b;
-    public A link;
+*/
 }
 
 
