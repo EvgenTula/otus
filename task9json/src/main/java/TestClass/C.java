@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class C extends B {
+    public VALUES values;
     public ArrayList<Integer> listInteger;
     public C(int num, String txt, int secondNum) {
         super(num, txt, secondNum);
@@ -11,5 +12,6 @@ public class C extends B {
         for (int i = 0; i < 10; i++) {
             listInteger.add(new Random().nextInt(100));
         }
+        values = VALUES.THREE;
     }
 }

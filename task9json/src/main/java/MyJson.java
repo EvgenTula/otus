@@ -1,99 +1,115 @@
-/*
-import org.json.JSONArray;
-import org.json.JSONObject;
-*/
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MyJson {
-    public static String toJson(Object obj) {
-        if (obj == null) {
+
+    private static Set<Class> setClasses = new HashSet<>();
+
+    static {
+        setClasses.add(Boolean.class);
+        setClasses.add(Byte.class);
+        setClasses.add(Short.class);
+        setClasses.add(Integer.class);
+        setClasses.add(Long.class);
+        setClasses.add(Float.class);
+        setClasses.add(Double.class);
+    }
+
+    public static String toJSON(Object o) {
+        if (o == null) {
             return "null";
         }
-        return MyJson.getJson(obj);
+        return parseObject(o);
     }
 
+    private static String parseObject(Object obj) {
+        if (isSimpleObject(obj.getClass()))
+        {
+            return parseSimpleObject(obj);
+        }
+        else
+        {
+            return parseCompositeObject(obj);
+        }
+    }
 
-    private static String getJson(Object obj)
-    {
+    private static boolean isSimpleObject(Class classInfo) {
+        return  (classInfo.getCanonicalName().equals("java.lang.String")
+                ||
+                classInfo.getCanonicalName().equals("java.lang.Character")
+                ||
+                setClasses.contains(classInfo)
+                ||
+                classInfo.isArray()
+                ||
+                Collection.class.isAssignableFrom(classInfo)
+        );
+    }
+
+    private static String parseSimpleObject(Object obj) {
         String result = "";
-
-        try {
-            Class classInfo = Class.forName(obj.getClass().getName());
-            if (!classInfo.isPrimitive()) {
-                for (Field field : classInfo.getDeclaredFields()) {
-                    if (!Modifier.isStatic(field.getModifiers()) && (field.getType().isPrimitive() || field.getType().getCanonicalName().equals("java.lang.String"))) {
-                        field.setAccessible(true);
-                        result += field.get(obj);
-                        //if (tmpObj != null && visited.contains(tmpObj) == false) {
-//                            result += calcSize(tmpObj, visited);
-  //                      }
-                    }
-                }
-            }
-            if (classInfo.isPrimitive())
-            {
-                if (classInfo.getCanonicalName().equals("java.lang.String")) {
-
-                }
-            }
-            if (classInfo.isArray()) {
-                System.out.println(classInfo);
-
-                /*
-                for (var item :) {
-
-                }*/
-            }
-            /*
-            else
-            {
-                for (Field field: classInfo.getDeclaredFields()) {
-                    try {
-                        prepareValue(field.get(obj));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }*/
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        Class classObjInfo = obj.getClass();
+        if (classObjInfo.getCanonicalName().equals("java.lang.String")
+                || classObjInfo.getCanonicalName().equals("java.lang.Character")
+                ) {
+                result = "\"" + obj.toString() + "\"";
+        }
+        if (setClasses.contains(classObjInfo)) {
+            result = obj.toString();
         }
 
+        if (classObjInfo.isArray()) {
+            JSONArray array = new JSONArray();
+            for (int i = 0 ; i < Array.getLength(obj); i++){
+                array.add(Array.get(obj, i));
+            }
+            result = array.toJSONString();
+        }
+
+        if (Collection.class.isAssignableFrom(classObjInfo)) {
+            JSONArray array = new JSONArray();
+            for (Object arrayItem : (Collection) obj) {
+                array.add(arrayItem);
+            }
+            result = array.toJSONString();
+        }
         return result;
-        //return calcSize(obj, null);
     }
 
-/*
-    static long calcSize(Object obj, List<Object> visited) {
-        long result = AgentMemory.sizeof(obj);
-        try {
-            if (visited == null)
-            {
-                visited = new ArrayList<>();
-                visited.add(obj);
-            }
-            Class classInfo = Class.forName(obj.getClass().getName());
-            if (!classInfo.isPrimitive()) {
-                for (Field field : classInfo.getDeclaredFields()) {
-                    if (!Modifier.isStatic(field.getModifiers()) && !field.getType().isPrimitive()) {
-                        field.setAccessible(true);
-                        Object tmpObj = field.get(obj);
-                        if (tmpObj != null && visited.contains(tmpObj) == false) {
-                            result += calcSize(tmpObj, visited);
-                        }
+    private static String parseCompositeObject(Object obj) {
+        return prepareCompositeObject(obj, obj.getClass()).toJSONString();
+    }
+
+    private static JSONObject prepareCompositeObject(Object obj, Class classInfo) {
+        JSONObject jsonObject = new JSONObject();
+        for (Field field: classInfo.getDeclaredFields()){
+            try {
+                if (!Modifier.isTransient(field.getModifiers())) {
+                    field.setAccessible(true);
+                    if (field.getType().isEnum()) {
+                        jsonObject.put(field.getName(), field.get(obj).toString() + "");
+                    }
+                    else {
+                        jsonObject.put(field.getName(), field.get(obj));
                     }
                 }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-        return result;
-    }*/
+
+        if (classInfo.getSuperclass() != null){
+            jsonObject.putAll(prepareCompositeObject(obj, classInfo.getSuperclass()));
+        }
+
+        return jsonObject;
+    }
 }
