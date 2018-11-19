@@ -1,9 +1,9 @@
 package TestClass;
 
-public class A {
+public class SimpleClass {
     public transient int num;
     public String txt;
-    public A(int num, String txt) {
+    public SimpleClass(int num, String txt) {
         this.num = num;
         this.txt = txt;
     }

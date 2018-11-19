@@ -1,5 +1,6 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 
 import java.lang.reflect.Array;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MyJson {
+public class SimpleJson {
 
     private static Set<Class> setClasses = new HashSet<>();
 
@@ -77,7 +78,15 @@ public class MyJson {
         if (Collection.class.isAssignableFrom(classObjInfo)) {
             JSONArray array = new JSONArray();
             for (Object arrayItem : (Collection) obj) {
-                array.add(arrayItem);
+                if (isSimpleObject(arrayItem.getClass()))
+                {
+                    array.add(arrayItem);
+                }
+                else
+                {
+                    array.add(prepareCompositeObject(arrayItem,arrayItem.getClass()));
+                }
+
             }
             result = array.toJSONString();
         }
@@ -95,7 +104,27 @@ public class MyJson {
                 if (!Modifier.isTransient(field.getModifiers())) {
                     field.setAccessible(true);
                     if (field.getType().isEnum()) {
-                        jsonObject.put(field.getName(), field.get(obj).toString() + "");
+                        jsonObject.put(field.getName(),field.get(obj).toString() + "");
+                        continue;
+                    }
+
+                    if (Collection.class.isAssignableFrom(field.getType())) {
+                        JSONArray array = new JSONArray();
+                        for (Object arrayItem : (Collection) field.get(obj)) {
+                            if (isSimpleObject(arrayItem.getClass()))
+                            {
+                                jsonObject.put(field.getName(), field.get(obj));
+                                break;
+                            }
+                            else
+                            {
+                                array.add(prepareCompositeObject(arrayItem,arrayItem.getClass()));
+                            }
+
+                        }
+                        if (!array.isEmpty()) {
+                            jsonObject.put(field.getName(), array);
+                        }
                     }
                     else {
                         jsonObject.put(field.getName(), field.get(obj));
@@ -106,9 +135,11 @@ public class MyJson {
             }
         }
 
+
         if (classInfo.getSuperclass() != null){
             jsonObject.putAll(prepareCompositeObject(obj, classInfo.getSuperclass()));
         }
+
 
         return jsonObject;
     }

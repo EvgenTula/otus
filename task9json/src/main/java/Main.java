@@ -1,6 +1,4 @@
-import TestClass.A;
-import TestClass.B;
-import TestClass.C;
+import TestClass.*;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -15,48 +13,63 @@ public class Main {
         Gson gson = new Gson();
 
         System.out.println("gson : " + gson.toJson("text"));
-        System.out.println("MyJson : " +MyJson.toJSON("text"));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON("text"));
 
         System.out.println("gson : " + gson.toJson(""));
-        System.out.println("MyJson : " +MyJson.toJSON(""));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(""));
 
         System.out.println("gson : " + gson.toJson(1));
-        System.out.println("MyJson : " +MyJson.toJSON(1));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(1));
 
         System.out.println("gson : " + gson.toJson('1'));
-        System.out.println("MyJson : " +MyJson.toJSON('1'));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON('1'));
 
         System.out.println("gson : " + gson.toJson(false));
-        System.out.println("MyJson : " +MyJson.toJSON(false));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(false));
 
         System.out.println("gson : " + gson.toJson(null));
-        System.out.println("MyJson : " +MyJson.toJSON(null));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(null));
 
         System.out.println("gson : " + gson.toJson(new Object()));
-        System.out.println("MyJson : " +MyJson.toJSON(new Object()));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(new Object()));
 
         System.out.println("gson : " + gson.toJson(new Object[10]));
-        System.out.println("MyJson : " + MyJson.toJSON(new Object[10]));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(new Object[10]));
 
         List<Integer> listInteger = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             listInteger.add(new Random().nextInt(10));
         }
         System.out.println("gson : " + gson.toJson(listInteger));
-        System.out.println("MyJson : " + MyJson.toJSON(listInteger));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(listInteger));
 
 
-        A a = new A(1,"test A");
-        B b = new B(1,"test B", 100);
-        C c = new C(1,"test C", 100);
-        System.out.println("gson : " + gson.toJson(a));
-        System.out.println("MyJson : " +MyJson.toJSON(a));
-        System.out.println("gson : " + gson.toJson(b));
-        System.out.println("MyJson : " +MyJson.toJSON(b));
-        System.out.println("gson : " + gson.toJson(c));
-        System.out.println("MyJson : " +MyJson.toJSON(c));
+        SimpleClass simpleClass = new SimpleClass(1,"test SimpleClass");
+        System.out.println("gson : " + gson.toJson(simpleClass));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(simpleClass));
 
+        ExtendsSimpleClass extendsSimpleClass = new ExtendsSimpleClass(1,"test ExtendsSimpleClass", 100);
+        System.out.println("gson : " + gson.toJson(extendsSimpleClass));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(extendsSimpleClass));
 
+        ClassWithEnum classWithEnum = new ClassWithEnum("test ClassWithEnum", VALUES.THREE);
+        System.out.println("gson : " + gson.toJson(classWithEnum));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(classWithEnum));
+
+        ClassWithSimpleList classWithSimpleList = new ClassWithSimpleList("test ClassWithSimpleList", 100);
+        System.out.println("gson : " + gson.toJson(classWithSimpleList));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(classWithSimpleList));
+
+        List<SimpleClass> simpleClassList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            simpleClassList.add(new SimpleClass(i,"test SimpleClass " + i));
+        }
+        System.out.println("gson : " + gson.toJson(simpleClassList));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(simpleClassList));
+
+        ClassWithObjectList classWithObjectList = new ClassWithObjectList("test classWithObjectList");
+        System.out.println("gson : " + gson.toJson(classWithObjectList));
+        System.out.println("SimpleJson : " + SimpleJson.toJSON(classWithObjectList));
 
     }
 }
