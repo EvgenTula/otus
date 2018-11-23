@@ -7,14 +7,16 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
-
-        DBService dbService = new DBService();
-        /*
+        Integer i = 0;
+        i = i-- + --i;
+        System.out.println(i);
+                    /*
         лучше всего в перед тем как использовать сервис в методе init()
         проанализировать все классы на соответствие таблицам. И сохранить результат разбора.
     собственно, как Hibernate и делает
         */
-        dbService.prepareTables();
+
+        DBService dbService = new DBService();
 
         List<UserDataSet> newUserList = new ArrayList<>();
         newUserList.add(new UserDataSet(1,"user 1", 18));
@@ -22,13 +24,12 @@ public class Main {
         newUserList.add(new UserDataSet(3,"user 3", 20));
 
         for (UserDataSet item : newUserList) {
-            dbService.save(item);
+            dbService.(item);
         }
 
         newUserList.clear();
         UserDataSet loadUser = dbService.load(1,UserDataSet.class);
         System.out.println(loadUser.toString());
-
 
         /*
         Connection conn = ConnectionHelper.getConnection();

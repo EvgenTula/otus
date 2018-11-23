@@ -1,8 +1,7 @@
 package ru.otus.hw10orm;
 
 public class UserDataSet extends DataSet {
-
-    private static final String TABLE_NAME = "user";
+    //private HashMap<String, String>
 
     public String name;
     public int age;
@@ -20,8 +19,4 @@ public class UserDataSet extends DataSet {
                 "age : " + this.age;
     }
 
-    @Override
-    public String getTableName() {
-        return TABLE_NAME;
-    }
 }
