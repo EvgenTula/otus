@@ -1,37 +1,45 @@
 package ru.otus.hw10orm;
 
+import ru.otus.hw10orm.dataset.DataSet;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Executor {
 
     private final Connection connection;
 
+
     public Executor(Connection connection){
         this.connection = connection;
     }
+      public <T extends DataSet> void save(T user, String sql) throws SQLException {
 
-    public <T extends DataSet> void save(T user) throws SQLException {
-        try(PreparedStatement statement = connection.prepareStatement(SELECT_DATAROW))
+        try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql))
         {
-            statement.setLong(1,user.id);
-            statement.execute(SELECT_DATAROW);
-            if (statement.getResultSet().wasNull()) {
+            preparedStatement.setLong(1,user.id);
+            if (preparedStatement.execute()) {
 
             }
+            /*
+            preparedStatement.execute("");
+            if (preparedStatement.executestatement.getResultSet().wasNull()) {
+
+            }
+            */
             //st.execute(CREATE_TABLE_USER);
         }
     }
 
-    public <T extends DataSet> T load(long id, Class<T> clazz) throws SQLException {
-        T result = null;
-        try(Statement st = connection.createStatement())
+    public ResultSet load(long id, String sql) throws SQLException {
+        try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql))
         {
-            st.execute(CREATE_TABLE_USER);
+            preparedStatement.setLong(1,id);
+            preparedStatement.execute();
+            return preparedStatement.getResultSet();
         }
-        return result;
     }
 
 }

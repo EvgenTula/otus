@@ -1,4 +1,4 @@
-package ru.otus.hw10orm;
+package ru.otus.hw10orm.dataset;
 
 public class UserDataSet extends DataSet {
     //private HashMap<String, String>
