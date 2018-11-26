@@ -5,6 +5,7 @@ public class UserDataSet extends DataSet {
 
     public String name;
     public int age;
+    public UserDataSet() {}
 
     public UserDataSet(long id, String name, int age) {
         this.id = id;
@@ -15,8 +16,8 @@ public class UserDataSet extends DataSet {
     @Override
     public String toString() {
         return "id : " + this.id +
-                "name : " + this.name +
-                "age : " + this.age;
+                "\nname : " + this.name +
+                "\nage : " + this.age;
     }
 
 }
