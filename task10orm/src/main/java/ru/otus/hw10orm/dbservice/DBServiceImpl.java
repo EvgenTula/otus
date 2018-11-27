@@ -1,7 +1,6 @@
 package ru.otus.hw10orm.dbservice;
 
 import ru.otus.hw10orm.dataset.DataSet;
-import ru.otus.hw10orm.dataset.UserDataSet;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,39 +12,20 @@ import java.util.*;
 
 public class DBServiceImpl implements DBService {
 
-    private static final String TABLE_NAME = "user";
-    private static final String CREATE_TABLE_USER = "create table " + TABLE_NAME + " (id bigint auto_increment, name varchar(255), age int, primary key (id))";
-    private static final String DROP_TABLE = "drop table if exists " + TABLE_NAME;
     private final Connection connection;
     private final Executor executor;
-    private HashMap<Class,List<String>> classesFields;
-
+    private HashMap<Class,DataSetConfiguration> classListConfig;
 
     public DBServiceImpl() {
-        this.classesFields = new HashMap<>();
-        this.addClass(UserDataSet.class);
+        this.classListConfig = new HashMap<>();
         this.connection = ConnectionHelper.getConnection();
         this.executor = new Executor(this.connection);
-        try {
-            this.prepareTables();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public <T extends DataSet> void save(T user) {
         try {
-            StringJoiner fieldList = new StringJoiner(",");
-            StringJoiner valueField = new StringJoiner(",");
-            for (Map.Entry<String, Object> item : getFieldsValue(user).entrySet()) {
-                fieldList.add(item.getKey());
-                valueField.add("?");
-            }
-
-            StringBuilder sql = new StringBuilder("insert into " + TABLE_NAME + "( " + fieldList.toString() + " ) values ( " + valueField + ")");
-
-            this.executor.save(sql.toString(),handler -> {
+            this.executor.save(classListConfig.get(user.getClass()).getSqlInsert(),handler -> {
                 int order = 1;
                 for (Map.Entry<String, Object> item : getFieldsValue(user).entrySet()) {
                     handler.setObject(order, item.getValue());
@@ -62,9 +42,9 @@ public class DBServiceImpl implements DBService {
 
         try {
             T result = clazz.getDeclaredConstructor().newInstance();;
-            this.executor.load(id, getSelectQuery(clazz), handle -> {
+            this.executor.load(id, classListConfig.get(clazz).getSqlSelect(), handle -> {
                 handle.next();
-                for (String fieldName : classesFields.get(clazz)){
+                for (String fieldName : classListConfig.get(clazz).getFieldList()){
                     clazz.getField(fieldName).set(result,handle.getObject(fieldName));
                 }
             });
@@ -85,24 +65,12 @@ public class DBServiceImpl implements DBService {
         return null;
     }
 
-    private String getSelectQuery(Class classInfo) {
-        return new String("select " + getFields(classInfo) + " from " + TABLE_NAME + " where id = ?");
-    }
-
-    private String getFields(Class clazz) {
-        StringJoiner stringJoiner = new StringJoiner(",");
-        for (String fieldName : classesFields.get(clazz)) {
-            stringJoiner.add(fieldName);
-        }
-        return stringJoiner.toString();
-    }
-
     private <T extends DataSet> HashMap<String, Object> getFieldsValue(T obj) {
         HashMap<String, Object> result = new HashMap<>();
         Class classInfo = obj.getClass();
-        if (classesFields.get(classInfo) != null)
+        if (classListConfig.get(classInfo) != null)
         {
-            for (String fieldName : classesFields.get(classInfo)){
+            for (String fieldName : classListConfig.get(classInfo).fieldList){
                 try {
                     result.put(fieldName,classInfo.getField(fieldName).get(obj));
                 } catch (IllegalAccessException e) {
@@ -115,25 +83,96 @@ public class DBServiceImpl implements DBService {
         return result;
     }
 
-    private void addClass(Class classInfo) {
-        if (classesFields.get(classInfo) == null) {
-            List<String> fields = new ArrayList<>();
-            for (Field field: classInfo.getDeclaredFields()) {
-                if (Modifier.isPublic(field.getModifiers())) {
-                    fields.add(field.getName());
-                }
-            }
-            if (fields.size() > 0) {
-                classesFields.put(classInfo, fields);
+    @Override
+    public void addClass(Class classInfo, String tableName) {
+        if (!classListConfig.containsKey(classInfo)) {
+            classListConfig.put(classInfo, new DataSetConfiguration(classInfo, tableName));
+            try {
+                this.prepareTables(classInfo);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void prepareTables() throws SQLException {
-        try(Statement st = connection.createStatement())
-        {
-            st.execute(DROP_TABLE);
-            st.execute(CREATE_TABLE_USER);
+    private void prepareTables(Class clazz) throws SQLException {
+        try(Statement st = connection.createStatement()) {
+            st.execute(classListConfig.get(clazz).getSqlDropTable());
+            st.execute(classListConfig.get(clazz).getSqlCreateTable());
+        }
+    }
+
+    private class DataSetConfiguration {
+
+        public Class classInfo;
+        private String tableName;
+        private String sqlSelect;
+        private String sqlCreateTable;
+        private String sqlDropTable;
+        private String sqlInsert;
+        private List<String> fieldList;
+
+        public DataSetConfiguration(Class classInfo, String tableName) {
+            this.classInfo = classInfo;
+            this.tableName = tableName;
+            this.fieldList = new ArrayList<>();
+
+            for (Field field: classInfo.getDeclaredFields()) {
+                if (Modifier.isPublic(field.getModifiers())) {
+                    fieldList.add(field.getName());
+                }
+            }
+
+            fillSqlDropTable();
+            fillSqlCreateTable();
+            fillSqlSelect();
+            fillSqlInsert();
+        }
+
+        public String getSqlSelect() {
+            return this.sqlSelect;
+        }
+
+        public String getSqlDropTable() {
+            return this.sqlDropTable;
+        }
+
+        public String getSqlCreateTable() {
+            return this.sqlCreateTable;
+        }
+
+        public String getSqlInsert() {
+            return this.sqlInsert;
+        }
+
+        public List<String> getFieldList() {
+            return this.fieldList;
+        }
+
+        private void fillSqlSelect() {
+            StringJoiner stringJoiner = new StringJoiner(",");
+            for (String fieldName : fieldList) {
+                stringJoiner.add(fieldName);
+            }
+            this.sqlSelect = new String("select " + stringJoiner.toString() + " from " + this.tableName + " where id = ?");
+        }
+
+        private void  fillSqlDropTable() {
+            this.sqlDropTable = "drop table if exists " + this.tableName;
+        }
+
+        private void fillSqlCreateTable() {
+            this.sqlCreateTable = "create table " + this.tableName + " (id bigint auto_increment, name varchar(255), age int, primary key (id))";
+        }
+
+        private void fillSqlInsert() {
+            StringJoiner nameFieldJoiner = new StringJoiner(",");
+            StringJoiner valueFieldJoiner = new StringJoiner(",");
+            for (String field : this.fieldList) {
+                nameFieldJoiner.add(field);
+                valueFieldJoiner.add("?");
+            }
+            this.sqlInsert = "insert into " + this.tableName + "( " + nameFieldJoiner.toString() + " ) values (" + valueFieldJoiner.toString() + ")";
         }
     }
 }
