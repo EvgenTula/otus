@@ -27,6 +27,9 @@ public class UserDataSet extends DataSet {
         this.setAge(age);
         this.setAddress(address);
         this.phoneList = phones;
+        for (PhoneDataSet phone: phones) {
+            phone.setUserDataSet(this);
+        }
     }
 
     public void setName(String name) {

@@ -13,8 +13,8 @@ public class AddressDataSet extends DataSet {
 
     public AddressDataSet() { }
 
-    public AddressDataSet(long id, String street) {
-        this.setId(id);
+    public AddressDataSet(String street) {
+        //this.setId(id);
         this.setStreet(street);
     }
 
@@ -24,6 +24,6 @@ public class AddressDataSet extends DataSet {
 
     @Override
     public String toString() {
-        return super.toString();
+        return this.street;
     }
 }

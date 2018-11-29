@@ -1,5 +1,13 @@
 package ru.otus.wh11hibernate;
 
+import ru.otus.wh11hibernate.dataset.AddressDataSet;
+import ru.otus.wh11hibernate.dataset.DataSet;
+import ru.otus.wh11hibernate.dataset.PhoneDataSet;
+import ru.otus.wh11hibernate.dataset.UserDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 
 Домашнее задание
@@ -24,5 +32,13 @@ private String number;
 public class Main {
     public static void main(String[] args) {
         DBService dbService = new DBServiceHibernateImpl();
+        List<PhoneDataSet> phones = new ArrayList<>();
+        phones.add(new PhoneDataSet("123"));
+        phones.add(new PhoneDataSet("456"));
+        phones.add(new PhoneDataSet("789"));
+        dbService.save(new UserDataSet(1,"test",1,new AddressDataSet("test address"),phones));
+        System.out.println(dbService.load(1, UserDataSet.class).toString());
+
+        //dbService.
     }
 }

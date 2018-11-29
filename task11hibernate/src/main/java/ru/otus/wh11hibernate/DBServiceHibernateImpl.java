@@ -7,8 +7,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import ru.otus.wh11hibernate.dataset.*;
 
-import javax.security.auth.login.AppConfigurationEntry;
-
 public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
@@ -25,7 +23,12 @@ public class DBServiceHibernateImpl implements DBService {
         configuration.setProperty("hibernate.connection.url", "jdbc:h2:~/test");
         configuration.setProperty("hibernate.connection.username", "sa");
         configuration.setProperty("hibernate.connection.password", "sa");
-        configuration.setProperty("hibernate.show_sql", "true");
+
+        configuration.setProperty("hibernate.show_sql", "false");
+        configuration.setProperty("hibernate.generate_statistics", "false");
+        configuration.setProperty("hibernate.use_sql_comments", "false");
+
+
         configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         configuration.setProperty("hibernate.connection.useSSL", "false");
         configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
@@ -47,10 +50,12 @@ public class DBServiceHibernateImpl implements DBService {
 
     public <T extends DataSet> T load(long id, Class<T> clazz) {
         try (Session session = sessionFactory.openSession()) {
+            return session.load(clazz, id);
             //UserDataSetDAO dao = new UserDataSetDAO(session);
             //dao.save(dataSet);
-            session.load();
+            //session.load();
         }
+        //return null;
     }
 
     public <T extends DataSet> void save(T obj) {
