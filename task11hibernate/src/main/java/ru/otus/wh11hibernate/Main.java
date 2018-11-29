@@ -23,6 +23,6 @@ private String number;
 */
 public class Main {
     public static void main(String[] args) {
-        DBService dbService = new DBServiceImplHibernate();
+        DBService dbService = new DBServiceHibernateImpl();
     }
 }
