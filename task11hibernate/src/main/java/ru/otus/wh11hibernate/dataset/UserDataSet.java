@@ -66,7 +66,8 @@ public class UserDataSet extends DataSet {
         return this.getClass().getName() + " {\nid : " + this.getId() +
                 "\nname : " + this.getName() +
                 "\nage : " + this.getAge() +
-                "\naddress : " + this.getAddress() + printPhoneList();
+                "\naddress : " + this.getAddress() +
+                "\nphone : "  + printPhoneList() + "\n}";
     }
 
     private String printPhoneList() {
