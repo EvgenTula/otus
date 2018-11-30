@@ -1,6 +1,6 @@
-package ru.otus.wh11hibernate;
+package ru.otus.hw11hibernate;
 
-import ru.otus.wh11hibernate.dataset.DataSet;
+import ru.otus.hw11hibernate.datasets.DataSet;
 
 public interface DBService {
     void addClass(Class classInfo, String tableName);

@@ -1,4 +1,4 @@
-package ru.otus.wh11hibernate.dataset;
+package ru.otus.hw11hibernate.datasets;
 
 import javax.persistence.*;
 

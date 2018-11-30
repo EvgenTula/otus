@@ -1,4 +1,4 @@
-package ru.otus.wh11hibernate.dataset;
+package ru.otus.hw11hibernate.datasets;
 
 import javax.persistence.*;
 import java.util.List;
@@ -63,11 +63,11 @@ public class UserDataSet extends DataSet {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " {\nid : " + this.getId() +
+        return this.getClass().getName() + " [\nid : " + this.getId() +
                 "\nname : " + this.getName() +
                 "\nage : " + this.getAge() +
                 "\naddress : " + this.getAddress() +
-                "\nphone : "  + printPhoneList() + "\n}";
+                "\nphone :\n"  + printPhoneList() + "]";
     }
 
     private String printPhoneList() {

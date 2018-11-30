@@ -1,8 +1,6 @@
-package ru.otus.wh11hibernate.dataset;
+package ru.otus.hw11hibernate.datasets;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "address")
@@ -14,7 +12,6 @@ public class AddressDataSet extends DataSet {
     public AddressDataSet() { }
 
     public AddressDataSet(String street) {
-        //this.setId(id);
         this.setStreet(street);
     }
 
@@ -24,6 +21,6 @@ public class AddressDataSet extends DataSet {
 
     @Override
     public String toString() {
-        return this.street;
+        return this.getClass().getName() + " { " + this.street + " }";
     }
 }

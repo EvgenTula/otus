@@ -1,11 +1,14 @@
-package ru.otus.wh11hibernate;
+package ru.otus.hw11hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import ru.otus.wh11hibernate.dataset.*;
+import ru.otus.hw11hibernate.dao.UsersDAO;
+import ru.otus.hw11hibernate.datasets.*;
+
+import java.util.List;
 
 public class DBServiceHibernateImpl implements DBService {
 
@@ -51,18 +54,40 @@ public class DBServiceHibernateImpl implements DBService {
     public <T extends DataSet> T load(long id, Class<T> clazz) {
         try (Session session = sessionFactory.openSession()) {
             return session.load(clazz, id);
-            //UserDataSetDAO dao = new UserDataSetDAO(session);
-            //dao.save(dataSet);
-            //session.load();
         }
-        //return null;
     }
 
     public <T extends DataSet> void save(T obj) {
         try (Session session = sessionFactory.openSession()) {
-            //UserDataSetDAO dao = new UserDataSetDAO(session);
-            //dao.save(dataSet);
             session.save(obj);
+        }
+    }
+
+    public void userSave (UserDataSet obj) {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            dao.save(obj);
+        }
+    }
+
+    public UserDataSet userLoad(long id) {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            return dao.load(id);
+        }
+    }
+
+    public UserDataSet userGetByName(String name) {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            return dao.readByName(name);
+        }
+    }
+
+    public List<UserDataSet> userGetAllList() {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            return dao.readAll();
         }
     }
 }

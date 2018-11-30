@@ -1,4 +1,4 @@
-package ru.otus.wh11hibernate.dataset;
+package ru.otus.hw11hibernate.datasets;
 
 import javax.persistence.*;
 
@@ -31,6 +31,6 @@ public class PhoneDataSet extends DataSet {
 
     @Override
     public String toString() {
-        return this.getNumber();
+        return this.getClass().getName() + " { " + this.getNumber() + " }";
     }
 }
