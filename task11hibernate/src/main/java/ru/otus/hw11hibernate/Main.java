@@ -1,12 +1,15 @@
 package ru.otus.hw11hibernate;
 
+import org.hibernate.cfg.Configuration;
 import ru.otus.hw11hibernate.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.dbservice.DBServiceHibernateImpl;
 
+import ru.otus.hw11hibernate.orm.dataset.AddressDataSetOrm;
+import ru.otus.hw11hibernate.orm.dataset.PhoneDataSetOrm;
 import ru.otus.hw11hibernate.orm.dataset.UserDataSetOrm;
-import ru.otus.hw11hibernate.orm.dbservice.DBServiceImpl;
+import ru.otus.hw11hibernate.orm.dbservice.DBServiceOrmImpl;
 import ru.otus.hw11hibernate.orm.dbservice.DataSetConfiguration;
 
 import java.util.ArrayList;
@@ -17,24 +20,66 @@ public class Main {
 
         /*orm*/
         List<DataSetConfiguration> configurationList = new ArrayList<>();
-        configurationList.add(new DataSetConfiguration(UserDataSetOrm.class, "user"));
-        DBService dbServiceOrm = new DBServiceImpl(configurationList);
+        configurationList.add(
+                new DataSetConfiguration(
+                        UserDataSetOrm.class,
+                        "user",
+                        "(id bigint auto_increment, name varchar(255), age int, primary key (id))"));
+        configurationList.add(
+                new DataSetConfiguration(
+                        PhoneDataSetOrm.class, "phone","(id bigint auto_increment, number varchar(255), age int, " +
+                        "userdataset_id bigint, foreign key (userdataset_id) references user(id), primary key (id))"));
+        configurationList.add(
+                new DataSetConfiguration(
+                        AddressDataSetOrm.class, "address","(id bigint auto_increment, street varchar(255), primary key (id))"));
+        DBService dbServiceOrm = new DBServiceOrmImpl(configurationList);
 
-        List<UserDataSetOrm> newUserList = new ArrayList<>();
-        newUserList.add(new UserDataSetOrm(1,"user 1", 18));
-        newUserList.add(new UserDataSetOrm(2,"user 2", 19));
-        newUserList.add(new UserDataSetOrm(3,"user 3", 20));
-
-        for (UserDataSetOrm item : newUserList) {
+        /*
+        List<PhoneDataSetOrm> phonesOrm = new ArrayList<>();
+        phonesOrm.add(new PhoneDataSetOrm("123"));
+        phonesOrm.add(new PhoneDataSetOrm("456"));
+        phonesOrm.add(new PhoneDataSetOrm("789"));
+        */
+        List<UserDataSetOrm> userListOrm = new ArrayList<>();
+        /*
+        userListOrm.add(new UserDataSetOrm(1,"user 1", 18, new AddressDataSetOrm("test 1 orm"), phonesOrm));
+        userListOrm.add(new UserDataSetOrm(2,"user 2", 19, new AddressDataSetOrm("test 2 orm"), phonesOrm));
+        userListOrm.add(new UserDataSetOrm(3,"user 3", 20, new AddressDataSetOrm("test 3 orm"), phonesOrm));
+        */
+        userListOrm.add(new UserDataSetOrm(1,"user 1", 18));
+        userListOrm.add(new UserDataSetOrm(2,"user 2", 19));
+        userListOrm.add(new UserDataSetOrm(3,"user 3", 20));
+        for (UserDataSetOrm item : userListOrm) {
             dbServiceOrm.save(item);
         }
 
-        newUserList.clear();
+        userListOrm.clear();
         UserDataSetOrm loadUser = dbServiceOrm.load(1, UserDataSetOrm.class);
         System.out.println(loadUser.toString());
 
         /*hibernate*/
-        DBService dbService = new DBServiceHibernateImpl();
+        Configuration configuration = new Configuration();
+
+        configuration.addAnnotatedClass(UserDataSetHibernate.class);
+        configuration.addAnnotatedClass(AddressDataSetHibernate.class);
+        configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
+
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:h2:~/test");
+        configuration.setProperty("hibernate.connection.username", "sa");
+        configuration.setProperty("hibernate.connection.password", "sa");
+
+        configuration.setProperty("hibernate.show_sql", "false");
+        configuration.setProperty("hibernate.generate_statistics", "false");
+        configuration.setProperty("hibernate.use_sql_comments", "false");
+
+
+        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+        configuration.setProperty("hibernate.connection.useSSL", "false");
+        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
+
+        DBService dbService = new DBServiceHibernateImpl(configuration);
         List<PhoneDataSetHibernate> phones = new ArrayList<>();
         phones.add(new PhoneDataSetHibernate("123"));
         phones.add(new PhoneDataSetHibernate("456"));

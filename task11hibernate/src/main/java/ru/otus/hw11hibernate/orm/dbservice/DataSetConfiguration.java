@@ -1,7 +1,6 @@
 package ru.otus.hw11hibernate.orm.dbservice;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -16,7 +15,7 @@ public class DataSetConfiguration {
     private String sqlInsert;
     private List<Field> fieldList;
 
-    public DataSetConfiguration(Class classInfo, String tableName) {
+    public DataSetConfiguration(Class classInfo, String tableName, String sqlCreateTableColumns) {
         this.classInfo = classInfo;
         this.tableName = tableName;
         this.fieldList = new ArrayList<>();
@@ -26,7 +25,7 @@ public class DataSetConfiguration {
         }
 
         fillSqlDropTable();
-        fillSqlCreateTable();
+        fillSqlCreateTable(sqlCreateTableColumns);
         fillSqlSelect();
         fillSqlInsert();
     }
@@ -63,8 +62,8 @@ public class DataSetConfiguration {
         this.sqlDropTable = "drop table if exists " + this.tableName;
     }
 
-    private void fillSqlCreateTable() {
-        this.sqlCreateTable = "create table " + this.tableName + " (id bigint auto_increment, name varchar(255), age int, primary key (id))";
+    private void fillSqlCreateTable(String sqlCreateTableColumns) {
+        this.sqlCreateTable = "create table " + this.tableName + " " + sqlCreateTableColumns;
     }
 
     private void fillSqlInsert() {

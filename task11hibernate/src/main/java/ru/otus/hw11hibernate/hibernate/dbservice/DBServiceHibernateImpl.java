@@ -15,31 +15,10 @@ import java.util.List;
 public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
-
-    public DBServiceHibernateImpl() {
-        Configuration configuration = new Configuration();
-
-        configuration.addAnnotatedClass(UserDataSetHibernate.class);
-        configuration.addAnnotatedClass(AddressDataSetHibernate.class);
-        configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
-
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:h2:~/test");
-        configuration.setProperty("hibernate.connection.username", "sa");
-        configuration.setProperty("hibernate.connection.password", "sa");
-
-        configuration.setProperty("hibernate.show_sql", "false");
-        configuration.setProperty("hibernate.generate_statistics", "false");
-        configuration.setProperty("hibernate.use_sql_comments", "false");
-
-
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
-        configuration.setProperty("hibernate.connection.useSSL", "false");
-        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-
-        sessionFactory = createSessionFactory(configuration);
-
+    private final Configuration configuration;
+    public DBServiceHibernateImpl(Configuration configuration) {
+        this.configuration = configuration;
+        sessionFactory = createSessionFactory(this.configuration);
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
