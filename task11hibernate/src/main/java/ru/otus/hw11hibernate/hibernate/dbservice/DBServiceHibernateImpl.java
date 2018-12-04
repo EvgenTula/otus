@@ -1,12 +1,14 @@
-package ru.otus.hw11hibernate;
+package ru.otus.hw11hibernate.hibernate.dbservice;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import ru.otus.hw11hibernate.dao.UsersDAO;
-import ru.otus.hw11hibernate.datasets.*;
+import ru.otus.hw11hibernate.DBService;
+import ru.otus.hw11hibernate.DataSet;
+import ru.otus.hw11hibernate.hibernate.dao.UsersDAO;
+import ru.otus.hw11hibernate.hibernate.datasets.*;
 
 import java.util.List;
 
@@ -17,9 +19,9 @@ public class DBServiceHibernateImpl implements DBService {
     public DBServiceHibernateImpl() {
         Configuration configuration = new Configuration();
 
-        configuration.addAnnotatedClass(UserDataSet.class);
-        configuration.addAnnotatedClass(AddressDataSet.class);
-        configuration.addAnnotatedClass(PhoneDataSet.class);
+        configuration.addAnnotatedClass(UserDataSetHibernate.class);
+        configuration.addAnnotatedClass(AddressDataSetHibernate.class);
+        configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
@@ -63,28 +65,28 @@ public class DBServiceHibernateImpl implements DBService {
         }
     }
 
-    public void userSave (UserDataSet obj) {
+    public void userSave (UserDataSetHibernate obj) {
         try (Session session = sessionFactory.openSession()) {
             UsersDAO dao = new UsersDAO(session);
             dao.save(obj);
         }
     }
 
-    public UserDataSet userLoad(long id) {
+    public UserDataSetHibernate userLoad(long id) {
         try (Session session = sessionFactory.openSession()) {
             UsersDAO dao = new UsersDAO(session);
             return dao.load(id);
         }
     }
 
-    public UserDataSet userGetByName(String name) {
+    public UserDataSetHibernate userGetByName(String name) {
         try (Session session = sessionFactory.openSession()) {
             UsersDAO dao = new UsersDAO(session);
             return dao.readByName(name);
         }
     }
 
-    public List<UserDataSet> userGetAllList() {
+    public List<UserDataSetHibernate> userGetAllList() {
         try (Session session = sessionFactory.openSession()) {
             UsersDAO dao = new UsersDAO(session);
             return dao.readAll();

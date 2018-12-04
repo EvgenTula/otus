@@ -1,23 +1,25 @@
-package ru.otus.hw11hibernate.datasets;
+package ru.otus.hw11hibernate.hibernate.datasets;
+
+import ru.otus.hw11hibernate.DataSet;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name =  "phone")
-public class PhoneDataSet extends DataSet {
+public class PhoneDataSetHibernate extends DataSet {
     @Column(name = "number")
     private String number;
 
     @ManyToOne
-    private UserDataSet userDataSet;
+    private UserDataSetHibernate userDataSet;
 
-    public PhoneDataSet() { }
+    public PhoneDataSetHibernate() { }
 
-    public PhoneDataSet(String number) {
+    public PhoneDataSetHibernate(String number) {
         this.number = number;
     }
 
-    public void setUserDataSet(UserDataSet userDataSet) {
+    public void setUserDataSet(UserDataSetHibernate userDataSet) {
         this.userDataSet = userDataSet;
     }
 

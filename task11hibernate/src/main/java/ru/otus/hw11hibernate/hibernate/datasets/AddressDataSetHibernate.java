@@ -1,17 +1,19 @@
-package ru.otus.hw11hibernate.datasets;
+package ru.otus.hw11hibernate.hibernate.datasets;
+
+import ru.otus.hw11hibernate.DataSet;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "address")
-public class AddressDataSet extends DataSet {
+public class AddressDataSetHibernate extends DataSet {
 
     @Column(name = "street")
     private String street;
 
-    public AddressDataSet() { }
+    public AddressDataSetHibernate() { }
 
-    public AddressDataSet(String street) {
+    public AddressDataSetHibernate(String street) {
         this.setStreet(street);
     }
 
