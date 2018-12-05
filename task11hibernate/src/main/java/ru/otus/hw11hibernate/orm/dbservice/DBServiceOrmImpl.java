@@ -3,6 +3,7 @@ package ru.otus.hw11hibernate.orm.dbservice;
 import ru.otus.hw11hibernate.*;
 import ru.otus.hw11hibernate.orm.config.ConfigurationOrm;
 import ru.otus.hw11hibernate.orm.config.DataSetConfiguration;
+import ru.otus.hw11hibernate.orm.dataset.UserDataSetOrm;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +18,7 @@ public class DBServiceOrmImpl implements DBService {
     private final Executor executor;
     private HashMap<Class, DataSetConfiguration> classListConfig;
 
-    public DBServiceOrmImpl(ConfigurationOrm config)
-    {
+    public DBServiceOrmImpl(ConfigurationOrm config) {
         this.connection = config.getConnection();
         this.executor = new Executor(this.connection);
         this.classListConfig = new HashMap<>();
@@ -30,6 +30,10 @@ public class DBServiceOrmImpl implements DBService {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void saveUserDataSet(UserDataSetOrm user) {
+        this.executor.save(user);
     }
 
     @Override
@@ -82,6 +86,7 @@ public class DBServiceOrmImpl implements DBService {
         {
             for (Field declareField : classListConfig.get(classInfo).getFieldList()){
                 try {
+                    //field.getType().getSuperclass().isAssignableFrom(DataSet.class)
                     declareField.setAccessible(true);
                     result.put(declareField.getName(),declareField.get(obj));
                 } catch (IllegalAccessException e) {

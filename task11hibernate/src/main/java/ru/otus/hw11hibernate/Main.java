@@ -19,11 +19,14 @@ public class Main {
     public static void main(String[] args) {
 
         /*orm*/
+
         DBService dbServiceOrm = new DBServiceOrmImpl(new ConfigurationOrm());
 
         List<UserDataSetOrm> userListOrm = new ArrayList<>();
 
         List<PhoneDataSetOrm> phonesOrm = new ArrayList<>();
+
+        /*
         phonesOrm.add(new PhoneDataSetOrm("111"));
         phonesOrm.add(new PhoneDataSetOrm("222"));
         phonesOrm.add(new PhoneDataSetOrm("333"));
@@ -47,6 +50,14 @@ public class Main {
 
         UserDataSetOrm loadUser = dbServiceOrm.load(1, UserDataSetOrm.class);
         System.out.println(loadUser.toString());
+        */
+
+        System.out.println("test====");
+        phonesOrm.clear();
+        phonesOrm.add(new PhoneDataSetOrm("000"));
+        UserDataSetOrm testUser = new UserDataSetOrm("user test", 30, new AddressDataSetOrm("test user test"), phonesOrm);
+        ((DBServiceOrmImpl) dbServiceOrm).saveUserDataSet(testUser);
+        System.out.println("test====");
 
         /*hibernate*/
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());

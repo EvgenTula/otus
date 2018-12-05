@@ -2,6 +2,7 @@ package ru.otus.hw11hibernate.orm.dbservice;
 
 import ru.otus.hw11hibernate.DataSet;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 public class Executor {
 
     private final Connection connection;
-
 
     public Executor(Connection connection){
         this.connection = connection;
@@ -40,8 +40,18 @@ public class Executor {
         );
     }
 */
-    public <T extends DataSet> void save(T user) {
-
+    public <T extends DataSet> void save(T obj) {
+        for (Field declareField : obj.getClass().getDeclaredFields()){
+            try {
+                declareField.setAccessible(true);
+                if (DataSet.class.isAssignableFrom(declareField.getType())) {
+                //if (declareField.getType().getSuperclass().isAssignableFrom(DataSet.class)) {
+                    save((DataSet)declareField.get(obj));
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void save(String sql, ExecuteHandler executeHandler) throws SQLException {

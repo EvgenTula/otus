@@ -15,7 +15,7 @@ public class UserDataSetHibernate extends DataSet {
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "address_id")
     private AddressDataSetHibernate address;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userDataSet")

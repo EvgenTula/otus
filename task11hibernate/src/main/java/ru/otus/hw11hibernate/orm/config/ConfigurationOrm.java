@@ -33,7 +33,7 @@ public class ConfigurationOrm {
                 new DataSetConfiguration(
                         UserDataSetOrm.class,
                         "user",
-                        "(id bigint auto_increment, name varchar(255), age int, primary key (id))"));
+                        "(id bigint auto_increment, name varchar(255), age int, address_id bigint, foreign key (address_id) references address(id), primary key (id))"));
         configurationList.add(
                 new DataSetConfiguration(
                         PhoneDataSetOrm.class, "phone","(id bigint auto_increment, number varchar(255), age int, " +
