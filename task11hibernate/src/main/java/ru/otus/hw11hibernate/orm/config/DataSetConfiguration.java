@@ -2,6 +2,7 @@ package ru.otus.hw11hibernate.orm.config;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -21,7 +22,9 @@ public class DataSetConfiguration {
         this.fieldList = new ArrayList<>();
 
         for (Field field: classInfo.getDeclaredFields()) {
-            fieldList.add(field);
+            if (!Collection.class.isAssignableFrom(field.getType())) {
+                fieldList.add(field);
+            }
         }
 
         fillSqlDropTable();

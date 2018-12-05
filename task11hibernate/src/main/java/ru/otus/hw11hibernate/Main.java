@@ -53,7 +53,6 @@ public class Main {
         */
 
         System.out.println("test====");
-        dbServiceOrm.save(new AddressDataSetOrm("ping"));
         phonesOrm.clear();
         phonesOrm.add(new PhoneDataSetOrm("000"));
         UserDataSetOrm testUser = new UserDataSetOrm("user test", 30, new AddressDataSetOrm("test user test"), phonesOrm);

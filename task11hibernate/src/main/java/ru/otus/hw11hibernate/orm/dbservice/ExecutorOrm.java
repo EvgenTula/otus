@@ -4,10 +4,7 @@ import ru.otus.hw11hibernate.DataSet;
 
 import javax.management.ObjectName;
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,17 +32,20 @@ public class ExecutorOrm {
                     declareFieldValue = save((DataSet) declareField.get(obj));
                 }
 
-                fieldsValue.put(declareField.getName(), declareFieldValue);
-                /*
+
+
                 if (Collection.class.isAssignableFrom(declareField.getType())) {
+                    continue;
+                    /*
                     for (Object arrayItem : (Collection) declareField.get(obj)) {
                         if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
                         {
                             save((DataSet)arrayItem);
                         }
-                    }
+                    }*/
+
                 }
-                */
+                fieldsValue.put(declareField.getName(), declareFieldValue);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -69,15 +69,14 @@ public class ExecutorOrm {
 
     public long save(String sql, ExecuteHandler executeHandler) throws SQLException {
         long result = -1L;
-        try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql)) {
+        try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             boolean autoCommit = preparedStatement.getConnection().getAutoCommit();
             preparedStatement.getConnection().setAutoCommit(false);
             executeHandler.accept(preparedStatement);
-            System.out.println("upd : " + preparedStatement.executeUpdate());
+            preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()){
                 result = resultSet.getLong("id");
-                System.out.println("new id :" + result);
             }
             preparedStatement.getConnection().setAutoCommit(autoCommit);
             preparedStatement.getConnection().commit();
