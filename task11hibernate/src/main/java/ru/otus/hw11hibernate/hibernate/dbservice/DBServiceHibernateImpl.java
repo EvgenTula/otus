@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import ru.otus.hw11hibernate.DBService;
 import ru.otus.hw11hibernate.DataSet;
+import ru.otus.hw11hibernate.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw11hibernate.hibernate.dao.UsersDAO;
 import ru.otus.hw11hibernate.hibernate.datasets.*;
 
@@ -16,8 +17,8 @@ public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
-    public DBServiceHibernateImpl(Configuration configuration) {
-        this.configuration = configuration;
+    public DBServiceHibernateImpl(ConfigurationHibernate cofig) {
+        this.configuration = cofig.getConfiguration();
         sessionFactory = createSessionFactory(this.configuration);
     }
 
@@ -26,10 +27,6 @@ public class DBServiceHibernateImpl implements DBService {
         builder.applySettings(configuration.getProperties());
         ServiceRegistry serviceRegistry = builder.build();
         return configuration.buildSessionFactory(serviceRegistry);
-    }
-
-    public void addClass(Class classInfo, String tableName) {
-
     }
 
     public <T extends DataSet> T load(long id, Class<T> clazz) {

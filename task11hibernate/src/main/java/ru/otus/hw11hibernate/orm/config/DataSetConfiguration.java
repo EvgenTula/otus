@@ -1,4 +1,4 @@
-package ru.otus.hw11hibernate.orm.dbservice;
+package ru.otus.hw11hibernate.orm.config;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

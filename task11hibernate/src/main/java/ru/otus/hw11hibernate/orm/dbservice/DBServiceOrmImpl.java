@@ -1,9 +1,8 @@
 package ru.otus.hw11hibernate.orm.dbservice;
 
 import ru.otus.hw11hibernate.*;
-import ru.otus.hw11hibernate.orm.dataset.AddressDataSetOrm;
-import ru.otus.hw11hibernate.orm.dataset.PhoneDataSetOrm;
-import ru.otus.hw11hibernate.orm.dataset.UserDataSetOrm;
+import ru.otus.hw11hibernate.orm.config.ConfigurationOrm;
+import ru.otus.hw11hibernate.orm.config.DataSetConfiguration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,16 +15,17 @@ public class DBServiceOrmImpl implements DBService {
 
     private final Connection connection;
     private final Executor executor;
-    private HashMap<Class,DataSetConfiguration> classListConfig;
+    private HashMap<Class, DataSetConfiguration> classListConfig;
 
-    public DBServiceOrmImpl(List<DataSetConfiguration> configurationList) {
-        this.connection = ConnectionHelper.getConnection();
+    public DBServiceOrmImpl(ConfigurationOrm config)
+    {
+        this.connection = config.getConnection();
         this.executor = new Executor(this.connection);
         this.classListConfig = new HashMap<>();
-        for (DataSetConfiguration config : configurationList) {
-            this.classListConfig.put(config.classInfo, config);
+        for (DataSetConfiguration configDataSet : config.getConfigurationList()) {
+            this.classListConfig.put(configDataSet.classInfo, configDataSet);
             try {
-                prepareTables(config.classInfo);
+                prepareTables(configDataSet.classInfo);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -1,16 +1,14 @@
 package ru.otus.hw11hibernate;
 
-import org.hibernate.cfg.Configuration;
+import ru.otus.hw11hibernate.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw11hibernate.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw11hibernate.hibernate.dbservice.DBServiceHibernateImpl;
 
-import ru.otus.hw11hibernate.orm.dataset.AddressDataSetOrm;
-import ru.otus.hw11hibernate.orm.dataset.PhoneDataSetOrm;
+import ru.otus.hw11hibernate.orm.config.ConfigurationOrm;
 import ru.otus.hw11hibernate.orm.dataset.UserDataSetOrm;
 import ru.otus.hw11hibernate.orm.dbservice.DBServiceOrmImpl;
-import ru.otus.hw11hibernate.orm.dbservice.DataSetConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +17,7 @@ public class Main {
     public static void main(String[] args) {
 
         /*orm*/
-        List<DataSetConfiguration> configurationList = new ArrayList<>();
-        configurationList.add(
-                new DataSetConfiguration(
-                        UserDataSetOrm.class,
-                        "user",
-                        "(id bigint auto_increment, name varchar(255), age int, primary key (id))"));
-        configurationList.add(
-                new DataSetConfiguration(
-                        PhoneDataSetOrm.class, "phone","(id bigint auto_increment, number varchar(255), age int, " +
-                        "userdataset_id bigint, foreign key (userdataset_id) references user(id), primary key (id))"));
-        configurationList.add(
-                new DataSetConfiguration(
-                        AddressDataSetOrm.class, "address","(id bigint auto_increment, street varchar(255), primary key (id))"));
-        DBService dbServiceOrm = new DBServiceOrmImpl(configurationList);
+        DBService dbServiceOrm = new DBServiceOrmImpl(new ConfigurationOrm());
 
         /*
         List<PhoneDataSetOrm> phonesOrm = new ArrayList<>();
@@ -58,36 +43,26 @@ public class Main {
         System.out.println(loadUser.toString());
 
         /*hibernate*/
-        Configuration configuration = new Configuration();
-
-        configuration.addAnnotatedClass(UserDataSetHibernate.class);
-        configuration.addAnnotatedClass(AddressDataSetHibernate.class);
-        configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
-
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:h2:~/test");
-        configuration.setProperty("hibernate.connection.username", "sa");
-        configuration.setProperty("hibernate.connection.password", "sa");
-
-        configuration.setProperty("hibernate.show_sql", "false");
-        configuration.setProperty("hibernate.generate_statistics", "false");
-        configuration.setProperty("hibernate.use_sql_comments", "false");
-
-
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
-        configuration.setProperty("hibernate.connection.useSSL", "false");
-        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-
-        DBService dbService = new DBServiceHibernateImpl(configuration);
+        DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
         List<PhoneDataSetHibernate> phones = new ArrayList<>();
-        phones.add(new PhoneDataSetHibernate("123"));
-        phones.add(new PhoneDataSetHibernate("456"));
-        phones.add(new PhoneDataSetHibernate("789"));
+        phones.add(new PhoneDataSetHibernate("111"));
+        phones.add(new PhoneDataSetHibernate("222"));
+        phones.add(new PhoneDataSetHibernate("333"));
         dbService.save(new UserDataSetHibernate(1,"test1",1,new AddressDataSetHibernate("test1 address"),phones));
+
+
+        phones.clear();
+        phones.add(new PhoneDataSetHibernate("444"));
+        phones.add(new PhoneDataSetHibernate("555"));
+        phones.add(new PhoneDataSetHibernate("666"));
         dbService.save(new UserDataSetHibernate(2,"test2",1,new AddressDataSetHibernate("test2 address"),phones));
+
+        phones.clear();
+        phones.add(new PhoneDataSetHibernate("777"));
+        phones.add(new PhoneDataSetHibernate("888"));
+        phones.add(new PhoneDataSetHibernate("999"));
         dbService.save(new UserDataSetHibernate(3,"test3",1,new AddressDataSetHibernate("test3 address"),phones));
-        dbService.save(new UserDataSetHibernate(4,"test4",1,new AddressDataSetHibernate("test4 address"),phones));
+
         System.out.println(dbService.load(1, UserDataSetHibernate.class).toString());
         System.out.println(dbService.load(1, PhoneDataSetHibernate.class).toString());
         System.out.println(dbService.load(1, AddressDataSetHibernate.class).toString());
