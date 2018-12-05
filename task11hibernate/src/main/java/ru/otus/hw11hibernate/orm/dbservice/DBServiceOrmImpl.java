@@ -15,12 +15,13 @@ import java.util.*;
 public class DBServiceOrmImpl implements DBService {
 
     private final Connection connection;
-    private final Executor executor;
-    private HashMap<Class, DataSetConfiguration> classListConfig;
+    private final ExecutorOrm executor;
+    public HashMap<Class, DataSetConfiguration> classListConfig;
 
     public DBServiceOrmImpl(ConfigurationOrm config) {
         this.connection = config.getConnection();
-        this.executor = new Executor(this.connection);
+        this.executor = new ExecutorOrm(this.connection);
+        this.executor.dbServiceOrm = this;
         this.classListConfig = new HashMap<>();
         for (DataSetConfiguration configDataSet : config.getConfigurationList()) {
             this.classListConfig.put(configDataSet.classInfo, configDataSet);
@@ -79,7 +80,7 @@ public class DBServiceOrmImpl implements DBService {
         return null;
     }
 
-    private <T extends DataSet> HashMap<String, Object> getFieldsValue(T obj) {
+    public <T extends DataSet> HashMap<String, Object> getFieldsValue(T obj) {
         HashMap<String, Object> result = new HashMap<>();
         Class classInfo = obj.getClass();
         if (classListConfig.get(classInfo) != null)

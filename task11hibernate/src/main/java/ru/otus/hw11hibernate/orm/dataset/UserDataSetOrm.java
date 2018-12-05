@@ -8,7 +8,7 @@ public class UserDataSetOrm extends DataSet {
 
     private String name;
     private int age;
-    private AddressDataSetOrm address;
+    private AddressDataSetOrm address_id;
     private List<PhoneDataSetOrm> phoneList;
 
 
@@ -18,7 +18,7 @@ public class UserDataSetOrm extends DataSet {
         this.setId(-1);
         this.setName(name);
         this.setAge(age);
-        this.setAddress(address);
+        this.setAddress_id(address);
         this.phoneList = phones;
         for (PhoneDataSetOrm phone: phones) {
             phone.setUserDataSet(this);
@@ -41,12 +41,12 @@ public class UserDataSetOrm extends DataSet {
         return name;
     }
 
-    public void setAddress(AddressDataSetOrm address) {
-        this.address = address;
+    public void setAddress_id(AddressDataSetOrm address_id) {
+        this.address_id = address_id;
     }
 
-    public AddressDataSetOrm getAddress() {
-        return address;
+    public AddressDataSetOrm getAddress_id() {
+        return address_id;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UserDataSetOrm extends DataSet {
         return this.getClass().getName() + " [\nid :\t\t" + this.getId() +
                 "\nname :\t\t" + this.getName() +
                 "\nage :\t\t" + this.getAge() +
-                "\naddress : " + this.getAddress() +
+                "\naddress_id : " + this.getAddress_id() +
                 "\nphone :\n"  + printPhoneList() + " ]";
     }
 

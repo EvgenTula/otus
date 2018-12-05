@@ -53,6 +53,7 @@ public class Main {
         */
 
         System.out.println("test====");
+        dbServiceOrm.save(new AddressDataSetOrm("ping"));
         phonesOrm.clear();
         phonesOrm.add(new PhoneDataSetOrm("000"));
         UserDataSetOrm testUser = new UserDataSetOrm("user test", 30, new AddressDataSetOrm("test user test"), phonesOrm);
@@ -60,6 +61,7 @@ public class Main {
         System.out.println("test====");
 
         /*hibernate*/
+        /*
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
         List<PhoneDataSetHibernate> phones = new ArrayList<>();
         phones.add(new PhoneDataSetHibernate("111"));
@@ -85,5 +87,6 @@ public class Main {
         }
 
         System.out.println(((DBServiceHibernateImpl) dbService).userGetByName("test1").toString());
+        */
     }
 }
