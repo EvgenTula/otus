@@ -17,6 +17,6 @@ public class AddressDataSetOrm extends DataSet {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " { " + this.street + " }";
+        return this.getClass().getName() + "{ " + this.street + " }";
     }
 }

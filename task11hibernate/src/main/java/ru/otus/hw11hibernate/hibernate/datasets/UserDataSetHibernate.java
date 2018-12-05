@@ -23,8 +23,8 @@ public class UserDataSetHibernate extends DataSet {
 
     public UserDataSetHibernate() { }
 
-    public UserDataSetHibernate(long id, String name, int age, AddressDataSetHibernate address, List<PhoneDataSetHibernate> phones) {
-        this.setId(id);
+    public UserDataSetHibernate(String name, int age, AddressDataSetHibernate address, List<PhoneDataSetHibernate> phones) {
+        this.setId(-1);
         this.setName(name);
         this.setAge(age);
         this.setAddress(address);
@@ -65,17 +65,17 @@ public class UserDataSetHibernate extends DataSet {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [\nid : " + this.getId() +
-                "\nname : " + this.getName() +
-                "\nage : " + this.getAge() +
-                "\naddress : " + this.getAddress() +
-                "\nphone :\n"  + printPhoneList() + "]";
+        return this.getClass().getName() + " [\nid :\t\t" + this.getId() +
+                "\nname :\t\t" + this.getName() +
+                "\nage :\t\t" + this.getAge() +
+                "\naddress :\t" + this.getAddress().toString() +
+                "\nphone :\t\t"  + printPhoneList() + "]";
     }
 
     private String printPhoneList() {
         StringBuilder stringBuilder = new StringBuilder();
         for (PhoneDataSetHibernate phone: this.phoneList) {
-            stringBuilder.append(phone.toString()+"\n");
+            stringBuilder.append(phone.toString()+" ");
         }
         return stringBuilder.toString();
     }

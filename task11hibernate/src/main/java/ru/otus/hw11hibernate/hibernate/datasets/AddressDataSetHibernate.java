@@ -23,6 +23,6 @@ public class AddressDataSetHibernate extends DataSet {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " { " + this.street + " }";
+        return "{ " + this.street + " }";
     }
 }

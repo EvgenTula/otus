@@ -33,11 +33,11 @@ public class DBServiceOrmImpl implements DBService {
     }
 
     @Override
-    public <T extends DataSet> void save(T user) {
+    public <T extends DataSet> void save(T obj) {
         try {
-            this.executor.save(classListConfig.get(user.getClass()).getSqlInsert(),handler -> {
+            this.executor.save(classListConfig.get(obj.getClass()).getSqlInsert(), handler -> {
                 int order = 1;
-                for (Map.Entry<String, Object> item : getFieldsValue(user).entrySet()) {
+                for (Map.Entry<String, Object> item : getFieldsValue(obj).entrySet()) {
                     handler.setObject(order, item.getValue());
                     order++;
                 }
@@ -94,6 +94,7 @@ public class DBServiceOrmImpl implements DBService {
 
     private void prepareTables(Class clazz) throws SQLException {
         try(Statement st = connection.createStatement()) {
+
             st.execute(classListConfig.get(clazz).getSqlDropTable());
             st.execute(classListConfig.get(clazz).getSqlCreateTable());
         }

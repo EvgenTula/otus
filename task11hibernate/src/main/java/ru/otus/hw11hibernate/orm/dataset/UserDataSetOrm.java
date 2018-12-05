@@ -8,23 +8,21 @@ public class UserDataSetOrm extends DataSet {
 
     private String name;
     private int age;
-    //private AddressDataSetOrm address;
-    //private List<PhoneDataSetOrm> phoneList;
+    private AddressDataSetOrm address;
+    private List<PhoneDataSetOrm> phoneList;
 
 
     public UserDataSetOrm() {}
 
-    public UserDataSetOrm(long id, String name, int age/*, AddressDataSetOrm address, List<PhoneDataSetOrm> phones*/) {
-        this.setId(id);
+    public UserDataSetOrm(String name, int age, AddressDataSetOrm address, List<PhoneDataSetOrm> phones) {
+        this.setId(-1);
         this.setName(name);
         this.setAge(age);
-        /*
         this.setAddress(address);
         this.phoneList = phones;
         for (PhoneDataSetOrm phone: phones) {
             phone.setUserDataSet(this);
         }
-        */
     }
 
     public void setAge(int age) {
@@ -42,7 +40,7 @@ public class UserDataSetOrm extends DataSet {
     public String getName() {
         return name;
     }
-/*
+
     public void setAddress(AddressDataSetOrm address) {
         this.address = address;
     }
@@ -50,21 +48,21 @@ public class UserDataSetOrm extends DataSet {
     public AddressDataSetOrm getAddress() {
         return address;
     }
-*/
+
     @Override
     public String toString() {
-        return this.getClass().getName() + " [\nid : " + this.getId() +
-                "\nname : " + this.getName() +
-                "\nage : " + this.getAge() /*+
+        return this.getClass().getName() + " [\nid :\t\t" + this.getId() +
+                "\nname :\t\t" + this.getName() +
+                "\nage :\t\t" + this.getAge() +
                 "\naddress : " + this.getAddress() +
-                "\nphone :\n"  + printPhoneList()*/ + "]";
+                "\nphone :\n"  + printPhoneList() + " ]";
     }
-/*
+
     private String printPhoneList() {
         StringBuilder stringBuilder = new StringBuilder();
         for (PhoneDataSetOrm phone: this.phoneList) {
             stringBuilder.append(phone.toString()+"\n");
         }
         return stringBuilder.toString();
-    }*/
+    }
 }

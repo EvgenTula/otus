@@ -2,6 +2,7 @@ package ru.otus.hw11hibernate.hibernate.dbservice;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -37,21 +38,9 @@ public class DBServiceHibernateImpl implements DBService {
 
     public <T extends DataSet> void save(T obj) {
         try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.save(obj);
-        }
-    }
-
-    public void userSave (UserDataSetHibernate obj) {
-        try (Session session = sessionFactory.openSession()) {
-            UsersDAO dao = new UsersDAO(session);
-            dao.save(obj);
-        }
-    }
-
-    public UserDataSetHibernate userLoad(long id) {
-        try (Session session = sessionFactory.openSession()) {
-            UsersDAO dao = new UsersDAO(session);
-            return dao.load(id);
+            transaction.commit();
         }
     }
 
