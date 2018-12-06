@@ -22,8 +22,9 @@ public class UserDataSetOrm extends DataSet {
         this.setName(name);
         this.setAge(age);
         this.setAddress_id(address);
-        this.phoneList = phones;
+        this.phoneList = new ArrayList<>();
         for (PhoneDataSetOrm phone: phones) {
+            phoneList.add(phone);
             phone.setUserDataSet(this);
         }
     }
