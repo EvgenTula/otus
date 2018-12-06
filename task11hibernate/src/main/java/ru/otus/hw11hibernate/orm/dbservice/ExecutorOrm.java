@@ -2,8 +2,8 @@ package ru.otus.hw11hibernate.orm.dbservice;
 
 import ru.otus.hw11hibernate.DataSet;
 
-import javax.management.ObjectName;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.*;
 
@@ -83,7 +83,7 @@ public class ExecutorOrm {
         return key;
     }
 
-    public long save(String sql, ExecuteHandler executeHandler) throws SQLException {
+    private long save(String sql, ExecuteHandler executeHandler) throws SQLException {
         long result = -1L;
         try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             boolean autoCommit = preparedStatement.getConnection().getAutoCommit();
@@ -98,6 +98,53 @@ public class ExecutorOrm {
             preparedStatement.getConnection().commit();
         }
         return result;
+    }
+
+    public <T extends DataSet> T loadUser(long id, Class<T> clazz) {
+        try {
+            T result = clazz.getDeclaredConstructor().newInstance();
+
+            load(id, dbServiceOrm.classListConfig.get(clazz).getSqlSelect(), resultSet -> {
+            resultSet.next();
+            for (Field field : dbServiceOrm.classListConfig.get(clazz).getFieldList()){
+                field.setAccessible(true);
+                if (Collection.class.isAssignableFrom(field.getType())) {
+                    /*
+                    HashMap<String, Object> arrayItemFieldValue = new HashMap<>();
+                    Class classInfo = null;
+                    for (Object arrayItem : (Collection) field.get(obj)) {
+                        if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
+                        {
+                            classInfo = arrayItem.getClass();
+                            arrayItemFieldValue = dbServiceOrm.getFieldsValue((DataSet)arrayItem);
+                        }
+                    }
+                    if (arrayItemFieldValue.size() > 0) {
+                        afterInsertObject.put(classInfo, arrayItemFieldValue);
+                    }*/
+                } else {
+                    Object declareFieldValue = resultSet.getObject(field.getName());
+                    if (DataSet.class.isAssignableFrom(field.getType())) {
+                        declareFieldValue = (Object) loadUser((long)declareFieldValue, (Class<T>) field.getType());
+                    }
+                    field.set(result,declareFieldValue);
+                }
+            }});
+            return result;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void load(long id, String sql, ResultHandler resultHandler) throws SQLException, NoSuchFieldException, IllegalAccessException {

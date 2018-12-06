@@ -2,6 +2,7 @@ package ru.otus.hw11hibernate.orm.dataset;
 
 import ru.otus.hw11hibernate.DataSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDataSetOrm extends DataSet {
@@ -12,7 +13,9 @@ public class UserDataSetOrm extends DataSet {
     private List<PhoneDataSetOrm> phoneList;
 
 
-    public UserDataSetOrm() {}
+    public UserDataSetOrm() {
+        this.phoneList = new ArrayList<>();
+    }
 
     public UserDataSetOrm(String name, int age, AddressDataSetOrm address, List<PhoneDataSetOrm> phones) {
         this.setId(-1);

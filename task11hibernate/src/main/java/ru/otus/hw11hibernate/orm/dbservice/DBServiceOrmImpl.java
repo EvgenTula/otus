@@ -3,7 +3,6 @@ package ru.otus.hw11hibernate.orm.dbservice;
 import ru.otus.hw11hibernate.*;
 import ru.otus.hw11hibernate.orm.config.ConfigurationOrm;
 import ru.otus.hw11hibernate.orm.config.DataSetConfiguration;
-import ru.otus.hw11hibernate.orm.dataset.UserDataSetOrm;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,24 +32,15 @@ public class DBServiceOrmImpl implements DBService {
         }
     }
 
-    public void saveUserDataSet(UserDataSetOrm user) {
-        this.executor.save(user);
-    }
-
     @Override
     public <T extends DataSet> void save(T obj) {
-        try {
-            this.executor.save(classListConfig.get(obj.getClass()).getSqlInsert(), handler -> {
-                int order = 1;
-                for (Map.Entry<String, Object> item : getFieldsValue(obj).entrySet()) {
-                    handler.setObject(order, item.getValue());
-                    order++;
-                }
-            });
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.executor.save(obj);
     }
+
+    public <T extends DataSet> T loadUser(long id, Class<T> clazz) {
+        return this.executor.loadUser(id,clazz);
+    }
+
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
@@ -87,7 +77,6 @@ public class DBServiceOrmImpl implements DBService {
         {
             for (Field declareField : classListConfig.get(classInfo).getFieldList()){
                 try {
-                    //field.getType().getSuperclass().isAssignableFrom(DataSet.class)
                     declareField.setAccessible(true);
                     result.put(declareField.getName(),declareField.get(obj));
                 } catch (IllegalAccessException e) {

@@ -56,7 +56,9 @@ public class Main {
         phonesOrm.clear();
         phonesOrm.add(new PhoneDataSetOrm("000"));
         UserDataSetOrm testUser = new UserDataSetOrm("user test", 30, new AddressDataSetOrm("test user test"), phonesOrm);
-        ((DBServiceOrmImpl) dbServiceOrm).saveUserDataSet(testUser);
+        dbServiceOrm.save(testUser);
+        UserDataSetOrm obj = ((DBServiceOrmImpl) dbServiceOrm).loadUser(1,UserDataSetOrm.class);
+        System.out.println(obj.toString());
         System.out.println("test====");
 
         /*hibernate*/
