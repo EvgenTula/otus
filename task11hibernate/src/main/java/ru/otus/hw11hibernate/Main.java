@@ -26,7 +26,7 @@ public class Main {
 
         List<PhoneDataSetOrm> phonesOrm = new ArrayList<>();
 
-        /*
+
         phonesOrm.add(new PhoneDataSetOrm("111"));
         phonesOrm.add(new PhoneDataSetOrm("222"));
         phonesOrm.add(new PhoneDataSetOrm("333"));
@@ -48,9 +48,9 @@ public class Main {
             dbServiceOrm.save(item);
         }
 
-        UserDataSetOrm loadUser = dbServiceOrm.load(1, UserDataSetOrm.class);
-        System.out.println(loadUser.toString());
-        */
+        UserDataSetOrm load = dbServiceOrm.load(1, UserDataSetOrm.class);
+        System.out.println(load.toString());
+        /*
 
         System.out.println("test====");
         phonesOrm.clear();
@@ -60,7 +60,7 @@ public class Main {
         UserDataSetOrm obj = ((DBServiceOrmImpl) dbServiceOrm).loadUser(1,UserDataSetOrm.class);
         System.out.println(obj.toString());
         System.out.println("test====");
-
+*/
         /*hibernate*/
         /*
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());

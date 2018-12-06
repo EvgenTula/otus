@@ -5,7 +5,6 @@ import ru.otus.hw11hibernate.orm.config.ConfigurationOrm;
 import ru.otus.hw11hibernate.orm.config.DataSetConfiguration;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,36 +37,13 @@ public class DBServiceOrmImpl implements DBService {
     }
 
     public <T extends DataSet> T loadUser(long id, Class<T> clazz) {
-        return this.executor.loadUser(id,clazz);
+        return this.executor.load(id,clazz);
     }
 
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
-        try {
-            T result = clazz.getDeclaredConstructor().newInstance();
-            this.executor.load(id, classListConfig.get(clazz).getSqlSelect(), handle -> {
-                handle.next();
-                for (Field declaredField : classListConfig.get(clazz).getFieldList()){
-                    declaredField.setAccessible(true);
-                    declaredField.set(result,handle.getObject(declaredField.getName()));
-                }
-            });
-            return result;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return this.executor.load(id,clazz);
     }
 
     public <T extends DataSet> HashMap<String, Object> getFieldsValue(T obj) {

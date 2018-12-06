@@ -10,6 +10,7 @@ public class DataSetConfiguration {
 
     public Class classInfo;
     private String tableName;
+    private String sqlSelectById;
     private String sqlSelect;
     private String sqlCreateTable;
     private String sqlDropTable;
@@ -31,8 +32,8 @@ public class DataSetConfiguration {
         fillSqlInsert();
     }
 
-    public String getSqlSelect() {
-        return this.sqlSelect;
+    public String getSqlSelectById() {
+        return this.sqlSelectById;
     }
 
     public String getSqlDropTable() {
@@ -51,6 +52,8 @@ public class DataSetConfiguration {
         return this.fieldList;
     }
 
+    public String getSqlSelect() { return this.sqlSelect; }
+
     private void fillSqlSelect() {
         StringJoiner stringJoiner = new StringJoiner(",");
         for (Field field : fieldList) {
@@ -58,7 +61,8 @@ public class DataSetConfiguration {
                 stringJoiner.add(field.getName());
             }
         }
-        this.sqlSelect = new String("select " + stringJoiner.toString() + " from " + this.tableName + " where id = ?");
+        this.sqlSelect = new String("select id, " + stringJoiner.toString() + " from " + this.tableName);
+        this.sqlSelectById = new String("select " + stringJoiner.toString() + " from " + this.tableName + " where id = ?");
     }
 
     private void  fillSqlDropTable() {

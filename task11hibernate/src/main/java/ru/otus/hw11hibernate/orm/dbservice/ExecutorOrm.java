@@ -4,6 +4,7 @@ import ru.otus.hw11hibernate.DataSet;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.sql.*;
 import java.util.*;
 
@@ -29,17 +30,19 @@ public class ExecutorOrm {
 
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     HashMap<String, Object> arrayItemFieldValue = new HashMap<>();
-                    Class classInfo = null;
+                    //Class classInfo = null;
                     for (Object arrayItem : (Collection) field.get(obj)) {
                         if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
                         {
-                            classInfo = arrayItem.getClass();
+                            //classInfo = arrayItem.getClass();
                             arrayItemFieldValue = dbServiceOrm.getFieldsValue((DataSet)arrayItem);
+                            if (arrayItemFieldValue.size() > 0) {
+                                afterInsertObject.put(arrayItem, arrayItemFieldValue);
+                            }
                         }
                     }
-                    if (arrayItemFieldValue.size() > 0) {
-                        afterInsertObject.put(classInfo, arrayItemFieldValue);
-                    }
+
+
                 } else {
                     if (DataSet.class.isAssignableFrom(field.getType())) {
                         declareFieldValue = save((DataSet) field.get(obj));
@@ -63,7 +66,7 @@ public class ExecutorOrm {
 
             for (Map.Entry<Object, HashMap<String, Object>> item : afterInsertObject.entrySet()) {
                 long finalKey = key;
-                save(dbServiceOrm.classListConfig.get(item.getKey()).getSqlInsert(), handler -> {
+                save(dbServiceOrm.classListConfig.get(item.getKey().getClass()).getSqlInsert(), handler -> {
                     int order = 1;
                     for (Map.Entry<String, Object> fieldValue : item.getValue().entrySet()) {
                         if (fieldValue.getValue().getClass().isAssignableFrom(obj.getClass())) {
@@ -100,32 +103,41 @@ public class ExecutorOrm {
         return result;
     }
 
-    public <T extends DataSet> T loadUser(long id, Class<T> clazz) {
+    public <T extends DataSet> T load(long id, Class<T> clazz) {
         try {
             T result = clazz.getDeclaredConstructor().newInstance();
-
-            load(id, dbServiceOrm.classListConfig.get(clazz).getSqlSelect(), resultSet -> {
+            load(id, dbServiceOrm.classListConfig.get(clazz).getSqlSelectById(), resultSet -> {
+            result.setId(id);
             resultSet.next();
             for (Field field : dbServiceOrm.classListConfig.get(clazz).getFieldList()){
                 field.setAccessible(true);
                 if (Collection.class.isAssignableFrom(field.getType())) {
-                    /*
-                    HashMap<String, Object> arrayItemFieldValue = new HashMap<>();
-                    Class classInfo = null;
-                    for (Object arrayItem : (Collection) field.get(obj)) {
-                        if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
-                        {
-                            classInfo = arrayItem.getClass();
-                            arrayItemFieldValue = dbServiceOrm.getFieldsValue((DataSet)arrayItem);
+                    Class fieldClass = (Class) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
+                    for (Field fieldObjectItem : dbServiceOrm.classListConfig.get(fieldClass).getFieldList()) {
+                        if (clazz.isAssignableFrom(fieldObjectItem.getType())) {
+                            List<DataSet> listObject = new ArrayList<>();
+                            load(id, dbServiceOrm.classListConfig.get(fieldClass).getSqlSelect() + " where " + fieldObjectItem.getName() + " = ?", handlerResultSet -> {
+                                while (handlerResultSet.next()) {
+                                    DataSet obj = (DataSet) fieldClass.getConstructor().newInstance();
+                                    for (Field declaredField : dbServiceOrm.classListConfig.get(fieldClass).getFieldList()){
+                                        declaredField.setAccessible(true);
+                                        if (clazz.isAssignableFrom(declaredField.getType())) {
+                                            declaredField.set(obj, result);
+                                        } else {
+                                            declaredField.set(obj, handlerResultSet.getObject(declaredField.getName()));
+                                        }
+                                    }
+                                    obj.setId((Long) handlerResultSet.getObject("id"));
+                                    listObject.add(obj);
+                                }
+                                field.set(result,listObject);
+                            });
                         }
                     }
-                    if (arrayItemFieldValue.size() > 0) {
-                        afterInsertObject.put(classInfo, arrayItemFieldValue);
-                    }*/
                 } else {
                     Object declareFieldValue = resultSet.getObject(field.getName());
                     if (DataSet.class.isAssignableFrom(field.getType())) {
-                        declareFieldValue = (Object) loadUser((long)declareFieldValue, (Class<T>) field.getType());
+                        declareFieldValue = load((long)declareFieldValue, (Class<T>) field.getType());
                     }
                     field.set(result,declareFieldValue);
                 }
@@ -147,7 +159,7 @@ public class ExecutorOrm {
         return null;
     }
 
-    public void load(long id, String sql, ResultHandler resultHandler) throws SQLException, NoSuchFieldException, IllegalAccessException {
+    private void load(long id, String sql, ResultHandler resultHandler) throws SQLException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InstantiationException, InvocationTargetException {
         try(PreparedStatement preparedStatement = this.connection.prepareStatement(sql))
         {
             preparedStatement.setLong(1,id);
@@ -164,6 +176,6 @@ public class ExecutorOrm {
 
     @FunctionalInterface
     public interface ResultHandler {
-        void handle(ResultSet resultSet) throws SQLException, NoSuchFieldException, IllegalAccessException;
+        void handle(ResultSet resultSet) throws SQLException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException;
     }
 }
