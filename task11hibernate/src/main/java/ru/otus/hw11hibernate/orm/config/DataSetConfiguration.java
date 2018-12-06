@@ -22,9 +22,7 @@ public class DataSetConfiguration {
         this.fieldList = new ArrayList<>();
 
         for (Field field: classInfo.getDeclaredFields()) {
-            if (!Collection.class.isAssignableFrom(field.getType())) {
-                fieldList.add(field);
-            }
+            fieldList.add(field);
         }
 
         fillSqlDropTable();
@@ -56,7 +54,9 @@ public class DataSetConfiguration {
     private void fillSqlSelect() {
         StringJoiner stringJoiner = new StringJoiner(",");
         for (Field field : fieldList) {
-            stringJoiner.add(field.getName());
+            if (!Collection.class.isAssignableFrom(field.getType())) {
+                stringJoiner.add(field.getName());
+            }
         }
         this.sqlSelect = new String("select " + stringJoiner.toString() + " from " + this.tableName + " where id = ?");
     }
@@ -73,8 +73,10 @@ public class DataSetConfiguration {
         StringJoiner nameFieldJoiner = new StringJoiner(",");
         StringJoiner valueFieldJoiner = new StringJoiner(",");
         for (Field field : this.fieldList) {
-            nameFieldJoiner.add(field.getName());
-            valueFieldJoiner.add("?");
+            if (!Collection.class.isAssignableFrom(field.getType())) {
+                nameFieldJoiner.add(field.getName());
+                valueFieldJoiner.add("?");
+            }
         }
         this.sqlInsert = "insert into " + this.tableName + "( " + nameFieldJoiner.toString() + " ) values (" + valueFieldJoiner.toString() + ")";
     }

@@ -5,9 +5,7 @@ import ru.otus.hw11hibernate.DataSet;
 import javax.management.ObjectName;
 import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ExecutorOrm {
 
@@ -21,31 +19,33 @@ public class ExecutorOrm {
     public <T extends DataSet> long save(T obj) {
         long key = -1L;
 
-        HashMap<String, Object> fieldsValue = new HashMap<>();
-        Class classInfo = obj.getClass();
+        List<Object> fieldsValue = new ArrayList<>();
+        HashMap<Object, HashMap<String,Object>> afterInsertObject = new HashMap<>();
 
-        for (Field declareField : obj.getClass().getDeclaredFields()) {
+        for (Field field : dbServiceOrm.classListConfig.get(obj.getClass()).getFieldList()) {
             try {
-                declareField.setAccessible(true);
-                Object declareFieldValue = declareField.get(obj);
-                if (DataSet.class.isAssignableFrom(declareField.getType())) {
-                    declareFieldValue = save((DataSet) declareField.get(obj));
-                }
+                field.setAccessible(true);
+                Object declareFieldValue = field.get(obj);
 
-
-
-                if (Collection.class.isAssignableFrom(declareField.getType())) {
-                    continue;
-                    /*
-                    for (Object arrayItem : (Collection) declareField.get(obj)) {
+                if (Collection.class.isAssignableFrom(field.getType())) {
+                    HashMap<String, Object> arrayItemFieldValue = new HashMap<>();
+                    Class classInfo = null;
+                    for (Object arrayItem : (Collection) field.get(obj)) {
                         if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
                         {
-                            save((DataSet)arrayItem);
+                            classInfo = arrayItem.getClass();
+                            arrayItemFieldValue = dbServiceOrm.getFieldsValue((DataSet)arrayItem);
                         }
-                    }*/
-
+                    }
+                    if (arrayItemFieldValue.size() > 0) {
+                        afterInsertObject.put(classInfo, arrayItemFieldValue);
+                    }
+                } else {
+                    if (DataSet.class.isAssignableFrom(field.getType())) {
+                        declareFieldValue = save((DataSet) field.get(obj));
+                    }
+                    fieldsValue.add(declareFieldValue);
                 }
-                fieldsValue.put(declareField.getName(), declareFieldValue);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -55,11 +55,27 @@ public class ExecutorOrm {
         try {
             key = save(dbServiceOrm.classListConfig.get(obj.getClass()).getSqlInsert(), handler -> {
                 int order = 1;
-                for (Map.Entry<String, Object> item : fieldsValue.entrySet()) {
-                    handler.setObject(order, item.getValue());
+                for (Object val : fieldsValue) {
+                    handler.setObject(order, val);
                     order++;
                 }
             });
+
+            for (Map.Entry<Object, HashMap<String, Object>> item : afterInsertObject.entrySet()) {
+                long finalKey = key;
+                save(dbServiceOrm.classListConfig.get(item.getKey()).getSqlInsert(), handler -> {
+                    int order = 1;
+                    for (Map.Entry<String, Object> fieldValue : item.getValue().entrySet()) {
+                        if (fieldValue.getValue().getClass().isAssignableFrom(obj.getClass())) {
+                            handler.setObject(order, finalKey);
+                        }
+                        else {
+                            handler.setObject(order, fieldValue.getValue());
+                        }
+                        order++;
+                    }
+                });
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,7 +111,8 @@ public class ExecutorOrm {
 
     @FunctionalInterface
     public interface ExecuteHandler {
-        void accept(PreparedStatement statement) throws SQLException;
+        void
+        accept(PreparedStatement statement) throws SQLException;
     }
 
     @FunctionalInterface

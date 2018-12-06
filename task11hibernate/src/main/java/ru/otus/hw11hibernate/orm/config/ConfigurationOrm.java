@@ -29,6 +29,10 @@ public class ConfigurationOrm {
         }
 
         configurationList = new ArrayList<>();
+
+        configurationList.add(
+                new DataSetConfiguration(
+                        AddressDataSetOrm.class, "address","(id bigint auto_increment, street varchar(255), primary key (id))"));
         configurationList.add(
                 new DataSetConfiguration(
                         UserDataSetOrm.class,
@@ -36,11 +40,9 @@ public class ConfigurationOrm {
                         "(id bigint auto_increment, name varchar(255), age int, address_id bigint, foreign key (address_id) references address(id), primary key (id))"));
         configurationList.add(
                 new DataSetConfiguration(
-                        PhoneDataSetOrm.class, "phone","(id bigint auto_increment, number varchar(255), age int, " +
+                        PhoneDataSetOrm.class, "phone","(id bigint auto_increment, number varchar(255), " +
                         "userdataset_id bigint, foreign key (userdataset_id) references user(id), primary key (id))"));
-        configurationList.add(
-                new DataSetConfiguration(
-                        AddressDataSetOrm.class, "address","(id bigint auto_increment, street varchar(255), primary key (id))"));
+
     }
     public Connection getConnection() {
         return this.connection;

@@ -5,7 +5,7 @@ import ru.otus.hw11hibernate.DataSet;
 public class PhoneDataSetOrm extends DataSet {
 
     private String number;
-    private UserDataSetOrm userDataSet;
+    private UserDataSetOrm userdataset_id;
 
     public PhoneDataSetOrm() { }
 
@@ -14,7 +14,7 @@ public class PhoneDataSetOrm extends DataSet {
     }
 
     public void setUserDataSet(UserDataSetOrm userDataSet) {
-        this.userDataSet = userDataSet;
+        this.userdataset_id = userDataSet;
     }
 
     public String getNumber() {
