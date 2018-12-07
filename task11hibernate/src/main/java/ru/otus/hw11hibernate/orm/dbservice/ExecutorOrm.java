@@ -30,11 +30,9 @@ public class ExecutorOrm {
 
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     HashMap<String, Object> arrayItemFieldValue = new HashMap<>();
-                    //Class classInfo = null;
                     for (Object arrayItem : (Collection) field.get(obj)) {
                         if (DataSet.class.isAssignableFrom(arrayItem.getClass()))
                         {
-                            //classInfo = arrayItem.getClass();
                             arrayItemFieldValue = dbServiceOrm.getFieldsValue((DataSet)arrayItem);
                             if (arrayItemFieldValue.size() > 0) {
                                 afterInsertObject.put(arrayItem, arrayItemFieldValue);

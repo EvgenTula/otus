@@ -36,11 +36,6 @@ public class DBServiceOrmImpl implements DBService {
         this.executor.save(obj);
     }
 
-    public <T extends DataSet> T loadUser(long id, Class<T> clazz) {
-        return this.executor.load(id,clazz);
-    }
-
-
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
         return this.executor.load(id,clazz);
