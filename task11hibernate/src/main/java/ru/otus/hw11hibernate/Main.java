@@ -19,7 +19,6 @@ public class Main {
     public static void main(String[] args) {
 
         /*orm*/
-
         DBService dbServiceOrm = new DBServiceOrmImpl(new ConfigurationOrm());
 
         List<UserDataSetOrm> userListOrm = new ArrayList<>();
@@ -50,44 +49,33 @@ public class Main {
 
         UserDataSetOrm load = dbServiceOrm.load(1, UserDataSetOrm.class);
         System.out.println(load.toString());
-        /*
 
-        System.out.println("test====");
-        phonesOrm.clear();
-        phonesOrm.add(new PhoneDataSetOrm("000"));
-        UserDataSetOrm testUser = new UserDataSetOrm("user test", 30, new AddressDataSetOrm("test user test"), phonesOrm);
-        dbServiceOrm.save(testUser);
-        UserDataSetOrm obj = ((DBServiceOrmImpl) dbServiceOrm).loadUser(1,UserDataSetOrm.class);
-        System.out.println(obj.toString());
-        System.out.println("test====");
-*/
         /*hibernate*/
-        /*
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
         List<PhoneDataSetHibernate> phones = new ArrayList<>();
-        phones.add(new PhoneDataSetHibernate("111"));
-        phones.add(new PhoneDataSetHibernate("222"));
-        phones.add(new PhoneDataSetHibernate("333"));
-        dbService.save(new UserDataSetHibernate("test1",1,new AddressDataSetHibernate("test1 address"),phones));
+        phones.add(new PhoneDataSetHibernate("1111"));
+        phones.add(new PhoneDataSetHibernate("2222"));
+        phones.add(new PhoneDataSetHibernate("3333"));
+        dbService.save(new UserDataSetHibernate("test1 hibernate",1,new AddressDataSetHibernate("test1 address hibernate"),phones));
 
         phones.clear();
-        phones.add(new PhoneDataSetHibernate("444"));
-        phones.add(new PhoneDataSetHibernate("555"));
-        phones.add(new PhoneDataSetHibernate("666"));
-        dbService.save(new UserDataSetHibernate("test2",1,new AddressDataSetHibernate("test2 address"),phones));
+        phones.add(new PhoneDataSetHibernate("4444"));
+        phones.add(new PhoneDataSetHibernate("5555"));
+        phones.add(new PhoneDataSetHibernate("6666"));
+        dbService.save(new UserDataSetHibernate("test2 hibernate",1,new AddressDataSetHibernate("test2 address hibernate"),phones));
 
         phones.clear();
-        phones.add(new PhoneDataSetHibernate("777"));
-        phones.add(new PhoneDataSetHibernate("888"));
-        phones.add(new PhoneDataSetHibernate("999"));
-        dbService.save(new UserDataSetHibernate("test3",1,new AddressDataSetHibernate("test3 address"),phones));
+        phones.add(new PhoneDataSetHibernate("7777"));
+        phones.add(new PhoneDataSetHibernate("8888"));
+        phones.add(new PhoneDataSetHibernate("9999"));
+        dbService.save(new UserDataSetHibernate("test3 hibernate",1,new AddressDataSetHibernate("test3 address hibernate"),phones));
 
         List<UserDataSetHibernate> userList = ((DBServiceHibernateImpl) dbService).userGetAllList();
         for (UserDataSetHibernate user: userList) {
             System.out.println(user.toString());
         }
 
-        System.out.println(((DBServiceHibernateImpl) dbService).userGetByName("test1").toString());
-        */
+        System.out.println(((DBServiceHibernateImpl) dbService).userGetByName("test1 hibernate").toString());
+
     }
 }

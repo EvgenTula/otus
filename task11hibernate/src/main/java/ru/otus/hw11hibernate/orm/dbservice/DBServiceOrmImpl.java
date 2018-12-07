@@ -65,7 +65,6 @@ public class DBServiceOrmImpl implements DBService {
 
     private void prepareTables(Class clazz) throws SQLException {
         try(Statement st = connection.createStatement()) {
-
             st.execute(classListConfig.get(clazz).getSqlDropTable());
             st.execute(classListConfig.get(clazz).getSqlCreateTable());
         }
