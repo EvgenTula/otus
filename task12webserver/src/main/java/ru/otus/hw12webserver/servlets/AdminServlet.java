@@ -43,6 +43,16 @@ public class AdminServlet extends HttpServlet {
 
         <tr><td>34,5</td><td>3,5</td><td>36</td><td>23</td></tr>
 
+
+                //serverManager.
+        List<UserDataSetHibernate> userList = ((DBServiceHibernateImpl) dbService).userGetAllList();
+        for (UserDataSetHibernate user: userList) {
+            System.out.println(user.toString());
+        }
+
+        System.out.println(((DBServiceHibernateImpl) dbService).userGetByName("test1 hibernate").toString());
+
+
         */
         return pageVariables;
     }
