@@ -14,17 +14,8 @@ public class TemplateProcessor {
     private static final String HTML_TEMPLATES_DIR = "html_templates";
 
     private final Configuration configuration;
-    private static TemplateProcessor instance;
 
-    public static TemplateProcessor getInstance() throws IOException {
-        if (instance == null)
-        {
-            instance = new TemplateProcessor();
-        }
-        return instance;
-    }
-
-    private TemplateProcessor() throws IOException {
+    public TemplateProcessor() throws IOException {
         configuration = new Configuration(Configuration.VERSION_2_3_28);
         configuration.setDirectoryForTemplateLoading(new File(HTML_TEMPLATES_DIR));
         configuration.setDefaultEncoding("UTF-8");

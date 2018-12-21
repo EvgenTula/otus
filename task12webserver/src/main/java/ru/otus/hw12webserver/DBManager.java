@@ -25,13 +25,13 @@ public class DBManager {
         phones.add(new PhoneDataSetHibernate("4444"));
         phones.add(new PhoneDataSetHibernate("5555"));
         phones.add(new PhoneDataSetHibernate("6666"));
-        dbService.save(new UserDataSetHibernate("test2 hibernate", 1, new AddressDataSetHibernate("test2 address hibernate"), phones));
+        dbService.save(new UserDataSetHibernate("test2 hibernate", 2, new AddressDataSetHibernate("test2 address hibernate"), phones));
 
         phones.clear();
         phones.add(new PhoneDataSetHibernate("7777"));
         phones.add(new PhoneDataSetHibernate("8888"));
         phones.add(new PhoneDataSetHibernate("9999"));
-        dbService.save(new UserDataSetHibernate("test3 hibernate", 1, new AddressDataSetHibernate("test3 address hibernate"), phones));
+        dbService.save(new UserDataSetHibernate("test3 hibernate", 3, new AddressDataSetHibernate("test3 address hibernate"), phones));
 
         return dbService;
     }
