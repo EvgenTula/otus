@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>user</title>
+</head>
+<body>
+
+<form action="/user" method="POST">
+    <p>id: <input type="hidden" name="id"  value = ${id}></p>
+    <p>Name: <input type="text" name="name"  value = "${name}"></p>
+    <p>Age: <input type="text" name="age"  value = ${age}></p>
+    <p>Address <input type="text" name="address"  value = "${address}"></p>
+    <p>Phone <input type="text" multiple="multiple" name="phone"  value = ${phone}></p>
+    <input type="submit" value="Save user">
+</form>
+
+<input type="button" onclick="history.back();" value="Back"/>
+
+</body>
+</html>

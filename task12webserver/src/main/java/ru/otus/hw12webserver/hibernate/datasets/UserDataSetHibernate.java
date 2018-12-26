@@ -3,7 +3,7 @@ package ru.otus.hw12webserver.hibernate.datasets;
 import ru.otus.hw12webserver.hibernate.DataSet;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -21,17 +21,14 @@ public class UserDataSetHibernate extends DataSet {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userDataSet")
     private List<PhoneDataSetHibernate> phoneList;
 
-    public UserDataSetHibernate() { }
+    public UserDataSetHibernate() {
+        phoneList = new ArrayList<>();
+    }
 
-    public UserDataSetHibernate(String name, int age, AddressDataSetHibernate address, List<PhoneDataSetHibernate> phones) {
-        this.setId(-1);
+    public UserDataSetHibernate(String name, int age) {
         this.setName(name);
         this.setAge(age);
-        this.setAddress(address);
-        this.phoneList = phones;
-        for (PhoneDataSetHibernate phone: phones) {
-            phone.setUserDataSet(this);
-        }
+        this.phoneList = new ArrayList<>();
     }
 
     public void setName(String name) {
@@ -72,12 +69,12 @@ public class UserDataSetHibernate extends DataSet {
                 "\nphone :\t\t"  + printPhoneList() + "]";
     }
 
-    private String printPhoneList() {
-        StringBuilder stringBuilder = new StringBuilder();
+    public String printPhoneList() {
+        StringJoiner result = new StringJoiner(",");
         for (PhoneDataSetHibernate phone: this.phoneList) {
-            stringBuilder.append(phone.toString()+" ");
+            result.add(phone.toString());
         }
-        return stringBuilder.toString();
+        return result.toString();
     }
 
 }

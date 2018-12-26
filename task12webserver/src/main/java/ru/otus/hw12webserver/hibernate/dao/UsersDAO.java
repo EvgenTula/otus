@@ -17,7 +17,7 @@ public class UsersDAO {
     }
 
     public void save(UserDataSetHibernate dataSet) {
-        session.save(dataSet);
+        session.saveOrUpdate(dataSet);
     }
 
 

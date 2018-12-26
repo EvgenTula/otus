@@ -39,7 +39,7 @@ public class DBServiceHibernateImpl implements DBService {
     public <T extends DataSet> void save(T obj) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.save(obj);
+            session.saveOrUpdate(obj);
             transaction.commit();
         }
     }
@@ -55,6 +55,13 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             UsersDAO dao = new UsersDAO(session);
             return dao.readAll();
+        }
+    }
+
+    public void saveUser(UserDataSetHibernate user) {
+        try (Session session = sessionFactory.openSession()) {
+            UsersDAO dao = new UsersDAO(session);
+            dao.save(user);
         }
     }
 }

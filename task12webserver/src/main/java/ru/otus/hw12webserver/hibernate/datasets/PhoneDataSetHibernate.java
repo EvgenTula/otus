@@ -33,6 +33,6 @@ public class PhoneDataSetHibernate extends DataSet {
 
     @Override
     public String toString() {
-        return "{ " + this.getNumber() + " }";
+        return this.getNumber();
     }
 }

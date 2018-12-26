@@ -16,14 +16,13 @@ public class ConfigurationHibernate {
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:h2:~/test");
+        configuration.setProperty("hibernate.connection.url", "jdbc:h2:mem:~/test");
         configuration.setProperty("hibernate.connection.username", "sa");
         configuration.setProperty("hibernate.connection.password", "sa");
 
-        configuration.setProperty("hibernate.show_sql", "false");
-        configuration.setProperty("hibernate.generate_statistics", "false");
-        configuration.setProperty("hibernate.use_sql_comments", "false");
-
+        configuration.setProperty("hibernate.show_sql", "true");
+        //configuration.setProperty("hibernate.generate_statistics", "false");
+        //configuration.setProperty("hibernate.use_sql_comments", "false");
 
         configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         configuration.setProperty("hibernate.connection.useSSL", "false");

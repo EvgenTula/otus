@@ -7,31 +7,44 @@ import ru.otus.hw12webserver.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.dbservice.DBServiceHibernateImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DBManager {
 
     private DBService dbService = null;
     public DBService createDBService() {
         dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
-        List<PhoneDataSetHibernate> phones = new ArrayList<>();
-        phones.add(new PhoneDataSetHibernate("1111"));
-        phones.add(new PhoneDataSetHibernate("2222"));
-        phones.add(new PhoneDataSetHibernate("3333"));
-        dbService.save(new UserDataSetHibernate("test1 hibernate", 1, new AddressDataSetHibernate("test1 address hibernate"), phones));
 
-        phones.clear();
-        phones.add(new PhoneDataSetHibernate("4444"));
-        phones.add(new PhoneDataSetHibernate("5555"));
-        phones.add(new PhoneDataSetHibernate("6666"));
-        dbService.save(new UserDataSetHibernate("test2 hibernate", 2, new AddressDataSetHibernate("test2 address hibernate"), phones));
+        AddressDataSetHibernate user1Address = new AddressDataSetHibernate();
+        user1Address.setStreet("Street 1");
+        UserDataSetHibernate user1 = new UserDataSetHibernate(
+                "test1 hibernate",
+                1);
+        user1.setAddress(user1Address);
+        user1.addPhone(new PhoneDataSetHibernate("1111"));
+        user1.addPhone(new PhoneDataSetHibernate("2222"));
+        user1.addPhone(new PhoneDataSetHibernate("3333"));
+        dbService.save(user1);
 
-        phones.clear();
-        phones.add(new PhoneDataSetHibernate("7777"));
-        phones.add(new PhoneDataSetHibernate("8888"));
-        phones.add(new PhoneDataSetHibernate("9999"));
-        dbService.save(new UserDataSetHibernate("test3 hibernate", 3, new AddressDataSetHibernate("test3 address hibernate"), phones));
+        AddressDataSetHibernate user2Address = new AddressDataSetHibernate();
+        user2Address.setStreet("Street 2");
+        UserDataSetHibernate user2 = new UserDataSetHibernate(
+                "test2 hibernate",
+                2);
+        user2.setAddress(user2Address);
+        user2.addPhone(new PhoneDataSetHibernate("4444"));
+        user2.addPhone(new PhoneDataSetHibernate("5555"));
+        user2.addPhone(new PhoneDataSetHibernate("6666"));
+        dbService.save(user2);
+
+        AddressDataSetHibernate user3Address = new AddressDataSetHibernate();
+        user3Address.setStreet("Street 3");
+        UserDataSetHibernate user3 = new UserDataSetHibernate(
+                "test3 hibernate",
+                3);
+        user3.setAddress(user3Address);
+        user3.addPhone(new PhoneDataSetHibernate("7777"));
+        user3.addPhone(new PhoneDataSetHibernate("8888"));
+        user3.addPhone(new PhoneDataSetHibernate("9999"));
+        dbService.save(user3);
 
         return dbService;
     }
