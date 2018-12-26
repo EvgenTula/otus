@@ -10,16 +10,10 @@ import ru.otus.hw12webserver.servlets.AdminServlet;
 import ru.otus.hw12webserver.servlets.TemplateProcessor;
 import ru.otus.hw12webserver.servlets.UserServlet;
 
-public class ServerManager {
+public class ServerHelper {
 
-    private int port = 8090;
-    private String PUBLIC_HTML = "html";
-
-    DBService dbService;
-    public Server createServer(DBService service, int port) throws Exception {
-
-        this.dbService = service;
-        this.port = port;
+    public static Server createServer(DBService service, int port) throws Exception {
+        final String PUBLIC_HTML = "html";
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(PUBLIC_HTML);
 
@@ -29,9 +23,8 @@ public class ServerManager {
         context.addServlet(new ServletHolder(new AdminServlet(templateProcessor, service)), "/user_list");
         context.addServlet(new ServletHolder(new UserServlet(templateProcessor, service)), "/user");
 
-        Server server = new Server(this.port);
+        Server server = new Server(port);
         server.setHandler(new HandlerList(resourceHandler, context));
         return server;
     }
-
 }

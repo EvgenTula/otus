@@ -30,24 +30,11 @@ public class UserServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         if (userId != 0) {
             UserDataSetHibernate user = dbService.load(userId,UserDataSetHibernate.class);
-            pageVariables.put("id",user.getId());
-            pageVariables.put("name",user.getName());
-            pageVariables.put("age",user.getAge());
-            if (user.getAddress() != null) {
-                pageVariables.put("address", user.getAddress());
-            }
-            else {
-                pageVariables.put("address", "");
-            }
-            pageVariables.put("phone", user.printPhoneList());
+            pageVariables.put("user", user);
         }
         else
         {
-            pageVariables.put("id",0);
-            pageVariables.put("name","");
-            pageVariables.put("age","");
-            pageVariables.put("address","");
-            pageVariables.put("phone","");
+            pageVariables.put("user",new UserDataSetHibernate());
         }
         return pageVariables;
     }
@@ -63,6 +50,11 @@ public class UserServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
+        this.dbService.save(userFromRequest(request));
+        response.sendRedirect("user_list");
+    }
+
+    private UserDataSetHibernate userFromRequest(HttpServletRequest request) {
         Long id = Long.parseLong(request.getParameter("id"));
         UserDataSetHibernate user = null;
         if (id != 0) {
@@ -88,9 +80,8 @@ public class UserServlet extends HttpServlet {
             newPhone.setNumber(phone);
             user.addPhone(newPhone);
         }
-
-        this.dbService.save(user);
-        response.sendRedirect("user_list");
+        return user;
     }
+
 
 }

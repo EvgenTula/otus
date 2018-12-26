@@ -7,11 +7,10 @@ import ru.otus.hw12webserver.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.dbservice.DBServiceHibernateImpl;
 
-public class DBManager {
+public class DBHelper {
 
-    private DBService dbService = null;
-    public DBService createDBService() {
-        dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
+    public static DBService createDBService() {
+        DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
 
         AddressDataSetHibernate user1Address = new AddressDataSetHibernate();
         user1Address.setStreet("Street 1");

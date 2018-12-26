@@ -7,9 +7,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        DBManager dbManager = new DBManager();
-        DBService dbService = dbManager.createDBService();
-        ServerManager serverManager = new ServerManager();
+        DBService dbService = DBHelper.createDBService();
+        ServerHelper serverManager = new ServerHelper();
         Server server = serverManager.createServer(dbService, 8090);
         server.start();
         server.join();
