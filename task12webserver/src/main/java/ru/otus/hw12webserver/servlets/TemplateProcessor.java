@@ -11,7 +11,7 @@ import java.io.Writer;
 import java.util.Map;
 
 public class TemplateProcessor {
-    private static final String HTML_DIR = "html";
+    private static final String HTML_DIR = "templates";
 
     private final Configuration configuration;
 

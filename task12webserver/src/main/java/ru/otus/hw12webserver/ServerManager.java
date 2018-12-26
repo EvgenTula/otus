@@ -22,7 +22,6 @@ public class ServerManager {
         this.port = port;
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(PUBLIC_HTML);
-        //resourceHandler.setWelcomeFiles(new String[] {"user_list.html"});
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         TemplateProcessor templateProcessor = new TemplateProcessor();
