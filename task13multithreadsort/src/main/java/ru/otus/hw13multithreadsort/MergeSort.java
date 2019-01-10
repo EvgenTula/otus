@@ -9,7 +9,7 @@ public class MergeSort {
         T[] tmpArray = Arrays.copyOfRange(arr,0,arr.length);
         mergeSort(arr,tmpArray, 0, arr.length - 1);
         long timeEnd = System.nanoTime();
-        System.out.println("time : " + ((double)timeEnd - timeStart / 1_000_000_000));
+        System.out.println("time : " + ((timeEnd - timeStart) / 1_000_000_000d));
     }
 
     private static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {

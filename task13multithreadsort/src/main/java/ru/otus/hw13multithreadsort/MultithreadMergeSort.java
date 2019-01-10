@@ -15,7 +15,7 @@ public class MultithreadMergeSort {
             if (Runtime.getRuntime().availableProcessors() < 4) {
                 THREADS = Runtime.getRuntime().availableProcessors();
             } else {
-                THREADS = 5;
+                THREADS = 4;
             }
             System.out.println(" THREADS = " + THREADS);
         }
@@ -116,6 +116,6 @@ public class MultithreadMergeSort {
             e.printStackTrace();
         }
         long timeEnd = System.nanoTime();
-        System.out.println("time : " + ((double)timeEnd - timeStart / 1_000_000_000));
+        System.out.println("time : " + ((timeEnd - timeStart) / 1_000_000_000d));
     }
 }
