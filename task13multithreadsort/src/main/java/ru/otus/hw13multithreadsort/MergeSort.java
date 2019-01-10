@@ -2,7 +2,7 @@ package ru.otus.hw13multithreadsort;
 
 import java.util.Arrays;
 
-public class MultithreadMergeSort {
+public class MergeSort {
 
     public static <T extends Comparable> void sort(T[] arr) {
         long timeStart = System.nanoTime();
@@ -26,10 +26,10 @@ public class MultithreadMergeSort {
     }
 
     private static <T extends Comparable> void merge(T[] original,
-                                                     T[] tmp,
-                                                     int lower,
-                                                     int middle,
-                                                     int upper) {
+                                                  T[] tmp,
+                                                  int lower,
+                                                  int middle,
+                                                  int upper) {
         int index = 0;
 
         int lowerIndex = lower;
@@ -60,5 +60,4 @@ public class MultithreadMergeSort {
             original[lower + i] = tmp[i];
         }
     }
-
 }
