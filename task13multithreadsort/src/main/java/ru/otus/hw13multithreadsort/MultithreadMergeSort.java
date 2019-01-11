@@ -10,14 +10,14 @@ public class MultithreadMergeSort {
         private T[] tmpArr;
         private int lower;
         private int upper;
-        private static int THREADS;
+        private static int AVAILABLE_THREADS;
+        private static int ACTIVE_THREADS;
         static {
             if (Runtime.getRuntime().availableProcessors() < 4) {
-                THREADS = Runtime.getRuntime().availableProcessors();
+                AVAILABLE_THREADS = Runtime.getRuntime().availableProcessors();
             } else {
-                THREADS = 4;
+                AVAILABLE_THREADS = 4;
             }
-            System.out.println(" THREADS = " + THREADS);
         }
 
 
@@ -30,11 +30,13 @@ public class MultithreadMergeSort {
 
         @Override
         public void run() {
+            ACTIVE_THREADS++;
             if (lower == upper) {
+                ACTIVE_THREADS--;
                 return;
             } else {
                 int middle = (lower + upper) / 2;
-                if (THREADS > Thread.activeCount()) {
+                if (AVAILABLE_THREADS > ACTIVE_THREADS) {
                     MultithreadSort lowerSort = new MultithreadSort(originalArray, tmpArr, lower, middle);
                     MultithreadSort upperSort = new MultithreadSort(originalArray, tmpArr, middle + 1, upper);
                     lowerSort.start();
@@ -52,6 +54,7 @@ public class MultithreadMergeSort {
                     merge(originalArray, tmpArr, lower, middle + 1, upper);
                 }
             }
+            ACTIVE_THREADS--;
         }
 
         private static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
@@ -107,7 +110,6 @@ public class MultithreadMergeSort {
     public static <T extends Comparable> void sort(T[] arr) {
         long timeStart = System.nanoTime();
         T[] tmpArray = Arrays.copyOfRange(arr,0,arr.length);
-        System.out.println(Thread.activeCount());
         MultithreadSort sort = new MultithreadSort(arr,tmpArray, 0, arr.length - 1);
         sort.start();
         try {

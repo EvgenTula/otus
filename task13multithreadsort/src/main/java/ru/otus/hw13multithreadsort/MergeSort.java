@@ -12,7 +12,7 @@ public class MergeSort {
         System.out.println("time : " + ((timeEnd - timeStart) / 1_000_000_000d));
     }
 
-    private static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
+    public static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
         if (lower == upper) {
             return;
         } else {
