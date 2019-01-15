@@ -6,7 +6,7 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        int size = 8;
+        int size = 8000;
 
         Integer[] array = new Integer[size];
         Random rnd = new Random();
@@ -21,17 +21,13 @@ public class Main {
         System.out.println(Arrays.toString(array1));
         System.out.println("Merge sort");
         MergeSort.sort(array1);
-        //System.out.println(Arrays.toString(array1));
 
         System.out.println("MultithreadMerge sort");
         MultithreadMergeSort.sort(array2);
-        //System.out.println(Arrays.toString(array2));
         System.out.println(Arrays.deepEquals(array1,array2));
 
         System.out.println("ThreadSortExecutorService merge sort");
         ThreadSortExecutorService.sort(array3);
-        System.out.println(Arrays.toString(array3));
-
         System.out.println(Arrays.deepEquals(array1,array3));
     }
 }
