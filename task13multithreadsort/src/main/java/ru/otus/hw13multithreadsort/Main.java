@@ -6,7 +6,7 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        int size = 8000;
+        int size = 80000;
 
         Integer[] array = new Integer[size];
         Random rnd = new Random();

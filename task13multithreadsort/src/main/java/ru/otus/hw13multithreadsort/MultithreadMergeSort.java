@@ -7,7 +7,6 @@ public class MultithreadMergeSort {
     private static class MultithreadSort<T extends Comparable> extends Thread {
 
         private T[] originalArray;
-        private T[] tmpArr;
         private int lower;
         private int upper;
         private static int AVAILABLE_THREADS;
@@ -21,9 +20,8 @@ public class MultithreadMergeSort {
         }
 
 
-        public MultithreadSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
+        public MultithreadSort(T[] originalArray, int lower, int upper) {
             this.originalArray = originalArray;
-            this.tmpArr = tmpArr;
             this.lower = lower;
             this.upper = upper;
         }
@@ -37,8 +35,8 @@ public class MultithreadMergeSort {
             } else {
                 int middle = (lower + upper) / 2;
                 if (AVAILABLE_THREADS > ACTIVE_THREADS) {
-                    MultithreadSort lowerSort = new MultithreadSort(originalArray, tmpArr, lower, middle);
-                    MultithreadSort upperSort = new MultithreadSort(originalArray, tmpArr, middle + 1, upper);
+                    MultithreadSort lowerSort = new MultithreadSort(originalArray, lower, middle);
+                    MultithreadSort upperSort = new MultithreadSort(originalArray, middle + 1, upper);
                     lowerSort.start();
                     upperSort.start();
                     try {
@@ -47,35 +45,34 @@ public class MultithreadMergeSort {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    merge(originalArray, tmpArr, lower, middle + 1, upper);
+                    merge(originalArray, lower, middle + 1, upper);
                 } else {
-                    mergeSort(originalArray, tmpArr, lower, middle);
-                    mergeSort(originalArray, tmpArr, middle + 1, upper);
-                    merge(originalArray, tmpArr, lower, middle + 1, upper);
+                    mergeSort(originalArray, lower, middle);
+                    mergeSort(originalArray,  middle + 1, upper);
+                    merge(originalArray, lower, middle + 1, upper);
                 }
             }
             ACTIVE_THREADS--;
         }
 
-        private static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
+        private static <T extends Comparable> void mergeSort(T[] originalArray, int lower, int upper) {
             if (lower == upper) {
                 return;
             } else {
                 int middle = (lower + upper) / 2;
 
-                mergeSort(originalArray,tmpArr, lower, middle);
-                mergeSort(originalArray,tmpArr, middle + 1, upper);
+                mergeSort(originalArray, lower, middle);
+                mergeSort(originalArray, middle + 1, upper);
 
-                merge(originalArray, tmpArr, lower, middle + 1, upper);
+                merge(originalArray, lower, middle + 1, upper);
             }
         }
 
         private static <T extends Comparable> void merge(T[] original,
-                                                         T[] tmp,
                                                          int lower,
                                                          int middle,
                                                          int upper) {
-            int index = 0;
+            T[] tmp = Arrays.copyOfRange(original,lower,upper + 1);
 
             int lowerIndex = lower;
             int lowerBound = middle-1;
@@ -85,11 +82,13 @@ public class MultithreadMergeSort {
 
             int size = upperBound - lowerIndex + 1;
 
+            int index = 0;
+
             while (lowerIndex <= lowerBound && upperIndex <= upperBound) {
-                if (original[lowerIndex].compareTo(original[upperIndex]) == -1) {
-                    tmp[index++] = original[lowerIndex++];
-                } else {
+                if (original[lowerIndex].compareTo(original[upperIndex]) > 0) {
                     tmp[index++] = original[upperIndex++];
+                } else {
+                    tmp[index++] = original[lowerIndex++];
                 }
             }
 
@@ -110,7 +109,7 @@ public class MultithreadMergeSort {
     public static <T extends Comparable> void sort(T[] arr) {
         long timeStart = System.nanoTime();
         T[] tmpArray = Arrays.copyOfRange(arr,0,arr.length);
-        MultithreadSort sort = new MultithreadSort(arr,tmpArray, 0, arr.length - 1);
+        MultithreadSort sort = new MultithreadSort(arr,0, arr.length - 1);
         sort.start();
         try {
             sort.join();
