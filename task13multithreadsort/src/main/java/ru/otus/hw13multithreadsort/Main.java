@@ -3,8 +3,6 @@ package ru.otus.hw13multithreadsort;
 import java.util.Arrays;
 import java.util.Random;
 
-
-
 /*
 Здравствуйте, Евгений. У вас нашлось сразу две реализации сортировки. Я проверял обе. Найденные недочеты:
 1. AVAILABLE_THREADS и ACTIVE_THREADS не константы (те static final), а просто статические переменные.
@@ -28,6 +26,7 @@ AvailableThreads = (Runtime.getRuntime().availableProcessors() > 4)? Runtime.get
 
 9. Методы, которые не относятся напрямую к сортировке можно вынести в хелпер
 */
+
 public class Main {
 
     public static void main(String[] args) {

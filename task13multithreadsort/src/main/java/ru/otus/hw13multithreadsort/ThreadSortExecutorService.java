@@ -10,7 +10,7 @@ public class ThreadSortExecutorService {
     private static int THREADS;
     private static ThreadPoolExecutor service;
     static {
-        if (Runtime.getRuntime().availableProcessors() < 4) {
+        if (Runtime.getRuntime().availableProcessors() > 4) {
             THREADS = Runtime.getRuntime().availableProcessors();
         } else {
             THREADS = 4;
@@ -23,20 +23,33 @@ public class ThreadSortExecutorService {
 
 
 
+        List<Callable<Object>> list = new ArrayList<>();
+
         List<Range> rangeList = prepareRange(arr);
         for (Range item : rangeList) {
-            service.execute(() -> {
+            list.add(Executors.callable(() -> {
                 mergeSort(arr, item.from,item.to);
-            });
+            }));
+            //service.execute(() -> {
+            //    mergeSort(arr, item.from,item.to);
+            //});
         }
-
-        service.shutdown();
         try {
-            service.awaitTermination(1, TimeUnit.SECONDS);
+            service.invokeAll(list);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        finally {
+            service.shutdown();
+        }
+        //service.shutdown();
+        /*
+        try {
+            service.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+*/
         for (int i = 1; i < rangeList.size(); i++) {
             int from = rangeList.get(0).from;
             int to = rangeList.get(i).to;
