@@ -1,5 +1,10 @@
 package ru.otus.hw13multithreadsort;
 
+import ru.otus.hw13multithreadsort.Sorters.ExecutorServiceMerge.ExecutorServiceSort;
+import ru.otus.hw13multithreadsort.Sorters.MultithreadMerge.MultithreadMergeSort;
+import ru.otus.hw13multithreadsort.Sorters.SimpleMerge.SimpleMergeSort;
+import ru.otus.hw13multithreadsort.Sorters.SorterDecorator;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -18,16 +23,18 @@ public class Main {
         Integer[] array2 = Arrays.copyOfRange(array,0,array.length);
         Integer[] array3 = Arrays.copyOfRange(array,0,array.length);
 
-        //System.out.println(Arrays.toString(array1));
-        System.out.println("Merge sort");
-        MergeSort.sort(array1);
+        //System.out.println("Merge sort");
+        SorterDecorator simpleSort = new SorterDecorator(new SimpleMergeSort());
+        simpleSort.Execute(array1);
 
-        System.out.println("MultithreadMerge sort");
-        MultithreadMergeSort.sort(array2);
+        //System.out.println("MultithreadMergeSort sort");
+        SorterDecorator multithreadMergeSort = new SorterDecorator(new MultithreadMergeSort());
+        multithreadMergeSort.Execute(array2);
         System.out.println(Arrays.deepEquals(array1,array2));
 
-        System.out.println("ThreadSortExecutorService merge sort");
-        ThreadSortExecutorService.sort(array3);
+        //System.out.println("threadSortExecutorService merge sort");
+        SorterDecorator threadSortExecutorService = new SorterDecorator(new ExecutorServiceSort());
+        threadSortExecutorService.Execute(array3);
         System.out.println(Arrays.deepEquals(array1,array3));
     }
 }

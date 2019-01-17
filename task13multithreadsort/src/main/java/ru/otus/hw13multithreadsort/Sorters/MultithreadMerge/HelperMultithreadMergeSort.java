@@ -1,28 +1,15 @@
-package ru.otus.hw13multithreadsort;
+package ru.otus.hw13multithreadsort.Sorters.MultithreadMerge;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MultithreadMergeSort {
+public class HelperMultithreadMergeSort {
 
-    private static final int DEFAULT_THREADS_COUNT = 4;
 
-    private static int availableThreads;
     private static AtomicInteger activeThreads = new AtomicInteger(0);
+    static int availableThreads;
 
-    public static <T extends Comparable> void sort(T[] arr) {
-        long timeStart = System.nanoTime();
-        if (Runtime.getRuntime().availableProcessors() > DEFAULT_THREADS_COUNT) {
-            availableThreads = Runtime.getRuntime().availableProcessors();
-        } else {
-            availableThreads = DEFAULT_THREADS_COUNT;
-        }
-        mergeSort(arr,0, arr.length - 1);
-        long timeEnd = System.nanoTime();
-        System.out.println("time : " + ((timeEnd - timeStart) / 1_000_000_000d));
-    }
-
-    private static <T extends Comparable> void mergeSort(T[] originalArray, int lower, int upper) {
+    static <T extends Comparable> void mergeSort(T[] originalArray, int lower, int upper) {
         if (lower == upper) {
             return;
         } else {
