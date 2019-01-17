@@ -7,13 +7,14 @@ import java.util.concurrent.*;
 
 public class ThreadSortExecutorService {
 
+    private static final int DEFAULT_THREADS_COUNT = 4;
     private static int THREADS;
     private static ThreadPoolExecutor service;
     static {
-        if (Runtime.getRuntime().availableProcessors() > 4) {
+        if (Runtime.getRuntime().availableProcessors() > DEFAULT_THREADS_COUNT) {
             THREADS = Runtime.getRuntime().availableProcessors();
         } else {
-            THREADS = 4;
+            THREADS = DEFAULT_THREADS_COUNT;
         }
         service = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
     }
@@ -30,10 +31,8 @@ public class ThreadSortExecutorService {
             list.add(Executors.callable(() -> {
                 mergeSort(arr, item.from,item.to);
             }));
-            //service.execute(() -> {
-            //    mergeSort(arr, item.from,item.to);
-            //});
         }
+
         try {
             service.invokeAll(list);
         } catch (InterruptedException e) {
@@ -42,14 +41,7 @@ public class ThreadSortExecutorService {
         finally {
             service.shutdown();
         }
-        //service.shutdown();
-        /*
-        try {
-            service.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-*/
+
         for (int i = 1; i < rangeList.size(); i++) {
             int from = rangeList.get(0).from;
             int to = rangeList.get(i).to;
