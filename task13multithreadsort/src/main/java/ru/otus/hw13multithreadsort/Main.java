@@ -23,16 +23,13 @@ public class Main {
         Integer[] array2 = Arrays.copyOfRange(array,0,array.length);
         Integer[] array3 = Arrays.copyOfRange(array,0,array.length);
 
-        //System.out.println("Merge sort");
         SorterDecorator simpleSort = new SorterDecorator(new SimpleMergeSort());
         simpleSort.Execute(array1);
 
-        //System.out.println("MultithreadMergeSort sort");
         SorterDecorator multithreadMergeSort = new SorterDecorator(new MultithreadMergeSort());
         multithreadMergeSort.Execute(array2);
         System.out.println(Arrays.deepEquals(array1,array2));
 
-        //System.out.println("threadSortExecutorService merge sort");
         SorterDecorator threadSortExecutorService = new SorterDecorator(new ExecutorServiceSort());
         threadSortExecutorService.Execute(array3);
         System.out.println(Arrays.deepEquals(array1,array3));

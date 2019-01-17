@@ -1,5 +1,7 @@
 package ru.otus.hw13multithreadsort.Sorters.ExecutorServiceMerge;
 
+import ru.otus.hw13multithreadsort.Sorters.MultithreadMerge.HelperMultithreadMergeSort;
+import ru.otus.hw13multithreadsort.Sorters.RuntimerHelper;
 import ru.otus.hw13multithreadsort.Sorters.Sorter;
 
 import java.util.ArrayList;
@@ -13,11 +15,7 @@ public class ExecutorServiceSort implements Sorter {
 
     public <T extends Comparable> void sort(T[] arr) {
 
-        if (Runtime.getRuntime().availableProcessors() > DEFAULT_THREADS_COUNT) {
-            HelperExecutorServiceSort.availableThreads = Runtime.getRuntime().availableProcessors();
-        } else {
-            HelperExecutorServiceSort.availableThreads = DEFAULT_THREADS_COUNT;
-        }
+        HelperExecutorServiceSort.availableThreads = RuntimerHelper.getAvailableThreadsOrDefault(DEFAULT_THREADS_COUNT);;
         service = (ThreadPoolExecutor) Executors.newFixedThreadPool(HelperExecutorServiceSort.availableThreads);
 
         List<Callable<Object>> list = new ArrayList<>();
