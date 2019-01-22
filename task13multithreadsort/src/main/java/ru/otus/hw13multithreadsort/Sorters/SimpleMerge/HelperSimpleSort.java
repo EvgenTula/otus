@@ -1,16 +1,6 @@
-package ru.otus.hw13multithreadsort;
+package ru.otus.hw13multithreadsort.Sorters.SimpleMerge;
 
-import java.util.Arrays;
-
-public class MergeSort {
-
-    public static <T extends Comparable> void sort(T[] arr) {
-        long timeStart = System.nanoTime();
-        T[] tmpArray = Arrays.copyOfRange(arr,0,arr.length);
-        mergeSort(arr,tmpArray, 0, arr.length - 1);
-        long timeEnd = System.nanoTime();
-        System.out.println("time : " + ((timeEnd - timeStart) / 1_000_000_000d));
-    }
+public class HelperSimpleSort {
 
     public static <T extends Comparable> void mergeSort(T[] originalArray,T[] tmpArr, int lower, int upper) {
         if (lower == upper) {
@@ -26,10 +16,10 @@ public class MergeSort {
     }
 
     private static <T extends Comparable> void merge(T[] original,
-                                                  T[] tmp,
-                                                  int lower,
-                                                  int middle,
-                                                  int upper) {
+                                                     T[] tmp,
+                                                     int lower,
+                                                     int middle,
+                                                     int upper) {
         int index = 0;
 
         int lowerIndex = lower;
