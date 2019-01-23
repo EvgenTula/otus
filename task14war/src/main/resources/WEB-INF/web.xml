@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>hw14war</display-name>
+    <description>This is war!:)</description>
+
+    <servlet>
+        <servlet-name>adminServlet</servlet-name>
+        <servlet-class>main.java.ru.otus.hw14war.webserver.servlets.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>userServlet</servlet-name>
+        <url-pattern>/main.java.ru.otus.hw14war.webserver.servlets.UserServlet</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
+
