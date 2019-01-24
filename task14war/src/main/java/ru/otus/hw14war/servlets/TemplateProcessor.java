@@ -1,4 +1,4 @@
-package ru.otus.hw14war.webserver.servlets;
+package ru.otus.hw14war.servlets;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -11,13 +11,14 @@ import java.io.Writer;
 import java.util.Map;
 
 public class TemplateProcessor {
-    private static final String HTML_DIR = "templates";
+    private static final String HTML_DIR = "/templates/";
 
     private final Configuration configuration;
 
     public TemplateProcessor() throws IOException {
         configuration = new Configuration(Configuration.VERSION_2_3_28);
-        configuration.setDirectoryForTemplateLoading(new File(HTML_DIR));
+        configuration.setClassForTemplateLoading(this.getClass(),HTML_DIR);
+        //configuration.setDirectoryForTemplateLoading(new File(HTML_DIR));
         configuration.setDefaultEncoding("UTF-8");
     }
 

@@ -1,9 +1,9 @@
-package ru.otus.hw14war.webserver.hibernate.config;
+package ru.otus.hw14war.hibernate.config;
 
 import org.hibernate.cfg.Configuration;
-import ru.otus.hw14war.webserver.hibernate.datasets.AddressDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.PhoneDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
 
 public class ConfigurationHibernate {
     private Configuration configuration;

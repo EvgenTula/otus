@@ -7,12 +7,22 @@
 
     <servlet>
         <servlet-name>adminServlet</servlet-name>
-        <servlet-class>main.java.ru.otus.hw14war.webserver.servlets.AdminServlet</servlet-class>
+        <servlet-class>ru.otus.hw14war.servlets.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>adminServlet</servlet-name>
+        <url-pattern>/user_list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>userServlet</servlet-name>
+        <servlet-class>ru.otus.hw14war.servlets.UserServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>userServlet</servlet-name>
-        <url-pattern>/main.java.ru.otus.hw14war.webserver.servlets.UserServlet</url-pattern>
+        <url-pattern>/user</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

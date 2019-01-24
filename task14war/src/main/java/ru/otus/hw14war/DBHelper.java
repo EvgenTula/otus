@@ -1,13 +1,15 @@
-package ru.otus.hw14war.webserver;
+package ru.otus.hw14war;
 
-import ru.otus.hw14war.webserver.hibernate.DBService;
-import ru.otus.hw14war.webserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.AddressDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.PhoneDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.UserDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw14war.hibernate.DBService;
+import ru.otus.hw14war.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw14war.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl;
 
 public class DBHelper {
+
+
 
     public static DBService createDBService() {
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());

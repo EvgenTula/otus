@@ -4,15 +4,14 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
-    <!--
-    <bean id="dbService " class="ru.otus.servlet.TimeService">
-        <constructor-arg name="pattern" value="HH@mm@ss" />
-    </bean>
--->
-
-    <bean id="cacheEngine " class="ru.otus.hw14war.mycacheengine.CacheEngine">
-        <constructor-arg name="maxElements" value="10" />
+    <bean id="templateProcessor " class="ru.otus.hw14war.servlets.TemplateProcessor">
     </bean>
 
+    <bean id="configurationHibernate" class="ru.otus.hw14war.hibernate.config.ConfigurationHibernate">
+    </bean>
+
+    <bean id="dbService " class="ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl">
+        <constructor-arg name="config" ref="configurationHibernate" />
+    </bean>
 
 </beans>

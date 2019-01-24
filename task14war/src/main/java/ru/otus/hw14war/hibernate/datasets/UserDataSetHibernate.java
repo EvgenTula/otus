@@ -1,7 +1,6 @@
-package ru.otus.hw14war.webserver.hibernate.datasets;
+package ru.otus.hw14war.hibernate.datasets;
 
-import ru.otus.hw14war.webserver.hibernate.DataSet;
-
+import ru.otus.hw14war.hibernate.DataSet;
 import javax.persistence.*;
 import java.util.*;
 

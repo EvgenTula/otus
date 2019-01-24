@@ -1,4 +1,4 @@
-package ru.otus.hw14war.webserver.hibernate;
+package ru.otus.hw14war.hibernate;
 
 import javax.persistence.*;
 

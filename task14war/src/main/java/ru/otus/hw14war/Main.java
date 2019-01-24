@@ -1,4 +1,4 @@
-package ru.otus.hw14war.webserver;
+package ru.otus.hw14war;
 /*
 import org.eclipse.jetty.server.Server;
 import ru.otus.hw14war.webserver.hibernate.DBService;

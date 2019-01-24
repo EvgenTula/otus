@@ -1,4 +1,4 @@
-package ru.otus.hw14war.webserver.hibernate.dbservice;
+package ru.otus.hw14war.hibernate.dbservice;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,11 +6,11 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import ru.otus.hw14war.webserver.hibernate.DBService;
-import ru.otus.hw14war.webserver.hibernate.DataSet;
-import ru.otus.hw14war.webserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw14war.webserver.hibernate.dao.UsersDAO;
-import ru.otus.hw14war.webserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw14war.hibernate.DBService;
+import ru.otus.hw14war.hibernate.DataSet;
+import ru.otus.hw14war.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw14war.hibernate.dao.UsersDAO;
+import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
-    public DBServiceHibernateImpl(ConfigurationHibernate cofig) {
-        this.configuration = cofig.getConfiguration();
+    public DBServiceHibernateImpl(ConfigurationHibernate config) {
+        this.configuration = config.getConfiguration();
         sessionFactory = createSessionFactory(this.configuration);
     }
 

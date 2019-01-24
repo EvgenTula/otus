@@ -1,9 +1,12 @@
-package ru.otus.hw14war.webserver.servlets;
+package ru.otus.hw14war.servlets;
 
-import ru.otus.hw14war.webserver.hibernate.DBService;
-import ru.otus.hw14war.webserver.hibernate.datasets.AddressDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.PhoneDataSetHibernate;
-import ru.otus.hw14war.webserver.hibernate.datasets.UserDataSetHibernate;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.otus.hw14war.hibernate.DBService;
+import ru.otus.hw14war.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +20,23 @@ public class UserServlet extends HttpServlet {
 
     private static final String PAGE_TEMPLATE = "user.html";
 
-    private final TemplateProcessor templateProcessor;
-    private final DBService dbService;
+    private TemplateProcessor templateProcessor;
+    private DBService dbService;
 
     @SuppressWarnings("WeakerAccess")
     public UserServlet(TemplateProcessor templateProcessor, DBService service) {
         this.templateProcessor = templateProcessor;
         this.dbService = service;
     }
+
+    public void init() {
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext(
+                        "SpringBeans.xml");
+        this.templateProcessor = context.getBean("templateProcessor", TemplateProcessor.class);
+        this.dbService = context.getBean("dbService", DBServiceHibernateImpl.class);
+    }
+
 
     private Map<String, Object> createPageDataFromHibernate(long userId) {
         Map<String, Object> pageVariables = new HashMap<>();

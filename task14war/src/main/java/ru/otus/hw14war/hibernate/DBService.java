@@ -1,4 +1,4 @@
-package ru.otus.hw14war.webserver.hibernate;
+package ru.otus.hw14war.hibernate;
 
 public interface DBService {
     <T extends DataSet> void save(T obj);
