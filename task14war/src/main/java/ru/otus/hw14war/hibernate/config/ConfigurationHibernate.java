@@ -4,12 +4,14 @@ import org.hibernate.cfg.Configuration;
 import ru.otus.hw14war.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw14war.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw14war.mycacheengine.CacheEngine;
 
 public class ConfigurationHibernate {
     private Configuration configuration;
-    public ConfigurationHibernate() {
+    private CacheEngine cacheEngine;
+    public ConfigurationHibernate(int cacheSize) {
         configuration = new Configuration();
-
+        cacheEngine = new CacheEngine<>(cacheSize);
         configuration.addAnnotatedClass(UserDataSetHibernate.class);
         configuration.addAnnotatedClass(AddressDataSetHibernate.class);
         configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
@@ -21,15 +23,16 @@ public class ConfigurationHibernate {
         configuration.setProperty("hibernate.connection.password", "sa");
 
         configuration.setProperty("hibernate.show_sql", "true");
-        //configuration.setProperty("hibernate.generate_statistics", "false");
-        //configuration.setProperty("hibernate.use_sql_comments", "false");
 
         configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         configuration.setProperty("hibernate.connection.useSSL", "false");
         configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
     }
 
-        public Configuration getConfiguration() {
+    public Configuration getConfiguration() {
             return this.configuration;
         }
+    public CacheEngine getCache() {
+        return this.cacheEngine;
+    }
 }

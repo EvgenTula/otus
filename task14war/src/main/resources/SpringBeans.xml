@@ -4,14 +4,14 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
-    <bean id="templateProcessor " class="ru.otus.hw14war.servlets.TemplateProcessor">
-    </bean>
+    <bean id="templateProcessor" class="ru.otus.hw14war.servlets.TemplateProcessor"/>
 
     <bean id="configurationHibernate" class="ru.otus.hw14war.hibernate.config.ConfigurationHibernate">
+        <constructor-arg name="cacheSize" value="100"/>
     </bean>
 
-    <bean id="dbService " class="ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl">
-        <constructor-arg name="config" ref="configurationHibernate" />
+    <bean id="dbService" class="ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl">
+        <constructor-arg ref="configurationHibernate" />
     </bean>
 
 </beans>

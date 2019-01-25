@@ -1,40 +1,41 @@
 package ru.otus.hw14war.servlets;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.otus.hw14war.hibernate.DBService;
 import ru.otus.hw14war.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw14war.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw14war.mycacheengine.CacheEngine;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Configurable
 public class UserServlet extends HttpServlet {
 
     private static final String PAGE_TEMPLATE = "user.html";
 
+    @Autowired
     private TemplateProcessor templateProcessor;
+    @Autowired
     private DBService dbService;
 
-    @SuppressWarnings("WeakerAccess")
-    public UserServlet(TemplateProcessor templateProcessor, DBService service) {
-        this.templateProcessor = templateProcessor;
-        this.dbService = service;
-    }
-
-    public void init() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext(
-                        "SpringBeans.xml");
-        this.templateProcessor = context.getBean("templateProcessor", TemplateProcessor.class);
-        this.dbService = context.getBean("dbService", DBServiceHibernateImpl.class);
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
 
@@ -86,7 +87,11 @@ public class UserServlet extends HttpServlet {
                 user.getAddress().setStreet(userAddress);
             }
         }
-        List<String> listParamPhone = List.of(request.getParameter("phone").split(","));
+        List<String> listParamPhone = new ArrayList<>();
+        String[] listPhone = request.getParameter("phone").split(",");
+        for (int i = 0 ; i<listPhone.length ; i++) {
+            listParamPhone.add(listPhone[i]);
+        }
         for (String phone : listParamPhone) {
             PhoneDataSetHibernate newPhone = new PhoneDataSetHibernate();
             newPhone.setNumber(phone);

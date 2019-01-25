@@ -1,12 +1,17 @@
 package ru.otus.hw14war.servlets;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import ru.otus.hw14war.hibernate.DBService;
-import ru.otus.hw14war.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw14war.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw14war.mycacheengine.CacheEngine;
+import ru.otus.hw14war.mycacheengine.Element;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,39 +20,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Configurable
 public class AdminServlet extends HttpServlet {
 
     private static final String PAGE_TEMPLATE = "user_list.html";
 
+    @Autowired
     private TemplateProcessor templateProcessor;
+    @Autowired
     private DBService dbService;
-    //private final CacheEngine cacheEngine;
 
-    //@SuppressWarnings("WeakerAccess")
-    public AdminServlet() throws IOException {
-        this.templateProcessor = new TemplateProcessor();
-        this.dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
-        //this.cacheEngine = cacheEngine;
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
-    public AdminServlet(TemplateProcessor templateProcessor, DBService service/*, CacheEngine cacheEngine*/) {
-        this.templateProcessor = templateProcessor;
-        this.dbService = service;
-        //this.cacheEngine = cacheEngine;
-    }
-
-    public void init() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext(
-                        "SpringBeans.xml");
-        try {
-            this.templateProcessor = new TemplateProcessor();//context.getBean("templateProcessor", TemplateProcessor.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.dbService = context.getBean("dbService", DBServiceHibernateImpl.class);
-    }
-
-
 
     private Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
         Map<String, Object> pageVariables = new HashMap<>();

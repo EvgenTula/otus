@@ -5,6 +5,15 @@
     <display-name>hw14war</display-name>
     <description>This is war!:)</description>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:SpringBeans.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>adminServlet</servlet-name>
         <servlet-class>ru.otus.hw14war.servlets.AdminServlet</servlet-class>

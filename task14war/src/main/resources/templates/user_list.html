@@ -5,7 +5,7 @@
     <title>user list</title>
 </head>
 <body>
-<form action="/user" method="get">
+<form action="user" method="get">
     <button name="id" type="submit" value="0">createUser</button>
 </form>
 
@@ -19,7 +19,7 @@
 
     <#list user_list as user>
     <tr>
-        <td><a href="/user?id=${user.id}">${user.id}</a></td><td>${user.name}</td><td>${user.age}</td>
+        <td><a href="user?id=${user.id}">${user.id}</a></td><td>${user.name}</td><td>${user.age}</td>
     </tr>
     </#list>
 

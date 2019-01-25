@@ -46,6 +46,12 @@ public class CacheEngine<K,V> {
         elements.put(key, softReference);
     }
 
+    public void remove(K key) {
+        if (elements.containsKey(key)) {
+            elements.remove(key);
+        }
+    }
+
     public void printSize() {
         while (referenceQueue.poll() != null)
         {
@@ -68,10 +74,8 @@ public class CacheEngine<K,V> {
     }
 
     public V get(K key) {
-
         SoftReference<V> softReferenceElement = elements.get(key);
-        if (softReferenceElement == null)
-        {
+        if (softReferenceElement == null) {
             return null;
         }
         return softReferenceElement.get();
