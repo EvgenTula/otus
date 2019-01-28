@@ -72,7 +72,7 @@ public class CacheEngine<K,V> {
         SoftReference<V> softReferenceElement = elements.get(key);
         if (softReferenceElement == null)
         {
-            //TODO: Подгрузка объектов из источника
+            return null;
         }
         return softReferenceElement.get();
     }
