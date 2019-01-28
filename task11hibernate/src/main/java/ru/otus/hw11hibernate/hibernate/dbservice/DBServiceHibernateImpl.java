@@ -31,9 +31,13 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     public <T extends DataSet> T load(long id, Class<T> clazz) {
+        T result;
         try (Session session = sessionFactory.openSession()) {
-            return session.load(clazz, id);
+            Transaction transaction = session.beginTransaction();
+            result = session.load(clazz, id);
+            transaction.commit();
         }
+        return result;
     }
 
     public <T extends DataSet> void save(T obj) {
