@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>ru.otus.hw1maven.Main</mainClass>
                             <packageName>ru.otus</packageName>
                         </manifest>
                     </archive>
@@ -81,7 +81,7 @@
                     </libs>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>ru.otus.hw1maven.Main</mainClass>
                             <packageName>ru.otus</packageName>
                         </manifest>
                     </archive>

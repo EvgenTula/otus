@@ -36,11 +36,11 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>Main</mainClass>
+                            <mainClass>ru.otus.hw2sizeof.Main</mainClass>
                             <packageName>ru.otus</packageName>
                         </manifest>
                         <manifestEntries>
-                            <Premain-Class>AgentMemory</Premain-Class>
+                            <Premain-Class>ru.otus.hw2sizeof.AgentMemory</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
