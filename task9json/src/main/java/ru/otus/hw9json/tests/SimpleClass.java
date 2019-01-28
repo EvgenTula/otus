@@ -1,4 +1,4 @@
-package TestClass;
+package ru.otus.hw9json.tests;
 
 public class SimpleClass {
     public transient int num;

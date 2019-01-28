@@ -1,3 +1,5 @@
+package ru.otus.hw9json;
+
 import java.lang.instrument.Instrumentation;
 
 public class AgentMemory {
@@ -11,6 +13,6 @@ public class AgentMemory {
         if (AgentMemory._instrumentation != null) {
             return AgentMemory._instrumentation.getObjectSize(obj);
         }
-        throw new IllegalStateException("AgentMemory._instrumentation is null");
+        throw new IllegalStateException("ru.otus.hw9json.AgentMemory._instrumentation is null");
     }
 }

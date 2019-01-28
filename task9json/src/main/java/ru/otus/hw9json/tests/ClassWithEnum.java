@@ -1,4 +1,4 @@
-package TestClass;
+package ru.otus.hw9json.tests;
 
 public class ClassWithEnum {
     public String name;

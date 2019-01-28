@@ -1,4 +1,4 @@
-package TestClass;
+package ru.otus.hw9json.tests;
 
 import java.util.ArrayList;
 import java.util.List;
