@@ -77,7 +77,7 @@
                     <webXml>src/main/resources/WEB-INF/web.xml</webXml>
                     <webResources>
                         <resource>
-                            <directory>src/main/java/ru/otus/hw14war/html</directory>
+                            <directory>html</directory>
                         </resource>
                     </webResources>
                 </configuration>

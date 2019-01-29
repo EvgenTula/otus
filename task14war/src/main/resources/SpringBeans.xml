@@ -3,7 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-
     <bean id="templateProcessor" class="ru.otus.hw14war.servlets.TemplateProcessor"/>
 
     <bean id="configurationHibernate" class="ru.otus.hw14war.hibernate.config.ConfigurationHibernate">

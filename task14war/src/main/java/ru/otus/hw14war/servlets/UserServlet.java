@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,7 @@ public class UserServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = createPageDataFromHibernate(Long.parseLong(request.getParameter("id")));
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
         String page = templateProcessor.getPage(PAGE_TEMPLATE, pageVariables);
         response.getWriter().println(page);
@@ -67,7 +69,8 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect("user_list");
     }
 
-    private UserDataSetHibernate userFromRequest(HttpServletRequest request) {
+    private UserDataSetHibernate userFromRequest(HttpServletRequest request) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
         Long id = Long.parseLong(request.getParameter("id"));
         UserDataSetHibernate user = null;
         if (id != 0) {

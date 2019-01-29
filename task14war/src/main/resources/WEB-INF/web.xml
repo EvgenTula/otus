@@ -14,6 +14,23 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>ru.otus.hw14war.servlets.EncodingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <servlet-name>adminServlet</servlet-name>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <servlet-name>userServlet</servlet-name>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>adminServlet</servlet-name>
         <servlet-class>ru.otus.hw14war.servlets.AdminServlet</servlet-class>
