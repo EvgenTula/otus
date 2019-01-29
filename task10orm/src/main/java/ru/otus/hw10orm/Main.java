@@ -18,7 +18,6 @@ import java.util.List;
 */
 
 public class Main {
-
     public static void main(String[] args) {
         DBService dbService = new DBServiceImpl();
         dbService.addClass(UserDataSet.class,"user");
