@@ -5,12 +5,15 @@
 
     <bean id="templateProcessor" class="ru.otus.hw14war.servlets.TemplateProcessor"/>
 
-    <bean id="configurationHibernate" class="ru.otus.hw14war.hibernate.config.ConfigurationHibernate">
-        <constructor-arg name="cacheSize" value="100"/>
+    <bean id="configurationHibernate" class="ru.otus.hw14war.hibernate.config.ConfigurationHibernate"/>
+
+    <bean id="cacheEngine" class="ru.otus.hw14war.mycacheengine.CacheEngine">
+        <constructor-arg name="maxElements" value="100" />
     </bean>
 
     <bean id="dbService" class="ru.otus.hw14war.hibernate.dbservice.DBServiceHibernateImpl">
         <constructor-arg ref="configurationHibernate" />
+        <constructor-arg ref="cacheEngine" />
     </bean>
 
 </beans>

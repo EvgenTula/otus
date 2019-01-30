@@ -56,8 +56,6 @@ public class UserServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = createPageDataFromHibernate(Long.parseLong(request.getParameter("id")));
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=utf-8");
         String page = templateProcessor.getPage(PAGE_TEMPLATE, pageVariables);
         response.getWriter().println(page);
         response.setStatus(HttpServletResponse.SC_OK);
@@ -70,7 +68,6 @@ public class UserServlet extends HttpServlet {
     }
 
     private UserDataSetHibernate userFromRequest(HttpServletRequest request) throws UnsupportedEncodingException {
-        request.setCharacterEncoding("UTF-8");
         Long id = Long.parseLong(request.getParameter("id"));
         UserDataSetHibernate user = null;
         if (id != 0) {

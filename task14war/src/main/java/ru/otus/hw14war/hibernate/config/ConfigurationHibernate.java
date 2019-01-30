@@ -8,10 +8,8 @@ import ru.otus.hw14war.mycacheengine.CacheEngine;
 
 public class ConfigurationHibernate {
     private Configuration configuration;
-    private CacheEngine cacheEngine;
-    public ConfigurationHibernate(int cacheSize) {
+    public ConfigurationHibernate() {
         configuration = new Configuration();
-        cacheEngine = new CacheEngine<>(cacheSize);
         configuration.addAnnotatedClass(UserDataSetHibernate.class);
         configuration.addAnnotatedClass(AddressDataSetHibernate.class);
         configuration.addAnnotatedClass(PhoneDataSetHibernate.class);
@@ -32,7 +30,4 @@ public class ConfigurationHibernate {
     public Configuration getConfiguration() {
             return this.configuration;
         }
-    public CacheEngine getCache() {
-        return this.cacheEngine;
-    }
 }

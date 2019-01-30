@@ -46,8 +46,6 @@ public class AdminServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         Map<String, Object> pageVariables = createPageVariablesMap(request);
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=utf-8");
         String page = templateProcessor.getPage(PAGE_TEMPLATE, pageVariables);
         response.getWriter().println(page);
         response.setStatus(HttpServletResponse.SC_OK);

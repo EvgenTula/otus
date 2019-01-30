@@ -21,10 +21,10 @@ public class DBServiceHibernateImpl<T extends DataSet> implements DBService {
     private SessionFactory sessionFactory;
     private Configuration configuration;
     private CacheEngine<Long, Element<Long, T>> cacheEngine;
-    public DBServiceHibernateImpl(ConfigurationHibernate config ) {
+    public DBServiceHibernateImpl(ConfigurationHibernate config, CacheEngine cacheEngine) {
         this.configuration = config.getConfiguration();
         this.sessionFactory = createSessionFactory(this.configuration);
-        this.cacheEngine = config.getCache();
+        this.cacheEngine = cacheEngine;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
