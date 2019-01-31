@@ -1,4 +1,4 @@
-package ru.otus.hw12webserver.hibernate;
+package ru.otus.hw15messagesystem.hibernate;
 
 import javax.persistence.*;
 

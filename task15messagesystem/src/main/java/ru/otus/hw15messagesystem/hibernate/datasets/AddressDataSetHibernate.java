@@ -1,6 +1,6 @@
-package ru.otus.hw12webserver.hibernate.datasets;
+package ru.otus.hw15messagesystem.hibernate.datasets;
 
-import ru.otus.hw12webserver.hibernate.DataSet;
+import ru.otus.hw15messagesystem.hibernate.DataSet;
 
 import javax.persistence.*;
 

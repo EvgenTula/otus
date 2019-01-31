@@ -1,19 +1,13 @@
-package ru.otus.hw12webserver.servlets;
-
+package ru.otus.hw15messagesystem.old.servlets;
+/*
 import ru.otus.hw12webserver.hibernate.DBService;
 import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.dbservice.DBServiceHibernateImpl;
-
+*/
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AdminServlet extends HttpServlet {
-
+/*
     private static final String PAGE_TEMPLATE = "user_list.html";
 
     private final TemplateProcessor templateProcessor;
@@ -40,6 +34,6 @@ public class AdminServlet extends HttpServlet {
         String page = templateProcessor.getPage(PAGE_TEMPLATE, pageVariables);
         response.getWriter().println(page);
         response.setStatus(HttpServletResponse.SC_OK);
-    }
+    }*/
 }
 

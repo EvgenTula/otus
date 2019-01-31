@@ -1,11 +1,11 @@
 package ru.otus.hw15messagesystem;
 
-import ru.otus.hw12webserver.hibernate.DBService;
-import ru.otus.hw12webserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw12webserver.hibernate.datasets.AddressDataSetHibernate;
-import ru.otus.hw12webserver.hibernate.datasets.PhoneDataSetHibernate;
-import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
-import ru.otus.hw12webserver.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw15messagesystem.hibernate.DBService;
+import ru.otus.hw15messagesystem.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw15messagesystem.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
 
 public class DBHelper {
 

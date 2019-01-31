@@ -1,4 +1,4 @@
-package ru.otus.hw12webserver.servlets;
+package ru.otus.hw15messagesystem.old.servlets;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

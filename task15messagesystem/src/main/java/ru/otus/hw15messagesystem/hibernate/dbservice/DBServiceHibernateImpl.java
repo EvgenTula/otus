@@ -1,4 +1,4 @@
-package ru.otus.hw12webserver.hibernate.dbservice;
+package ru.otus.hw15messagesystem.hibernate.dbservice;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,11 +6,11 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import ru.otus.hw12webserver.hibernate.DBService;
-import ru.otus.hw12webserver.hibernate.DataSet;
-import ru.otus.hw12webserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw12webserver.hibernate.dao.UsersDAO;
-import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw15messagesystem.hibernate.DBService;
+import ru.otus.hw15messagesystem.hibernate.DataSet;
+import ru.otus.hw15messagesystem.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw15messagesystem.hibernate.dao.UsersDAO;
+import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 
 import java.util.List;
 

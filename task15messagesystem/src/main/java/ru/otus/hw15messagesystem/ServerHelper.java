@@ -1,5 +1,5 @@
 package ru.otus.hw15messagesystem;
-
+/*
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -9,9 +9,9 @@ import ru.otus.hw12webserver.hibernate.DBService;
 import ru.otus.hw12webserver.servlets.AdminServlet;
 import ru.otus.hw12webserver.servlets.TemplateProcessor;
 import ru.otus.hw12webserver.servlets.UserServlet;
-
+*/
 public class ServerHelper {
-
+/*
     public static Server createServer(DBService service, int port) throws Exception {
         final String PUBLIC_HTML = "html";
         ResourceHandler resourceHandler = new ResourceHandler();
@@ -26,5 +26,5 @@ public class ServerHelper {
         Server server = new Server(port);
         server.setHandler(new HandlerList(resourceHandler, context));
         return server;
-    }
+    }*/
 }
