@@ -1,6 +1,6 @@
 package ru.otus.hw15messagesystem.old.servlets;
 /*
-import ru.otus.hw12webserver.hibernate.DBService;
+import ru.otus.hw12webserver.hibernate.DBServiceWebSocket;
 import ru.otus.hw12webserver.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw12webserver.hibernate.datasets.UserDataSetHibernate;
@@ -12,10 +12,10 @@ public class UserServlet extends HttpServlet {
     private static final String PAGE_TEMPLATE = "user.html";
 
     private final TemplateProcessor templateProcessor;
-    private final DBService dbService;
+    private final DBServiceWebSocket dbService;
 
     @SuppressWarnings("WeakerAccess")
-    public UserServlet(TemplateProcessor templateProcessor, DBService service) {
+    public UserServlet(TemplateProcessor templateProcessor, DBServiceWebSocket service) {
         this.templateProcessor = templateProcessor;
         this.dbService = service;
     }

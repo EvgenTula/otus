@@ -5,14 +5,20 @@
     <title>user</title>
 </head>
 <body>
+<!--
+<form name="message" action="">
+    <input name="usermsg" type="text" id="message" size="63"/>
+    <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
+</form>-->
 
-<form action="/user" method="POST">
+<form name="newUser" action="">
     <p>id: <input type="hidden" name="id"  value = ${user.id}></p>
     <p>Name: <input type="text" name="name"  value = "${user.name!}"></p>
     <p>Age: <input type="text" name="age"  value = ${user.age!}></p>
     <p>Address <input type="text" name="address"  value = "${user.getAddress()!}"></p>
     <p>Phone <input type="text" multiple="multiple" name="phone"  value = ${user.printPhoneList()!}></p>
-    <input type="submit" value="Save user">
+    <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
+    <!--<input type="submit" value="Save user">-->
 </form>
 
 <input type="button" onclick="history.back();" value="Back"/>

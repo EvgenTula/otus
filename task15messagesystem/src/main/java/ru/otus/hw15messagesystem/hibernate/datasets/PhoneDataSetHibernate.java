@@ -1,5 +1,6 @@
 package ru.otus.hw15messagesystem.hibernate.datasets;
 
+import com.google.gson.annotations.Expose;
 import ru.otus.hw15messagesystem.hibernate.DataSet;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Table(name =  "phone")
 public class PhoneDataSetHibernate extends DataSet {
     @Column(name = "number")
+    @Expose
     private String number;
 
     @ManyToOne
