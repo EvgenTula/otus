@@ -21,6 +21,8 @@ import java.util.Set;
 
 @WebSocket
 public class DBServiceWebSocket {
+    private static final String COMMAND_GET_USER = "get_user";
+
     private Set<DBServiceWebSocket> userList;
     private DBService dbService;
 
@@ -33,14 +35,12 @@ public class DBServiceWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
         dbService.save(newUser);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String gsonString = gson.toJson(dbUserList);
         for (DBServiceWebSocket item: userList) {
-            item.getSession().getRemote().sendString(gsonString);
+            item.getSession().getRemote().sendString(gson.toJson(dbUserList));
         }
     }
 

@@ -6,7 +6,6 @@
 </head>
 <body onload="init();">
 <div id="body">
-    <input type="button" value="createUser" onclick="window.location.href='user.html'" />
 
     <table id="tbl" border="1">
         <caption>user list</caption>
@@ -19,6 +18,15 @@
     </table>
     <p id="user_count">Count row = 0</p>
 
+<br><br>
+    <form name="newUser">
+        <p>id: <input type="hidden" id="id"  value = 0></p>
+        <p>Name: <input type="text" id="name"  value = ""></p>
+        <p>Age: <input type="text" id="age"  value = 0></p>
+        <p>Address <input type="text" id="address"  value = ""></p>
+        <p>Phone <input type="text" multiple="multiple" id="phoneList"  value = ""></p>
+        <input type="button" name="submitmsg" value="Save" onclick="sendMessage();"/>
+    </form>
 </div>
 </body>
 </html>
