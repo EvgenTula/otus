@@ -82,4 +82,8 @@ public class UserDataSetHibernate extends DataSet {
         return result.toString();
     }
 
+    public List<PhoneDataSetHibernate> getPhoneList() {
+        return this.phoneList;
+    }
+
 }

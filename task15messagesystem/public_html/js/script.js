@@ -26,26 +26,38 @@ init = function () {
     }
 };
 
-function editRow(userId) {
-    for (var i in userList) {
-        if (userList[i].id == userId)
-        {
-            document.getElementById("id").value = userList[i].id;
-            document.getElementById("name").value = userList[i].name;
-            document.getElementById("age").value = userList[i].age;
-            document.getElementById("address").value = userList[i].address.street;
-            var phoneList = "";
-            for(var phone in userList[i].phoneList)
-            {
-                if (phoneList != "")
-                    phoneList += ",";
-                phoneList += userList[i].phoneList[phone].number;
-            }
+function clearField() {
+    document.getElementById("id").value = 0;
+    document.getElementById("name").value = "";
+    document.getElementById("age").value = 0;
+    document.getElementById("address").value = "";
+    document.getElementById("phoneList").value = "";
+};
 
-            document.getElementById("phoneList").value = phoneList;
-        }
-    }
-}
+function editRow(userId) {
+     for (var i in userList) {
+         if (userList[i].id == userId)
+         {
+             document.getElementById("id").value = userList[i].id;
+             document.getElementById("name").value = userList[i].name;
+             document.getElementById("age").value = userList[i].age;
+             document.getElementById("address").value = userList[i].address.street;
+             var phoneList = "";
+             for(var phone in userList[i].phoneList)
+             {
+                 if (phoneList != "")
+                     phoneList += ",";
+                 phoneList += userList[i].phoneList[phone].number;
+             }
+
+             document.getElementById("phoneList").value = phoneList;
+         }
+     }
+ };
+
+
+
+
 
 function sendMessage() {
     var userId = document.getElementById("id");
@@ -69,4 +81,4 @@ function sendMessage() {
     }
     message += phoneListJson + "] }";
     ws.send(message);
-}
+};

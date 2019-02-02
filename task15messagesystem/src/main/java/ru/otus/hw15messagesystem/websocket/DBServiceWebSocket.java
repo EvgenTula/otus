@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import ru.otus.hw15messagesystem.hibernate.DBService;
+import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
 
@@ -37,6 +38,9 @@ public class DBServiceWebSocket {
     public void onMessage(String data) throws IOException {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
+        for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
+            phone.setUserDataSet(newUser);
+        }
         dbService.save(newUser);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
         for (DBServiceWebSocket item: userList) {
