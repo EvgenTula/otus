@@ -33,52 +33,24 @@ public class DBServiceWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException {
-/*
-        if (data.equals("onopen")) {
-            List<UserDataSetHibernate> userList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
-            JSONObject jsonObject = new JSONObject();
-            for (UserDataSetHibernate user: userList) {
-                jsonObject.put("id",user.getId());
-                jsonObject.put("name",user.getName());
-                jsonObject.put("age",user.getAge());
-                jsonObject.put("address",user.getAddress().toString());
-                jsonObject.put("phone",user.printPhoneList());
-            }
-            this.session.getRemote().sendString(jsonObject.toString());
+        Gson gson = new Gson();
+        UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
+        dbService.save(newUser);
+        List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
+        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String gsonString = gson.toJson(dbUserList);
+        for (DBServiceWebSocket item: userList) {
+            item.getSession().getRemote().sendString(gsonString);
         }
-        else {
-            for (DBServiceWebSocket user : userList) {
-                try {
-                    user.getSession().getRemote().sendString(data);
-                    System.out.println("Sending message: " + data);
-                } catch (Exception e) {
-                    System.out.print(e.toString());
-                }
-            }
-        }*/
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) throws IOException {
         userList.add(this);
         setSession(session);
-
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
-        //Gson gson = new Gson();
-
-        //JSONObject jsonObject = new JSONObject();
-/*
-        for (UserDataSetHibernate user: dbUserList) {
-            jsonObject.put("id",user.getId());
-            jsonObject.put("name",user.getName());
-            jsonObject.put("age",user.getAge());
-            jsonObject.put("address",user.getAddress().toString());
-            jsonObject.put("phone",user.printPhoneList());
-        }
-        */
-        //String array = JSONArray.toJSONString(dbUserList);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        this.session.getRemote().sendString(gson.toJson(dbUserList)/*array*//*jsonObject.toString()*/);
+        this.session.getRemote().sendString(gson.toJson(dbUserList));
     }
 
     public Session getSession() {

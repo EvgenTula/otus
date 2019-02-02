@@ -1,5 +1,7 @@
 package ru.otus.hw15messagesystem.hibernate;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 
@@ -7,6 +9,7 @@ import javax.persistence.*;
 public class DataSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Expose
     private long id;
 
     public long getId() {

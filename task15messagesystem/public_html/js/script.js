@@ -3,29 +3,17 @@ var ws;
 init = function () {
     ws = new WebSocket("ws://localhost:8090/dbwebsocket");
     ws.onopen = function (event) {
-        //ws.send("onopen");
+
     }
 
     ws.onmessage = function (event) {
-        //alert(event.data);
-
-        var $textarea = document.getElementById("messages");
-        var result;
-        var myList = JSON.parse(event.data);
-        for (var i = 0; i < myList.length; i++) {
-            var row = "<tr>"
-
-            //for (var colIndex = 0; colIndex < columns.length; colIndex++) {
-                //var cellValue = myList[i][columns[colIndex]];
-                //if (cellValue == null)
-                  //  cellValue = "";
-                //row = row + cellValue + "<td/>";
-                //row$.append($('<td/>').html(cellValue));
-            //}
-            result = result + "\n" + myList[i].name;
+        var userList = JSON.parse(event.data);
+        var tbl = document.getElementById("tbl");
+        for (var i in userList) {
+            var row = tbl.insertRow(tbl.rows.length);
+            row.innerHTML = "<td>"+userList[i].id+"</td><td>"+userList[i].name+"</td><td>"+userList[i].age+"</td>";
         }
-        alert(result);
-        $textarea.value = $textarea.value + JSON.parse(event.data) + "\n";
+        document.getElementById("user_count").innerHTML = "user count = " + (tbl.rows.length - 1);
     }
 
     ws.onclose = function (event) {
@@ -35,6 +23,29 @@ init = function () {
 
 function sendMessage() {
 /*
+[{
+	"name": "test1 hibernate",
+	"age": 1,
+
+	"address": {
+		"street": "Street 1",
+		"id": 1
+	},
+	"phoneList": [{
+		"number": "1111",
+		"id": 1
+	}, {
+		"number": "2222",
+		"id": 2
+	}, {
+		"number": "3333",
+		"id": 3
+	}],
+
+	"id": 1
+}]
+*/
+/*
     <p>id: <input type="hidden" name="id"  value = ${user.id}></p>
     <p>Name: <input type="text" name="name"  value = "${user.name!}"></p>
     <p>Age: <input type="text" name="age"  value = ${user.age!}></p>
@@ -42,11 +53,11 @@ function sendMessage() {
     <p>Phone <input type="text" multiple="multiple" name="phone"  value = ${user.printPhoneList()!}></p>
 */
 
-
+    var userId = document.getElementById("id");
     var userName = document.getElementById("name");
     var userAge = document.getElementById("age");
-    var userAddress = document.getElementById("age");
-    var userPhone = document.getElementById("age");
+    var userAddress = document.getElementById("address");
+    var userPhone = document.getElementById("phone");
     var message = userName.value + " _ " + userAge.value + " _ " + userAddress.value + " _ " + userPhone.value;
     alert(message)
     ws.send(message);

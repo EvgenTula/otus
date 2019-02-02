@@ -7,12 +7,8 @@
 <body onload="init();">
 <div id="body">
     <input type="button" value="createUser" onclick="window.location.href='user.html'" />
-    <!--
-    <form action="/user" method="get">
-        <button name="id" type="submit" value="0">createUser</button>
-    </form>-->
 
-    <table border="1">
+    <table id="tbl" border="1">
         <caption>user list</caption>
         <tr>
             <th>id</th>
@@ -20,25 +16,9 @@
             <th>age</th>
         </tr>
 
-
-
-        <tr>
-            <td><a href="/user?id=${user.id}">${user.id}</a></td><td>${user.name}</td><td>${user.age}</td>
-        </tr>
-
-
     </table>
-    <p>Count row = ${user_count}</p>
+    <p id="user_count">Count row = 0</p>
 
-    <div id="chatbox">
-        <textarea id="messages" rows="16" cols="48" readonly="readonly"></textarea>
-    </div>
-<!--
-    <form name="message" action="">
-        <input name="usermsg" type="text" id="message" size="63"/>
-        <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
-    </form>
--->
 </div>
 </body>
 </html>
