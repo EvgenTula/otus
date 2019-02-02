@@ -15,10 +15,7 @@ public class ServerHelper {
         resourceHandler.setResourceBase(PUBLIC_HTML);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        //TemplateProcessor templateProcessor = new TemplateProcessor();
 
-        //context.addServlet(new ServletHolder(new AdminServlet(templateProcessor, service)), "/user_list");
-        //context.addServlet(new ServletHolder(new UserServlet(templateProcessor, service)), "/user");
         context.addServlet(DBServiceWebSocketServlet.class,"/dbwebsocket");
         Server server = new Server(port);
         server.setHandler(new HandlerList(resourceHandler, context));

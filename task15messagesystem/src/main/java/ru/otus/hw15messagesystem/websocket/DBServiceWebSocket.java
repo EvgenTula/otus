@@ -1,5 +1,7 @@
 package ru.otus.hw15messagesystem.websocket;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.websocket.api.Session;
@@ -36,7 +38,7 @@ public class DBServiceWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = createGsonWithFilter();
         UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
         for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
             phone.setUserDataSet(newUser);
@@ -53,7 +55,7 @@ public class DBServiceWebSocket {
         userList.add(this);
         setSession(session);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = createGsonWithFilter();
         this.session.getRemote().sendString(gson.toJson(dbUserList));
     }
 
@@ -68,5 +70,20 @@ public class DBServiceWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         this.userList.remove(this);
+    }
+
+    private Gson createGsonWithFilter() {
+        return new GsonBuilder().addSerializationExclusionStrategy(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                boolean shouldSkipField = fieldAttributes.getDeclaredClass().equals(UserDataSetHibernate.class);
+                return shouldSkipField;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return false;
+            }
+        }).create();
     }
 }
