@@ -11,16 +11,20 @@ import ru.otus.hw15messagesystem.hibernate.DataSet;
 import ru.otus.hw15messagesystem.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw15messagesystem.hibernate.dao.UsersDAO;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw15messagesystem.messagesystem.Address;
+import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 import java.util.List;
 
-public class DBServiceHibernateImpl implements DBService {
+public class DBServiceHibernateImpl implements DBService, Sender {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
-    public DBServiceHibernateImpl(ConfigurationHibernate cofig) {
+    private final Address address;
+    public DBServiceHibernateImpl(ConfigurationHibernate cofig, Address address) {
         this.configuration = cofig.getConfiguration();
-        sessionFactory = createSessionFactory(this.configuration);
+        this.sessionFactory = createSessionFactory(this.configuration);
+        this.address = address;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -63,5 +67,10 @@ public class DBServiceHibernateImpl implements DBService {
             UsersDAO dao = new UsersDAO(session);
             dao.save(user);
         }
+    }
+
+    @Override
+    public Address getAddress() {
+        return this.address;
     }
 }

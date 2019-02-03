@@ -9,29 +9,29 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import ru.otus.hw15messagesystem.frontend.Frontend;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw15messagesystem.messagesystem.Address;
+import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @WebSocket
 public class DBServiceWebSocket {
-    private static final String COMMAND_GET_USER = "get_user";
 
+    private MessageSystem messageSystem;
     private Set<DBServiceWebSocket> userList;
     private DBService dbService;
 
     private Session session;
 
-    public DBServiceWebSocket(DBService dbService, Set<DBServiceWebSocket> userList) {
+    public DBServiceWebSocket(MessageSystem messageSystem,DBService dbService, Set<DBServiceWebSocket> userList) {
+        this.messageSystem = messageSystem;
         this.dbService = dbService;
         this.userList = userList;
     }
@@ -52,6 +52,10 @@ public class DBServiceWebSocket {
 
     @OnWebSocketConnect
     public void onOpen(Session session) throws IOException {
+        System.out.println(session.getRemoteAddress().toString());
+
+        this.messageSystem.addAddress(new Frontend(session,new Address("1")));
+
         userList.add(this);
         setSession(session);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
