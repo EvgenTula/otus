@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
 
 public class MessageSystem {
-    private Sender addressDBService;
     private final Map<Address,Address> addressMap;
     private final Map<Address, LinkedBlockingQueue<Message>> messagesMap;
     private final List<Thread> workers;
 
-    public MessageSystem(Sender addressDBService) {
-        this.addressDBService = addressDBService;
-        
+    public MessageSystem() {
         this.addressMap = new HashMap<>();
         this.messagesMap = new HashMap<>();
         this.workers = new ArrayList<>();
@@ -23,6 +21,19 @@ public class MessageSystem {
     public void addAddress(Sender sender) {
         this.addressMap.put(sender.getAddress(), null);
         this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
+        Thread thread = new Thread(() -> {
+            while (true) {
+                LinkedBlockingQueue<Message> queue = messagesMap.get(sender.getAddress());
+                try {
+                    Message message = queue.take();
+                    message.exec(sender.getAddress());
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+        });
+        thread.start();
+        workers.add(thread);
     }
 
     public void removeAddress(Sender sender) {
@@ -36,9 +47,5 @@ public class MessageSystem {
 
     public void dispose() {
         workers.forEach(Thread::interrupt);
-    }
-
-    public Address getAddressDBService() {
-        return addressDBService;
     }
 }

@@ -53,6 +53,8 @@ public class DBServiceWebSocket {
     @OnWebSocketConnect
     public void onOpen(Session session) throws IOException {
         this.messageSystem.addAddress(new FrontendServiceImpl(session));
+        this.messageSystem.sendMessage();
+
         userList.add(this);
         setSession(session);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
