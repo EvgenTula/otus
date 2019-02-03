@@ -9,12 +9,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import ru.otus.hw15messagesystem.frontend.Frontend;
+import ru.otus.hw15messagesystem.frontend.FrontendServiceImpl;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
-import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 
 import java.io.IOException;
@@ -38,6 +37,7 @@ public class DBServiceWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException {
+        //this.messageSystem.sendMessage();
         Gson gson = createGsonWithFilter();
         UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
         for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
@@ -52,10 +52,7 @@ public class DBServiceWebSocket {
 
     @OnWebSocketConnect
     public void onOpen(Session session) throws IOException {
-        System.out.println(session.getRemoteAddress().toString());
-
-        this.messageSystem.addAddress(new Frontend(session,new Address("1")));
-
+        this.messageSystem.addAddress(new FrontendServiceImpl(session));
         userList.add(this);
         setSession(session);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();

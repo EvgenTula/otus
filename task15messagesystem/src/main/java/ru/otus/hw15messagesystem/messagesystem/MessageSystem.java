@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageSystem {
+    private Sender addressDBService;
     private final Map<Address,Address> addressMap;
     private final Map<Address, LinkedBlockingQueue<Message>> messagesMap;
     private final List<Thread> workers;
 
-    public MessageSystem() {
+    public MessageSystem(Sender addressDBService) {
+        this.addressDBService = addressDBService;
+        
         this.addressMap = new HashMap<>();
         this.messagesMap = new HashMap<>();
         this.workers = new ArrayList<>();
@@ -33,5 +36,9 @@ public class MessageSystem {
 
     public void dispose() {
         workers.forEach(Thread::interrupt);
+    }
+
+    public Address getAddressDBService() {
+        return addressDBService;
     }
 }

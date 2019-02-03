@@ -1,6 +1,6 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
-public class Message {
+public abstract class Message {
     private Address from;
     private Address to;
     private String data;
@@ -22,4 +22,6 @@ public class Message {
     public String getData() {
         return data;
     }
+
+    public abstract void exec(Address address);
 }

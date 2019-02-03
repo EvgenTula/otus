@@ -12,11 +12,10 @@ import ru.otus.hw15messagesystem.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw15messagesystem.hibernate.dao.UsersDAO;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 import java.util.List;
 
-public class DBServiceHibernateImpl implements DBService, Sender {
+public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;

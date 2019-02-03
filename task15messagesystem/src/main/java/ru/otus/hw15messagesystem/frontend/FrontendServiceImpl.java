@@ -2,15 +2,14 @@ package ru.otus.hw15messagesystem.frontend;
 
 import org.eclipse.jetty.websocket.api.Session;
 import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.Sender;
 
-public class Frontend implements Sender {
+public class FrontendServiceImpl implements FrontendService {
 
     private Address address;
     private Session session;
-    public Frontend (Session session, Address address) {
+    public FrontendServiceImpl(Session session) {
         this.session = session;
-        this.address = address;
+        this.address = new Address(this.session.getRemoteAddress().toString());
     }
 
     @Override

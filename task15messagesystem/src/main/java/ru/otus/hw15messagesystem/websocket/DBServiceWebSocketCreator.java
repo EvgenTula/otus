@@ -7,6 +7,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import ru.otus.hw15messagesystem.DBHelper;
 
 import ru.otus.hw15messagesystem.hibernate.DBService;
+import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 
 import java.util.Collections;
@@ -20,11 +21,11 @@ public class DBServiceWebSocketCreator implements WebSocketCreator {
     private DBService dbService;
     private Set<DBServiceWebSocket> userList;
     public DBServiceWebSocketCreator() {
-        this.messageSystem = new MessageSystem();
-        //this.messageSystem.
         this.dbService = DBHelper.createDBService();
-        this.userList = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        this.messageSystem = new MessageSystem(this.dbService);
 
+        //this.messageSystem.addAddress((DBServiceHibernateImpl)dbService.);
+        this.userList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
     @Override
