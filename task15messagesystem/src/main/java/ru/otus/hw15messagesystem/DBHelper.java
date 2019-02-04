@@ -6,12 +6,11 @@ import ru.otus.hw15messagesystem.hibernate.datasets.AddressDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
-import ru.otus.hw15messagesystem.messagesystem.Address;
 
 public class DBHelper {
 
     public static DBService createDBService() {
-        DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate(), new Address("dbService"));
+        DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate());
 
         AddressDataSetHibernate user1Address = new AddressDataSetHibernate();
         user1Address.setStreet("Street 1");

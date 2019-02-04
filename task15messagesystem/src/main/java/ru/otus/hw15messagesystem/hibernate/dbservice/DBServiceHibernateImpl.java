@@ -19,11 +19,11 @@ public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
-    private final Address address;
-    public DBServiceHibernateImpl(ConfigurationHibernate cofig, Address address) {
+    private Address address;
+    public DBServiceHibernateImpl(ConfigurationHibernate cofig) {
         this.configuration = cofig.getConfiguration();
         this.sessionFactory = createSessionFactory(this.configuration);
-        this.address = address;
+        //this.address = address;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -72,4 +72,10 @@ public class DBServiceHibernateImpl implements DBService {
     public Address getAddress() {
         return this.address;
     }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+
 }

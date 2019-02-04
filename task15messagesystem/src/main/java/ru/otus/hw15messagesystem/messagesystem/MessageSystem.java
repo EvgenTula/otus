@@ -8,18 +8,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
 public class MessageSystem {
-    private final Map<Address,Address> addressMap;
+    //private final Map<Address,Address> addressMap;
     private final Map<Address, LinkedBlockingQueue<Message>> messagesMap;
     private final List<Thread> workers;
 
     public MessageSystem() {
-        this.addressMap = new HashMap<>();
+        //this.addressMap = new HashMap<>();
         this.messagesMap = new HashMap<>();
         this.workers = new ArrayList<>();
     }
 
     public void addAddress(Sender sender) {
-        this.addressMap.put(sender.getAddress(), null);
+        //this.addressMap.put(sender.getAddress(), null);
         this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
         Thread thread = new Thread(() -> {
             while (true) {
@@ -37,7 +37,7 @@ public class MessageSystem {
     }
 
     public void removeAddress(Sender sender) {
-        this.addressMap.remove(sender.getAddress());
+        //this.addressMap.remove(sender.getAddress());
         this.messagesMap.remove(sender.getAddress());
     }
 

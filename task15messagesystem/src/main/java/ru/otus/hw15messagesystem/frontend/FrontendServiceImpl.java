@@ -9,11 +9,20 @@ public class FrontendServiceImpl implements FrontendService {
     private Session session;
     public FrontendServiceImpl(Session session) {
         this.session = session;
-        this.address = new Address(this.session.getRemoteAddress().toString());
+        //this.address = new Address(this.session.getRemoteAddress().toString());
     }
 
     @Override
     public Address getAddress() {
         return this.address;
+    }
+
+    @Override
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Session getSession() {
+        return this.session;
     }
 }

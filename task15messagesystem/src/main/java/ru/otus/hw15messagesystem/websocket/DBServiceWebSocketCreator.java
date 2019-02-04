@@ -8,6 +8,7 @@ import ru.otus.hw15messagesystem.DBHelper;
 
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 
 import java.util.Collections;
@@ -21,10 +22,11 @@ public class DBServiceWebSocketCreator implements WebSocketCreator {
     private DBService dbService;
     private Set<DBServiceWebSocket> userList;
     public DBServiceWebSocketCreator() {
+        this.messageSystem = new MessageSystem();
         this.dbService = DBHelper.createDBService();
-        this.messageSystem = new MessageSystem(this.dbService);
+        this.dbService.setAddress(new Address("dbService", this.messageSystem));
+        this.messageSystem.addAddress(dbService);
 
-        //this.messageSystem.addAddress((DBServiceHibernateImpl)dbService.);
         this.userList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 

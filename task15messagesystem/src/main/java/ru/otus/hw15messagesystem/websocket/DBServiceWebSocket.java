@@ -9,12 +9,17 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import ru.otus.hw15messagesystem.frontend.FrontendService;
 import ru.otus.hw15messagesystem.frontend.FrontendServiceImpl;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
+import ru.otus.hw15messagesystem.messagesystem.message.MessageGetData;
+import ru.otus.hw15messagesystem.messagesystem.message.MessageSaveData;
+import ru.otus.hw15messagesystem.messagesystem.message.MessageToDBService;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +33,7 @@ public class DBServiceWebSocket {
     private DBService dbService;
 
     private Session session;
+    private FrontendService frontendService;
 
     public DBServiceWebSocket(MessageSystem messageSystem,DBService dbService, Set<DBServiceWebSocket> userList) {
         this.messageSystem = messageSystem;
@@ -37,7 +43,8 @@ public class DBServiceWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException {
-        //this.messageSystem.sendMessage();
+        this.messageSystem.sendMessage(new MessageSaveData(this.frontendService.getAddress(), this.dbService.getAddress(), data));
+        /*
         Gson gson = createGsonWithFilter();
         UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
         for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
@@ -48,18 +55,21 @@ public class DBServiceWebSocket {
         for (DBServiceWebSocket item: userList) {
             item.getSession().getRemote().sendString(gson.toJson(dbUserList));
         }
+        */
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) throws IOException {
+        frontendService = new FrontendServiceImpl(session);
+        frontendService.setAddress(new Address(session.getRemoteAddress().toString(),this.messageSystem));
         this.messageSystem.addAddress(new FrontendServiceImpl(session));
-        this.messageSystem.sendMessage();
-
+        this.messageSystem.sendMessage(new MessageGetData(frontendService.getAddress(), this.dbService.getAddress(),""));
+/*
         userList.add(this);
         setSession(session);
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)this.dbService).userGetAllList();
         Gson gson = createGsonWithFilter();
-        this.session.getRemote().sendString(gson.toJson(dbUserList));
+        this.session.getRemote().sendString(gson.toJson(dbUserList));*/
     }
 
     public Session getSession() {
@@ -72,7 +82,8 @@ public class DBServiceWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        this.userList.remove(this);
+        //this.userList.remove(this);
+        this.messageSystem.removeAddress(this.frontendService);
     }
 
     private Gson createGsonWithFilter() {
