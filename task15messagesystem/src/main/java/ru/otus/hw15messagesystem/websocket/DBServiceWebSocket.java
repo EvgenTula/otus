@@ -5,11 +5,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import ru.otus.hw15messagesystem.frontend.FrontendService;
-import ru.otus.hw15messagesystem.frontend.FrontendServiceImpl;
-import ru.otus.hw15messagesystem.hibernate.DBService;
-import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
+import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
 import ru.otus.hw15messagesystem.messagesystem.message.MessageSaveData;
 
 import java.util.Set;
@@ -17,30 +14,37 @@ import java.util.Set;
 @WebSocket
 public class DBServiceWebSocket {
 
+    private MessageSystemContext messageSystemContext;
     private MessageSystem messageSystem;
-    private DBService dbService;
-    private FrontendService frontendService;
+    private Set<DBServiceWebSocket> userList;
+    private Session session;
 
-    public DBServiceWebSocket(MessageSystem messageSystem,DBService dbService, Set<DBServiceWebSocket> userList) {
-        this.messageSystem = messageSystem;
-        this.dbService = dbService;
+
+    public DBServiceWebSocket(MessageSystemContext messageSystemContext, Set<DBServiceWebSocket> userList) {
+        this.messageSystemContext = messageSystemContext;
+        this.userList = userList;
+        this.messageSystem = messageSystemContext.getMessageSystem();
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        this.messageSystem.sendMessage(new MessageSaveData(this.dbService, frontendService, data));
+        messageSystem.sendMessage(new MessageSaveData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session), data));
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        frontendService = new FrontendServiceImpl(session);
-        frontendService.setAddress(new Address(session.getRemoteAddress().toString(),this.messageSystem));
-        this.messageSystem.addAddress(frontendService);
-        this.messageSystem.sendMessage(new MessageSaveData(this.dbService, frontendService,""));
+        userList.add(this);
+        messageSystemContext.addFrontendSender(session);
+        this.messageSystem.addAddress(messageSystemContext.getFrontendSender(session));
+        this.messageSystem.sendMessage(new MessageSaveData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session),""));
     }
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        this.messageSystem.removeAddress(this.frontendService);
+        this.messageSystem.removeAddress(messageSystemContext.getFrontendSender(session));
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 }

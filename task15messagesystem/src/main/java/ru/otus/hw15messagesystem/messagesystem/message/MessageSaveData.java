@@ -28,11 +28,13 @@ public class MessageSaveData extends MessageToDBService {
             }
             dbService.save(newUser);
         }
+        getFrom().getAddress().getMessageSystem().sendMessage(new MessageGetData(getTo(), getFrom(), getData()));
+        /*
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)dbService).userGetAllList();
         for (Sender fromSender : getFrom().getAddress().getMessageSystem().getAddressList()) {
             getFrom().getAddress().getMessageSystem().sendMessage(new MessageGetData(fromSender, getFrom(), gson.toJson(dbUserList)));
         }
-
+        */
     }
 
     private Gson createGsonWithFilter() {

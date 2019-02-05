@@ -14,6 +14,7 @@ public class MessageGetData extends MessageToFrontend {
     @Override
     public void exec(FrontendService frontendService) {
         try {
+
             frontendService.getSession().getRemote().sendString(super.getData());
         } catch (IOException e) {
             e.printStackTrace();
