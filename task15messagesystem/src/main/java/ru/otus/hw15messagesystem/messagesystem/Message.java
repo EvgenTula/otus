@@ -1,21 +1,21 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
 public abstract class Message {
-    private Address from;
-    private Address to;
+    private Sender from;
+    private Sender to;
     private String data;
 
-    public Message(Address from, Address to, String data) {
+    public Message(Sender from, Sender to, String data) {
         this.from = from;
         this.to = to;
         this.data = data;
     }
 
-    public Address getFrom() {
+    public Sender getFrom() {
         return this.from;
     }
 
-    public Address getTo() {
+    public Sender getTo() {
         return to;
     }
 
@@ -23,5 +23,5 @@ public abstract class Message {
         return data;
     }
 
-    public abstract void exec(Address address);
+    public abstract void exec(Sender sender);
 }

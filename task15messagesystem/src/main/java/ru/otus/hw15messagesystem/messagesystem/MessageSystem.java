@@ -8,41 +8,46 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
 public class MessageSystem {
-    //private final Map<Address,Address> addressMap;
-    private final Map<Address, LinkedBlockingQueue<Message>> messagesMap;
+    private final List<Sender> addressList;
+    private final Map<Sender, LinkedBlockingQueue<Message>> messagesMap;
     private final List<Thread> workers;
 
     public MessageSystem() {
-        //this.addressMap = new HashMap<>();
+        this.addressList = new ArrayList<>();
         this.messagesMap = new HashMap<>();
         this.workers = new ArrayList<>();
     }
 
     public void addAddress(Sender sender) {
-        //this.addressMap.put(sender.getAddress(), null);
-        this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
+        this.addressList.add(sender);
+        this.messagesMap.put(sender, new LinkedBlockingQueue<>());
         Thread thread = new Thread(() -> {
             while (true) {
-                LinkedBlockingQueue<Message> queue = messagesMap.get(sender.getAddress());
+                LinkedBlockingQueue<Message> queue = messagesMap.get(sender);
                 try {
                     Message message = queue.take();
-                    message.exec(sender.getAddress());
+                    message.exec(message.getFrom());
                 } catch (InterruptedException e) {
                     return;
                 }
             }
         });
+        thread.setName(sender.getAddress().getId());
         thread.start();
         workers.add(thread);
     }
 
     public void removeAddress(Sender sender) {
-        //this.addressMap.remove(sender.getAddress());
-        this.messagesMap.remove(sender.getAddress());
+        this.addressList.remove(sender);
+        this.messagesMap.remove(sender);
     }
 
     public void sendMessage(Message message) {
         messagesMap.get(message.getTo()).add(message);
+    }
+
+    public List<Sender> getAddressList() {
+        return addressList;
     }
 
     public void dispose() {

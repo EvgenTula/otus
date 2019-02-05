@@ -17,8 +17,4 @@ public class Address {
     public MessageSystem getMessageSystem() {
         return messageSystem;
     }
-
-    public void setMessageSystem(MessageSystem messageSystem) {
-        this.messageSystem = messageSystem;
-    }
 }

@@ -2,11 +2,12 @@ package ru.otus.hw15messagesystem.messagesystem.message;
 
 import ru.otus.hw15messagesystem.frontend.FrontendService;
 import ru.otus.hw15messagesystem.messagesystem.Address;
+import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 import java.io.IOException;
 
 public class MessageGetData extends MessageToFrontend {
-    public MessageGetData(Address from, Address to, String data) {
+    public MessageGetData(Sender from, Sender to, String data) {
         super(from, to, data);
     }
 
