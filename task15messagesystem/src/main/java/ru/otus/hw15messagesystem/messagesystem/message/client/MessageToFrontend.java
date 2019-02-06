@@ -1,4 +1,4 @@
-package ru.otus.hw15messagesystem.messagesystem.message;
+package ru.otus.hw15messagesystem.messagesystem.message.client;
 
 import ru.otus.hw15messagesystem.frontend.FrontendService;
 import ru.otus.hw15messagesystem.messagesystem.Address;
@@ -7,8 +7,8 @@ import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 public abstract class MessageToFrontend extends Message {
 
-    public MessageToFrontend(Sender from, Sender to, String data) {
-        super(from, to, data);
+    public MessageToFrontend(Sender from, Sender to) {
+        super(from, to);
     }
 
     @Override

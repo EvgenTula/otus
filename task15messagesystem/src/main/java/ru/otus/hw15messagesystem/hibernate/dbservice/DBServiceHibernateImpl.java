@@ -12,6 +12,8 @@ import ru.otus.hw15messagesystem.hibernate.config.ConfigurationHibernate;
 import ru.otus.hw15messagesystem.hibernate.dao.UsersDAO;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.messagesystem.Address;
+import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
+import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
 
 import java.util.List;
 
@@ -20,10 +22,12 @@ public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
     private Address address;
-    public DBServiceHibernateImpl(ConfigurationHibernate cofig) {
+    private MessageSystemContext messageSystemContext;
+    public DBServiceHibernateImpl(ConfigurationHibernate cofig, MessageSystemContext messageSystemContext, Address address) {
         this.configuration = cofig.getConfiguration();
         this.sessionFactory = createSessionFactory(this.configuration);
-        //this.address = address;
+        this.messageSystemContext = messageSystemContext;
+        this.address = address;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -73,9 +77,8 @@ public class DBServiceHibernateImpl implements DBService {
         return this.address;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    @Override
+    public MessageSystem getMessageSystem() {
+        return messageSystemContext.getMessageSystem();
     }
-
-
 }

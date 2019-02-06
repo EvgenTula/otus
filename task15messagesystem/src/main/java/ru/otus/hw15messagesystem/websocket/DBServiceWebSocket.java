@@ -7,7 +7,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
-import ru.otus.hw15messagesystem.messagesystem.message.MessageSaveData;
+import ru.otus.hw15messagesystem.messagesystem.message.service.MessageLoadData;
+import ru.otus.hw15messagesystem.messagesystem.message.service.MessageSaveData;
 
 import java.util.Set;
 
@@ -34,9 +35,10 @@ public class DBServiceWebSocket {
     @OnWebSocketConnect
     public void onOpen(Session session) {
         userList.add(this);
+        setSession(session);
         messageSystemContext.addFrontendSender(session);
         this.messageSystem.addAddress(messageSystemContext.getFrontendSender(session));
-        this.messageSystem.sendMessage(new MessageSaveData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session),""));
+        this.messageSystem.sendMessage(new MessageLoadData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session), session));
     }
 
     @OnWebSocketClose

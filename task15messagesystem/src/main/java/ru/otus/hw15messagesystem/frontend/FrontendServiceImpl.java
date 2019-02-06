@@ -5,14 +5,16 @@ import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
 
+import java.io.IOException;
+
 public class FrontendServiceImpl implements FrontendService {
 
     private Address address;
-    private Session session;
     private MessageSystemContext messageSystemContext;
-    public FrontendServiceImpl(Session session) {
-        this.session = session;
-        //this.address = new Address(this.session.getRemoteAddress().toString());
+
+    public FrontendServiceImpl(MessageSystemContext messageSystemContext,Address address) {
+        this.messageSystemContext = messageSystemContext;
+        this.address = address;
     }
 
     @Override
@@ -21,11 +23,17 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public void setAddress(Address address) {
-        this.address = address;
+    public MessageSystem getMessageSystem() {
+        return messageSystemContext.getMessageSystem();
     }
 
-    public Session getSession() {
-        return this.session;
+    public void sendDataAllClient(String data) {
+        for (Session item : messageSystemContext.getListFrontendSender().keySet()) {
+            try {
+                item.getRemote().sendString(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

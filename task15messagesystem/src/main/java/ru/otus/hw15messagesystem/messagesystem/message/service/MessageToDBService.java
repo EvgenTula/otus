@@ -1,4 +1,4 @@
-package ru.otus.hw15messagesystem.messagesystem.message;
+package ru.otus.hw15messagesystem.messagesystem.message.service;
 
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.messagesystem.Address;
@@ -7,8 +7,8 @@ import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 public abstract class MessageToDBService extends Message {
 
-    public MessageToDBService(Sender from, Sender to, String data) {
-        super(from, to, data);
+    public MessageToDBService(Sender from, Sender to) {
+        super(from, to);
     }
 
     @Override

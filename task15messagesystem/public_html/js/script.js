@@ -11,9 +11,10 @@ init = function () {
     ws.onmessage = function (event) {
         userList = JSON.parse(event.data);
         var tbl = document.getElementById("tbl");
+        /*
         while (tbl.rows.length > 1) {
             tbl.deleteRow(1);
-        }
+        }*/
         for (var i in userList) {
             var row = tbl.insertRow(tbl.rows.length);
             row.innerHTML = "<td><a onClick='editRow("+ userList[i].id +");' href='#'>"+userList[i].id+"</a></td><td>"+userList[i].name+"</td><td>"+userList[i].age+"</td>";

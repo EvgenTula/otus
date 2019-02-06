@@ -24,10 +24,9 @@ public class DBServiceWebSocketCreator implements WebSocketCreator {
     public DBServiceWebSocketCreator() {
         this.messageSystem = new MessageSystem();
         this.messageSystemContext = new MessageSystemContext(this.messageSystem);
-        this.dbService = DBHelper.createDBService();
-        this.dbService.setAddress(new Address("dbService", this.messageSystem));
+        this.dbService = DBHelper.createDBService(this.messageSystemContext,new Address("dbService"));
+        this.messageSystemContext.setServiceSender(dbService);
         this.messageSystem.addAddress(dbService);
-
         this.userList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 

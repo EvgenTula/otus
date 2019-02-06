@@ -15,8 +15,12 @@ public class MessageSystemContext  {
         this.listFrontendSender = new HashMap<>();
     }
 
-    public Sender setDbSender() {
-        return this.serviceSender;
+    public void setServiceSender(Sender serviceSender) {
+        this.serviceSender = serviceSender;
+    }
+
+    public Sender getServiceSender() {
+        return serviceSender;
     }
 
     public MessageSystem getMessageSystem() {
@@ -28,16 +32,11 @@ public class MessageSystemContext  {
     }
 
     public void addFrontendSender(Session session) {
-        FrontendService frontendService = new FrontendServiceImpl(session);
-        frontendService.setAddress(new Address(session.getRemoteAddress().toString(),messageSystem));
+        FrontendService frontendService = new FrontendServiceImpl(this,new Address(session.getRemoteAddress().toString()));
         this.listFrontendSender.put(session, frontendService);
     }
 
     public Sender getFrontendSender(Session session) {
         return this.listFrontendSender.get(session);
-    }
-
-    public Sender getServiceSender() {
-        return serviceSender;
     }
 }
