@@ -1,32 +1,29 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
-import ru.otus.hw15messagesystem.frontend.FrontendService;
-import ru.otus.hw15messagesystem.hibernate.DBService;
-
 public class MessageSystemContext  {
 
-    private DBService serviceSender;
-    private FrontendService frontendSender;
+    private Address dbServiceAddress;
+    private Address frontendAddress;
     private MessageSystem messageSystem;
 
     public MessageSystemContext(MessageSystem messageSystem) {
         this.messageSystem = messageSystem;
     }
 
-    public void setService(DBService serviceSender) {
-        this.serviceSender = serviceSender;
+    public void setService(Address dbServiceAddress) {
+        this.dbServiceAddress = dbServiceAddress;
     }
 
-    public DBService getDBService() {
-        return serviceSender;
+    public Address getDbServiceAddress() {
+        return dbServiceAddress;
     }
 
-    public void setFrontend(FrontendService frontendSender) {
-        this.frontendSender = frontendSender;
+    public void setFrontend(Address frontendAddress) {
+        this.frontendAddress = frontendAddress;
     }
 
-    public FrontendService getFrontend() {
-        return frontendSender;
+    public Address getFrontend() {
+        return frontendAddress;
     }
 
     public MessageSystem getMessageSystem() {

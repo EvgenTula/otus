@@ -22,7 +22,7 @@ public class MessageSystem {
                 LinkedBlockingQueue<Message> queue = messagesMap.get(sender);
                 try {
                     Message message = queue.take();
-                    message.exec(message.getFrom());
+                    message.exec(sender);
                 } catch (InterruptedException e) {
                     return;
                 }

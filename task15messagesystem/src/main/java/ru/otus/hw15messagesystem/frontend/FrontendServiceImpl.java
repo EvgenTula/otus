@@ -1,27 +1,26 @@
 package ru.otus.hw15messagesystem.frontend;
 
-import org.eclipse.jetty.websocket.api.Session;
 import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.Message;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
+import ru.otus.hw15messagesystem.messagesystem.message.service.MessageLoadData;
+import ru.otus.hw15messagesystem.messagesystem.message.service.MessageSaveData;
 import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FrontendServiceImpl implements FrontendService {
 
     private Address address;
     private MessageSystemContext messageSystemContext;
-    private Set<DBServiceWebSocket> listClient;
+    private ConcurrentHashMap<UUID, DBServiceWebSocket> listClient;
 
     public FrontendServiceImpl(MessageSystemContext messageSystemContext,Address address) {
         this.messageSystemContext = messageSystemContext;
         this.address = address;
-        this.listClient = Collections.synchronizedSet(new HashSet<>());
+        this.listClient = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     public void sendDataAllClient(String data) {
-        for (DBServiceWebSocket item : listClient) {
+        for (DBServiceWebSocket item : listClient.values()) {
             try {
                 item.getSession().getRemote().sendString(data);
             } catch (IOException e) {
@@ -45,12 +44,28 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public void addClient(DBServiceWebSocket webSocket) {
-        this.listClient.add(webSocket);
+    public void sendSaveUserMessage(String data) {
+        messageSystemContext.getMessageSystem().sendMessage(
+                new MessageSaveData(this.getAddress(),messageSystemContext.getDbServiceAddress(),data)
+        );
     }
 
     @Override
-    public void removeClient(DBServiceWebSocket webSocket) {
-        this.listClient.remove(webSocket);
+    public void sendGetUsersListMessage(String uuid) {
+        this.messageSystemContext.getMessageSystem().sendMessage(
+                new MessageLoadData(this.getAddress(),
+                                    messageSystemContext.getDbServiceAddress(),uuid));
+    }
+
+    @Override
+    public String addClient(DBServiceWebSocket webSocket) {
+        UUID randomUUID = UUID.randomUUID();
+        this.listClient.put(randomUUID,webSocket);
+        return randomUUID.toString();
+    }
+
+    @Override
+    public void removeClient(String uuid) {
+        this.listClient.remove(uuid);
     }
 }

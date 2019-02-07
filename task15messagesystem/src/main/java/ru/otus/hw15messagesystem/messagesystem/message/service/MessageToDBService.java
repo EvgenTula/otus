@@ -7,7 +7,7 @@ import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 public abstract class MessageToDBService extends Message {
 
-    public MessageToDBService(Sender from, Sender to) {
+    public MessageToDBService(Address from, Address to) {
         super(from, to);
     }
 

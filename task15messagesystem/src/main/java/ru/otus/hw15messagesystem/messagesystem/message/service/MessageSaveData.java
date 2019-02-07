@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.Sender;
 import ru.otus.hw15messagesystem.messagesystem.message.client.MessageGetDataAllClient;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class MessageSaveData extends MessageToDBService {
 
     private String data;
-    public MessageSaveData(Sender from, Sender to, String data) {
+    public MessageSaveData(Address from, Address to, String data) {
         super(from, to);
         this.data = data;
     }

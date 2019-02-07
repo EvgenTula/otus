@@ -5,6 +5,8 @@ import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
 
 public interface FrontendService extends Sender {
     void sendDataAllClient(String data);
-    void addClient(DBServiceWebSocket webSocket);
-    void removeClient(DBServiceWebSocket webSocket);
+    String addClient(DBServiceWebSocket webSocket);
+    void removeClient(String uuid);
+    void sendSaveUserMessage(String data);
+    void sendGetUsersListMessage(String uuid);
 }

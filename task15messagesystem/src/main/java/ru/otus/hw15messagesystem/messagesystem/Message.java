@@ -1,19 +1,19 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
 public abstract class Message {
-    private Sender from;
-    private Sender to;
+    private Address from;
+    private Address to;
 
-    public Message(Sender from, Sender to) {
+    public Message(Address from, Address to) {
         this.from = from;
         this.to = to;
     }
 
-    public Sender getFrom() {
+    public Address getFrom() {
         return this.from;
     }
 
-    public Sender getTo() {
+    public Address getTo() {
         return to;
     }
 

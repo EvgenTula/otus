@@ -7,7 +7,7 @@ import ru.otus.hw15messagesystem.messagesystem.Sender;
 
 public abstract class MessageToFrontend extends Message {
 
-    public MessageToFrontend(Sender from, Sender to) {
+    public MessageToFrontend(Address from, Address to) {
         super(from, to);
     }
 

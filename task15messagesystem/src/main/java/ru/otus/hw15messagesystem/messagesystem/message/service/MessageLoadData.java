@@ -7,17 +7,17 @@ import com.google.gson.GsonBuilder;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
-import ru.otus.hw15messagesystem.messagesystem.Sender;
-import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
+import ru.otus.hw15messagesystem.messagesystem.Address;
+import ru.otus.hw15messagesystem.messagesystem.message.client.MessageToFrontend;
 
 import java.io.IOException;
 import java.util.List;
 
 public class MessageLoadData extends MessageToDBService {
-    private DBServiceWebSocket webSocket;
-    public MessageLoadData(Sender from, Sender to, DBServiceWebSocket webSocket) {
+    private String uuid;
+    public MessageLoadData(Address from, Address to, String uuid) {
         super(from, to);
-        this.webSocket = webSocket;
+        this.uuid = uuid;
     }
 
     @Override
@@ -25,7 +25,9 @@ public class MessageLoadData extends MessageToDBService {
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)dbService).userGetAllList();
         try {
-            webSocket.getSession().getRemote().sendString(gson.toJson(dbUserList));
+            dbService.getMessageSystem().sendMessage(new MessageToFrontend() {
+            });
+            uuid.getSession().getRemote().sendString(gson.toJson(dbUserList));
         } catch (IOException e) {
             e.printStackTrace();
         }
