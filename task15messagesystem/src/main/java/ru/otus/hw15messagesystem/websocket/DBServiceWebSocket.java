@@ -10,43 +10,40 @@ import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
 import ru.otus.hw15messagesystem.messagesystem.message.service.MessageLoadData;
 import ru.otus.hw15messagesystem.messagesystem.message.service.MessageSaveData;
 
-import java.util.Set;
-
 @WebSocket
 public class DBServiceWebSocket {
 
     private MessageSystemContext messageSystemContext;
     private MessageSystem messageSystem;
-    private Set<DBServiceWebSocket> userList;
     private Session session;
 
-
-    public DBServiceWebSocket(MessageSystemContext messageSystemContext, Set<DBServiceWebSocket> userList) {
+    public DBServiceWebSocket(MessageSystemContext messageSystemContext) {
         this.messageSystemContext = messageSystemContext;
-        this.userList = userList;
         this.messageSystem = messageSystemContext.getMessageSystem();
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        messageSystem.sendMessage(new MessageSaveData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session), data));
+        messageSystem.sendMessage(new MessageSaveData(messageSystemContext.getDBService(), messageSystemContext.getFrontend(), data));
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        userList.add(this);
         setSession(session);
-        messageSystemContext.addFrontendSender(session);
-        this.messageSystem.addAddress(messageSystemContext.getFrontendSender(session));
-        this.messageSystem.sendMessage(new MessageLoadData(messageSystemContext.getServiceSender(), messageSystemContext.getFrontendSender(session), session));
+        messageSystemContext.getFrontend().addClient(this);
+        this.messageSystem.sendMessage(new MessageLoadData(messageSystemContext.getDBService(), messageSystemContext.getFrontend(), this));
     }
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        this.messageSystem.removeAddress(messageSystemContext.getFrontendSender(session));
+        messageSystemContext.getFrontend().removeClient(this);
     }
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public Session getSession() {
+        return this.session;
     }
 }

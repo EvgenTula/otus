@@ -6,33 +6,33 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 
 import ru.otus.hw15messagesystem.DBHelper;
 
+import ru.otus.hw15messagesystem.frontend.FrontendService;
+import ru.otus.hw15messagesystem.frontend.FrontendServiceImpl;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
 import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DBServiceWebSocketCreator implements WebSocketCreator {
 
     private MessageSystem messageSystem;
     private MessageSystemContext messageSystemContext;
     private DBService dbService;
-    private Set<DBServiceWebSocket> userList;
+    private FrontendService frontendService;
     public DBServiceWebSocketCreator() {
         this.messageSystem = new MessageSystem();
         this.messageSystemContext = new MessageSystemContext(this.messageSystem);
         this.dbService = DBHelper.createDBService(this.messageSystemContext,new Address("dbService"));
-        this.messageSystemContext.setServiceSender(dbService);
+        this.frontendService = new FrontendServiceImpl(this.messageSystemContext,new Address("frontendService"));
+        this.messageSystemContext.setService(dbService);
+        this.messageSystemContext.setFrontend(frontendService);
         this.messageSystem.addAddress(dbService);
-        this.userList = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        this.messageSystem.addAddress(frontendService);
     }
 
     @Override
     public Object createWebSocket(ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) {
-        DBServiceWebSocket webSocket = new DBServiceWebSocket(this.messageSystemContext, this.userList);
+        DBServiceWebSocket webSocket = new DBServiceWebSocket(this.messageSystemContext);
         return webSocket;
     }
 }

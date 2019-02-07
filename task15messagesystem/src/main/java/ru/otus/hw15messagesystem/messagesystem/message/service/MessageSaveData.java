@@ -45,7 +45,6 @@ public class MessageSaveData extends MessageToDBService {
                 boolean shouldSkipField = fieldAttributes.getDeclaredClass().equals(UserDataSetHibernate.class);
                 return shouldSkipField;
             }
-
             @Override
             public boolean shouldSkipClass(Class<?> aClass) {
                 return false;

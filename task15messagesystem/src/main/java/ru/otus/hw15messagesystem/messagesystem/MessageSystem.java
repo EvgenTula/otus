@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
 
 public class MessageSystem {
     private final Map<Sender, LinkedBlockingQueue<Message>> messagesMap;
@@ -32,10 +31,6 @@ public class MessageSystem {
         thread.setName(sender.getAddress().getId());
         thread.start();
         workers.add(thread);
-    }
-
-    public void removeAddress(Sender sender) {
-        this.messagesMap.remove(sender);
     }
 
     public void sendMessage(Message message) {

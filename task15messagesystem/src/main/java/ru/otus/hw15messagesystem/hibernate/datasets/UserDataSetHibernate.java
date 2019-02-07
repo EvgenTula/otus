@@ -1,6 +1,5 @@
 package ru.otus.hw15messagesystem.hibernate.datasets;
 
-import com.google.gson.annotations.Expose;
 import ru.otus.hw15messagesystem.hibernate.DataSet;
 
 import javax.persistence.*;
@@ -11,19 +10,16 @@ import java.util.*;
 public class UserDataSetHibernate extends DataSet {
 
     @Column(name = "name")
-    @Expose
     private String name;
+
     @Column(name = "age")
-    @Expose
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
-    @Expose
     private AddressDataSetHibernate address;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userDataSet")
-    @Expose
     private List<PhoneDataSetHibernate> phoneList;
 
     public UserDataSetHibernate() {

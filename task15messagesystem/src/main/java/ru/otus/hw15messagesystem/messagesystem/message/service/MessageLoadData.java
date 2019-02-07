@@ -4,20 +4,20 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.eclipse.jetty.websocket.api.Session;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
 import ru.otus.hw15messagesystem.messagesystem.Sender;
+import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
 
 import java.io.IOException;
 import java.util.List;
 
 public class MessageLoadData extends MessageToDBService {
-    private Session session;
-    public MessageLoadData(Sender from, Sender to, Session session) {
+    private DBServiceWebSocket webSocket;
+    public MessageLoadData(Sender from, Sender to, DBServiceWebSocket webSocket) {
         super(from, to);
-        this.session = session;
+        this.webSocket = webSocket;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class MessageLoadData extends MessageToDBService {
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)dbService).userGetAllList();
         try {
-            session.getRemote().sendString(gson.toJson(dbUserList));
+            webSocket.getSession().getRemote().sendString(gson.toJson(dbUserList));
         } catch (IOException e) {
             e.printStackTrace();
         }

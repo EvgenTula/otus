@@ -1,42 +1,35 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
-import org.eclipse.jetty.websocket.api.Session;
 import ru.otus.hw15messagesystem.frontend.FrontendService;
-import ru.otus.hw15messagesystem.frontend.FrontendServiceImpl;
-import java.util.HashMap;
-import java.util.Map;
+import ru.otus.hw15messagesystem.hibernate.DBService;
 
 public class MessageSystemContext  {
-    private Sender serviceSender;
-    private Map<Session, Sender> listFrontendSender;
+
+    private DBService serviceSender;
+    private FrontendService frontendSender;
     private MessageSystem messageSystem;
+
     public MessageSystemContext(MessageSystem messageSystem) {
         this.messageSystem = messageSystem;
-        this.listFrontendSender = new HashMap<>();
     }
 
-    public void setServiceSender(Sender serviceSender) {
+    public void setService(DBService serviceSender) {
         this.serviceSender = serviceSender;
     }
 
-    public Sender getServiceSender() {
+    public DBService getDBService() {
         return serviceSender;
+    }
+
+    public void setFrontend(FrontendService frontendSender) {
+        this.frontendSender = frontendSender;
+    }
+
+    public FrontendService getFrontend() {
+        return frontendSender;
     }
 
     public MessageSystem getMessageSystem() {
         return this.messageSystem;
-    }
-
-    public Map<Session, Sender> getListFrontendSender() {
-        return listFrontendSender;
-    }
-
-    public void addFrontendSender(Session session) {
-        FrontendService frontendService = new FrontendServiceImpl(this,new Address(session.getRemoteAddress().toString()));
-        this.listFrontendSender.put(session, frontendService);
-    }
-
-    public Sender getFrontendSender(Session session) {
-        return this.listFrontendSender.get(session);
     }
 }
