@@ -8,6 +8,7 @@ import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
 import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class FrontendServiceImpl implements FrontendService {
     public FrontendServiceImpl(MessageSystemContext messageSystemContext,Address address) {
         this.messageSystemContext = messageSystemContext;
         this.address = address;
-        this.listClient = new HashSet<>();
+        this.listClient = Collections.synchronizedSet(new HashSet<>());
     }
 
     @Override
