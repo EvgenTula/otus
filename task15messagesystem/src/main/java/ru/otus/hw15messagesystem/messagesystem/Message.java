@@ -17,5 +17,5 @@ public abstract class Message {
         return to;
     }
 
-    public abstract void exec(Sender sender);
+    public abstract void exec(Member sender);
 }

@@ -15,7 +15,7 @@ public class MessageSystem {
         this.workers = new ArrayList<>();
     }
 
-    public void addAddress(Sender sender) {
+    public void addMember(Member sender) {
         this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
         Thread thread = new Thread(() -> {
             while (true) {

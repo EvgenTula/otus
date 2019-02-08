@@ -26,10 +26,10 @@ public class ServerHelper {
         MessageSystemContext messageSystemContext = new MessageSystemContext(messageSystem);
         DBService dbService = DBHelper.createDBService(messageSystemContext,new Address("dbService"));
         FrontendService frontendService = new FrontendServiceImpl(messageSystemContext,new Address("frontendService"));
-        messageSystemContext.setService(dbService.getAddress());
-        messageSystemContext.setFrontend(frontendService.getAddress());
-        messageSystem.addAddress(dbService);
-        messageSystem.addAddress(frontendService);
+        messageSystemContext.setDBServiceAddress(dbService.getAddress());
+        messageSystemContext.setFrontendServiceAddress(frontendService.getAddress());
+        messageSystem.addMember(dbService);
+        messageSystem.addMember(frontendService);
 
         context.addServlet(new ServletHolder(new DBServiceWebSocketServlet(frontendService)),
                 "/dbwebsocket");

@@ -3,7 +3,7 @@ package ru.otus.hw15messagesystem.messagesystem.message.service;
 import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.messagesystem.Address;
 import ru.otus.hw15messagesystem.messagesystem.Message;
-import ru.otus.hw15messagesystem.messagesystem.Sender;
+import ru.otus.hw15messagesystem.messagesystem.Member;
 
 public abstract class MessageToDBService extends Message {
 
@@ -12,7 +12,7 @@ public abstract class MessageToDBService extends Message {
     }
 
     @Override
-    public void exec(Sender sender) {
+    public void exec(Member sender) {
         if (sender instanceof DBService) {
             exec((DBService)sender);
         }

@@ -10,7 +10,7 @@ public class MessageSystemContext  {
         this.messageSystem = messageSystem;
     }
 
-    public void setService(Address dbServiceAddress) {
+    public void setDBServiceAddress(Address dbServiceAddress) {
         this.dbServiceAddress = dbServiceAddress;
     }
 
@@ -18,7 +18,7 @@ public class MessageSystemContext  {
         return dbServiceAddress;
     }
 
-    public void setFrontend(Address frontendAddress) {
+    public void setFrontendServiceAddress(Address frontendAddress) {
         this.frontendAddress = frontendAddress;
     }
 

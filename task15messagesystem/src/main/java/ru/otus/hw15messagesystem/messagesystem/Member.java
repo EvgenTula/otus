@@ -1,6 +1,6 @@
 package ru.otus.hw15messagesystem.messagesystem;
 
-public interface Sender {
+public interface Member {
     Address getAddress();
     MessageSystem getMessageSystem();
 }

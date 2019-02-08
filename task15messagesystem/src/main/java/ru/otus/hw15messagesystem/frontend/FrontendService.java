@@ -1,9 +1,9 @@
 package ru.otus.hw15messagesystem.frontend;
 
-import ru.otus.hw15messagesystem.messagesystem.Sender;
+import ru.otus.hw15messagesystem.messagesystem.Member;
 import ru.otus.hw15messagesystem.websocket.DBServiceWebSocket;
 
-public interface FrontendService extends Sender {
+public interface FrontendService extends Member {
     void sendDataClient(String uuid, String data);
     String addClient(DBServiceWebSocket webSocket);
     void removeClient(String uuid);

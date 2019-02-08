@@ -16,12 +16,12 @@ public class FrontendServiceImpl implements FrontendService {
     private final static String ALL_CLIENT = "ALL_CLIENT";
     private Address address;
     private MessageSystemContext messageSystemContext;
-    private ConcurrentHashMap<UUID, DBServiceWebSocket> listClient;
+    private ConcurrentHashMap<UUID, DBServiceWebSocket> clientsMap;
 
     public FrontendServiceImpl(MessageSystemContext messageSystemContext,Address address) {
         this.messageSystemContext = messageSystemContext;
         this.address = address;
-        this.listClient = new ConcurrentHashMap<>();
+        this.clientsMap = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public void sendDataClient(String uuid, String data) {
         if (uuid.equals(ALL_CLIENT)) {
-            for (DBServiceWebSocket item : listClient.values()) {
+            for (DBServiceWebSocket item : clientsMap.values()) {
                 try {
                     item.getSession().getRemote().sendString(data);
                 } catch (IOException e1) {
@@ -46,7 +46,7 @@ public class FrontendServiceImpl implements FrontendService {
             }
         } else {
             try {
-                listClient.get(UUID.fromString(uuid)).getSession().getRemote().sendString(data);
+                clientsMap.get(UUID.fromString(uuid)).getSession().getRemote().sendString(data);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,12 +70,12 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public String addClient(DBServiceWebSocket webSocket) {
         UUID randomUUID = UUID.randomUUID();
-        this.listClient.put(randomUUID,webSocket);
+        this.clientsMap.put(randomUUID,webSocket);
         return randomUUID.toString();
     }
 
     @Override
     public void removeClient(String uuid) {
-        this.listClient.remove(uuid);
+        this.clientsMap.remove(uuid);
     }
 }
