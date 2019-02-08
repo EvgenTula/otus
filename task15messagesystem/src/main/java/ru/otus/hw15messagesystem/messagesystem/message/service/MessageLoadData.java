@@ -8,9 +8,8 @@ import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.dbservice.DBServiceHibernateImpl;
 import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.message.client.MessageToFrontend;
+import ru.otus.hw15messagesystem.messagesystem.message.client.MessageGetDataClient;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MessageLoadData extends MessageToDBService {
@@ -24,13 +23,7 @@ public class MessageLoadData extends MessageToDBService {
     public void exec(DBService dbService) {
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)dbService).userGetAllList();
-        try {
-            dbService.getMessageSystem().sendMessage(new MessageToFrontend() {
-            });
-            uuid.getSession().getRemote().sendString(gson.toJson(dbUserList));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dbService.getMessageSystem().sendMessage(new MessageGetDataClient(getTo(), getFrom(), gson.toJson(dbUserList), uuid));
     }
 
     private Gson createGsonWithFilter() {

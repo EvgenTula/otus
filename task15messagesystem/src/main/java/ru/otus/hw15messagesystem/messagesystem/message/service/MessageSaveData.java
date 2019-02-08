@@ -8,8 +8,7 @@ import ru.otus.hw15messagesystem.hibernate.DBService;
 import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.Sender;
-import ru.otus.hw15messagesystem.messagesystem.message.client.MessageGetDataAllClient;
+import ru.otus.hw15messagesystem.messagesystem.message.client.MessageGetDataClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class MessageSaveData extends MessageToDBService {
         dbService.save(newUser);
         List<UserDataSetHibernate> listData = new ArrayList<>();
         listData.add(newUser);
-        dbService.getMessageSystem().sendMessage(new MessageGetDataAllClient(getTo(), getFrom(), gson.toJson(listData)));
+        dbService.getMessageSystem().sendMessage(new MessageGetDataClient(getTo(), getFrom(), gson.toJson(listData)));
     }
 
     private Gson createGsonWithFilter() {

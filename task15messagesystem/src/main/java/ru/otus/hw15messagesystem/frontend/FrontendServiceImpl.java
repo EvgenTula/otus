@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FrontendServiceImpl implements FrontendService {
 
+    private final static String ALL_CLIENT = "ALL_CLIENT";
     private Address address;
     private MessageSystemContext messageSystemContext;
     private ConcurrentHashMap<UUID, DBServiceWebSocket> listClient;
@@ -33,10 +34,19 @@ public class FrontendServiceImpl implements FrontendService {
         return messageSystemContext.getMessageSystem();
     }
 
-    public void sendDataAllClient(String data) {
-        for (DBServiceWebSocket item : listClient.values()) {
+    @Override
+    public void sendDataClient(String uuid, String data) {
+        if (uuid.equals(ALL_CLIENT)) {
+            for (DBServiceWebSocket item : listClient.values()) {
+                try {
+                    item.getSession().getRemote().sendString(data);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } else {
             try {
-                item.getSession().getRemote().sendString(data);
+                listClient.get(UUID.fromString(uuid)).getSession().getRemote().sendString(data);
             } catch (IOException e) {
                 e.printStackTrace();
             }

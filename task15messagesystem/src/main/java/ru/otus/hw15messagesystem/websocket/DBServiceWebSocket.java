@@ -6,10 +6,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.otus.hw15messagesystem.frontend.FrontendService;
-import ru.otus.hw15messagesystem.messagesystem.MessageSystem;
-import ru.otus.hw15messagesystem.messagesystem.MessageSystemContext;
-import ru.otus.hw15messagesystem.messagesystem.message.service.MessageLoadData;
-import ru.otus.hw15messagesystem.messagesystem.message.service.MessageSaveData;
 
 @WebSocket
 public class DBServiceWebSocket {

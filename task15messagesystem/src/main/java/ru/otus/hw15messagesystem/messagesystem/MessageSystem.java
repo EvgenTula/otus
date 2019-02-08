@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageSystem {
-    private final Map<Sender, LinkedBlockingQueue<Message>> messagesMap;
+    private final Map<Address, LinkedBlockingQueue<Message>> messagesMap;
     private final List<Thread> workers;
 
     public MessageSystem() {
@@ -16,10 +16,10 @@ public class MessageSystem {
     }
 
     public void addAddress(Sender sender) {
-        this.messagesMap.put(sender, new LinkedBlockingQueue<>());
+        this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
         Thread thread = new Thread(() -> {
             while (true) {
-                LinkedBlockingQueue<Message> queue = messagesMap.get(sender);
+                LinkedBlockingQueue<Message> queue = messagesMap.get(sender.getAddress());
                 try {
                     Message message = queue.take();
                     message.exec(sender);
