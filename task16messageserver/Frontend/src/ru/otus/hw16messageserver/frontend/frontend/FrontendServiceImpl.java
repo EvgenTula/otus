@@ -1,7 +1,7 @@
 package ru.otus.hw16messageserver.frontend.frontend;
 
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystem;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemImpl;
 import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.service.MessageLoadData;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.service.MessageSaveData;
@@ -29,7 +29,7 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public MessageSystem getMessageSystem() {
+    public MessageSystemImpl getMessageSystem() {
         return messageSystemContext.getMessageSystem();
     }
 

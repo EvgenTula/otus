@@ -4,11 +4,6 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.otus.hw15messagesystem.hibernate.DBService;
-import ru.otus.hw15messagesystem.hibernate.datasets.PhoneDataSetHibernate;
-import ru.otus.hw15messagesystem.hibernate.datasets.UserDataSetHibernate;
-import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.message.client.MessageGetDataClient;
 
 import java.util.ArrayList;
 import java.util.List;

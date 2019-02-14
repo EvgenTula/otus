@@ -1,11 +1,11 @@
 package ru.otus.hw16messageserver;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystem;
+import ru.otus.hw16messageserver.messageserver.MessageServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemImpl;
 import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 
 
@@ -18,20 +18,23 @@ public class ServerHelper {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-        MessageSystem messageSystem = new MessageSystem();
+        MessageSystemImpl messageSystem = new MessageSystemImpl();
         MessageSystemContext messageSystemContext = new MessageSystemContext(messageSystem);
-        /*
+
         DBService dbService = DBHelper.createDBService(messageSystemContext,new Address("dbService"));
         FrontendService frontendService = new FrontendServiceImpl(messageSystemContext,new Address("frontendService"));
         messageSystemContext.setDBServiceAddress(dbService.getAddress());
         messageSystemContext.setFrontendServiceAddress(frontendService.getAddress());
         messageSystem.addMember(dbService);
         messageSystem.addMember(frontendService);
-        */
-        //context.addServlet(new ServletHolder(new DBServiceWebSocketServlet(frontendService)),
-//                "/dbwebsocket");
+
+        MessageServer messageServerMain = new MessageServer();
+
+        context.addServlet(new ServletHolder(new DBServiceWebSocketServlet(frontendService)),
+                "/dbwebsocket");
         Server server = new Server(port);
-  //      server.setHandler(new HandlerList(resourceHandler, context));
+        server.setHandler(new HandlerList(resourceHandler, context));
+
         return server;
     }
 }

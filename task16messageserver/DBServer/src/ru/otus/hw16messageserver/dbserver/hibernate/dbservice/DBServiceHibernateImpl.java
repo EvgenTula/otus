@@ -13,7 +13,7 @@ import ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernat
 import ru.otus.hw16messageserver.dbserver.hibernate.dao.UsersDAO;
 import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystem;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemImpl;
 import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     @Override
-    public MessageSystem getMessageSystem() {
+    public MessageSystemImpl getMessageSystem() {
         return messageSystemContext.getMessageSystem();
     }
 }

@@ -6,7 +6,7 @@ public class MessageSystemContext  {
     private Address frontendAddress;
     private MessageSystem messageSystem;
 
-    public MessageSystemContext(MessageSystem messageSystem) {
+    public MessageSystemContext(MessageSystemImpl messageSystem) {
         this.messageSystem = messageSystem;
     }
 

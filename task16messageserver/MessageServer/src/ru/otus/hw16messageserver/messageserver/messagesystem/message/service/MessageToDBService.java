@@ -1,9 +1,8 @@
 package ru.otus.hw16messageserver.messageserver.messagesystem.message.service;
 
-import ru.otus.hw15messagesystem.hibernate.DBService;
-import ru.otus.hw15messagesystem.messagesystem.Address;
-import ru.otus.hw15messagesystem.messagesystem.Member;
-import ru.otus.hw15messagesystem.messagesystem.Message;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Member;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Message;
 
 public abstract class MessageToDBService extends Message {
 

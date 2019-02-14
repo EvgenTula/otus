@@ -75,6 +75,12 @@
             <artifactId>gson</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>ru.otus</groupId>
+            <artifactId>task16messageserver.dbserver</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
