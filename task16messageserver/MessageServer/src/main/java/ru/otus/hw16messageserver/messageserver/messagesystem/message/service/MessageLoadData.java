@@ -1,5 +1,5 @@
 package ru.otus.hw16messageserver.messageserver.messagesystem.message.service;
-
+/*
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
 
 import java.util.List;
-
+*/
 public class MessageLoadData {}/*extends MessageToDBService {
     private String uuid;
     public MessageLoadData(Address from, Address to, String uuid) {
