@@ -1,5 +1,10 @@
-package ru.otus.hw16messageserver.dbserver.hibernate.dbservice;
+package main.java.ru.otus.hw16messageserver.dbserver.hibernate.dbservice;
 
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.DBService;
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.DataSet;
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernate;
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.dao.UsersDAO;
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -7,28 +12,19 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import ru.otus.hw16messageserver.dbserver.hibernate.DBService;
-import ru.otus.hw16messageserver.dbserver.hibernate.DataSet;
-import ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw16messageserver.dbserver.hibernate.dao.UsersDAO;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
-import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemImpl;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
-
 import java.util.List;
 
 public class DBServiceHibernateImpl implements DBService {
 
     private final SessionFactory sessionFactory;
     private final Configuration configuration;
-    private Address address;
-    private MessageSystemContext messageSystemContext;
-    public DBServiceHibernateImpl(ConfigurationHibernate cofig, MessageSystemContext messageSystemContext, Address address) {
+    //private Address address;
+    //private MessageSystemContext messageSystemContext;
+    public DBServiceHibernateImpl(ConfigurationHibernate cofig/*, MessageSystemContext messageSystemContext, Address address*/) {
         this.configuration = cofig.getConfiguration();
         this.sessionFactory = createSessionFactory(this.configuration);
-        this.messageSystemContext = messageSystemContext;
-        this.address = address;
+        //this.messageSystemContext = messageSystemContext;
+        //this.address = address;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -72,7 +68,7 @@ public class DBServiceHibernateImpl implements DBService {
             dao.save(user);
         }
     }
-
+/*
     @Override
     public Address getAddress() {
         return this.address;
@@ -81,5 +77,5 @@ public class DBServiceHibernateImpl implements DBService {
     @Override
     public MessageSystemImpl getMessageSystem() {
         return messageSystemContext.getMessageSystem();
-    }
+    }*/
 }

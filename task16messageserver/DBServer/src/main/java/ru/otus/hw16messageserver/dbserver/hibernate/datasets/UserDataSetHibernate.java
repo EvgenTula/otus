@@ -1,6 +1,6 @@
-package ru.otus.hw16messageserver.dbserver.hibernate.datasets;
+package main.java.ru.otus.hw16messageserver.dbserver.hibernate.datasets;
 
-import ru.otus.hw16messageserver.dbserver.hibernate.DataSet;
+import main.java.ru.otus.hw16messageserver.dbserver.hibernate.DataSet;
 
 import javax.persistence.*;
 import java.util.ArrayList;
