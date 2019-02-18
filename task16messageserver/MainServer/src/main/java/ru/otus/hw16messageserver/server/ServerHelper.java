@@ -1,19 +1,16 @@
-package ru.otus.hw16messageserver.servermain;
+package ru.otus.hw16messageserver.server;
 
-import ru.otus.hw16messageserver.servermain.websocket.DBServiceWebSocketServlet;
+import ru.otus.hw16messageserver.server.messageserver.MessageServer;
+import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocketServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.SocketHandler;
-
 
 public class ServerHelper {
 
@@ -33,6 +30,8 @@ public class ServerHelper {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
+        MessageServer messageServer = new MessageServer();
+        /*
         ProcessRunner processRunner = new ProcessRunner();
 
         try {
@@ -44,9 +43,9 @@ public class ServerHelper {
 
 
         SocketWorker socketWorker = new SocketWorker(new Socket(HOST,MESSAGESERVER_PORT));
+        */
 
-
-        context.addServlet(new ServletHolder(new DBServiceWebSocketServlet(socketWorker)),
+        context.addServlet(new ServletHolder(new DBServiceWebSocketServlet(messageServer)),
                 "/dbwebsocket");
         Server server = new Server(port);
         server.setHandler(new HandlerList(resourceHandler, context));

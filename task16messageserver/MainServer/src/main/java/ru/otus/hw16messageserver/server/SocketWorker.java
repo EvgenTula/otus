@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.servermain;
+package ru.otus.hw16messageserver.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class SocketWorker {
                 stringBuilder.append(inputLine);
                 if (inputLine.isEmpty()) { //empty line is the end of the message
                     String data = stringBuilder.toString();
-                    //input.add(msg);
+                    input.add(data);
                     //stringBuilder = new StringBuilder();
                     logger.info("ServerMain get data: " + data);
                 }

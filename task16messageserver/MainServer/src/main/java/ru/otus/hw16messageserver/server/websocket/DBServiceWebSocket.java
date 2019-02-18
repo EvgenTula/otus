@@ -1,15 +1,14 @@
-package ru.otus.hw16messageserver.servermain.websocket;
+package ru.otus.hw16messageserver.server.websocket;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import ru.otus.hw16messageserver.servermain.SocketWorker;
+import ru.otus.hw16messageserver.server.SocketWorker;
+import ru.otus.hw16messageserver.server.messageserver.MessageServer;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Message;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -24,17 +23,17 @@ public class DBServiceWebSocket {
     private HashMap<String, DBServiceWebSocket> clientsMap;
     private String uuid;
 
-    private SocketWorker socketWorker;
+    private MessageServer messageServer;
 
-    public DBServiceWebSocket(HashMap<String, DBServiceWebSocket> clientMap, SocketWorker socketWorker) {
+    public DBServiceWebSocket(HashMap<String, DBServiceWebSocket> clientMap, MessageServer messageServer) {
         this.clientsMap = clientMap;
-        this.socketWorker = socketWorker;
-        this.socketWorker.init();
+        this.messageServer = messageServer;
+        //this.socketWorker.init();
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        this.socketWorker.send(data);
+        /*this.socketWorker.send(data);*/
     }
 
     @OnWebSocketConnect
@@ -44,7 +43,7 @@ public class DBServiceWebSocket {
         UUID randomUUID = UUID.randomUUID();
         uuid = randomUUID.toString();
         clientsMap.put(uuid,this);
-        this.socketWorker.send(uuid);
+        //this.socketWorker.send(uuid);
     }
 
     @OnWebSocketClose

@@ -65,7 +65,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>main.java.ru.otus.hw16messageserver.servermain.ServerMain</mainClass>
+                            <mainClass>main.java.ru.otus.hw16messageserver.server.ServerMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

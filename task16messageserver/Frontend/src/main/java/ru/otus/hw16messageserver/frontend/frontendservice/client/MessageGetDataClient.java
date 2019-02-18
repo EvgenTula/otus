@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.messageserver.messagesystem.message.client;
+package ru.otus.hw16messageserver.frontend.frontendservice.client;
 
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
 

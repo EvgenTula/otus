@@ -1,9 +1,9 @@
-package ru.otus.hw16messageserver.messageserver;
+package ru.otus.hw16messageserver.server.messageserver;
 
-import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemImpl;
-import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
-import ru.otus.hw16messageserver.servermain.ProcessRunner;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemContext;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemImpl;
+import ru.otus.hw16messageserver.server.ProcessRunner;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,26 +25,19 @@ public class MessageServer {
 
     private static final Logger logger = Logger.getLogger(MessageServer.class.getName());
     private static final int THREADS_NUMBER = 1;
-    private static int port;
 
     MessageSystemContext messageSystemContext;
     private final ExecutorService executor;
 
-    public static void main(String[] args) throws Exception {
-        port = Integer.parseInt(args[0]);
-        MessageServer messageServer = new MessageServer(port);
-        messageServer.start();
-    }
 
-    public MessageServer(int port) {
-        logger.info("MessageServer started on port: " + port);
+    public MessageServer() {
+        logger.info("MessageServer started");
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
         messageSystemContext = new MessageSystemContext(new MessageSystemImpl());
         Address dbServerAddress = new Address(DBSERVER_PORT);//"dbServiceAddress");
         Address frontendAddress = new Address(FRONTEND_PORT);//"frontendAddress");
         messageSystemContext.setDBServiceAddress(dbServerAddress);
         messageSystemContext.setFrontendServiceAddress(frontendAddress);
-
 
         ProcessRunner processRunner = new ProcessRunner();
 

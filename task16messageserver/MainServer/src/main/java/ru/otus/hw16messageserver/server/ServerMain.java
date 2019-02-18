@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.servermain;
+package ru.otus.hw16messageserver.server;
 
 import org.eclipse.jetty.server.Server;
 
