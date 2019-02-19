@@ -1,4 +1,7 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem;
+package ru.otus.hw16messageserver.server.messageserver.messagesystem.message;
+
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
 
 public abstract class Message {
     private Address from;
@@ -18,4 +21,5 @@ public abstract class Message {
     }
 
     public abstract void exec(Member sender);
+
 }

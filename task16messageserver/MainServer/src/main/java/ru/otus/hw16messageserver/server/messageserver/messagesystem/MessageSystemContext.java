@@ -6,8 +6,13 @@ public class MessageSystemContext  {
     private Address frontendAddress;
     private MessageSystem messageSystem;
 
-    public MessageSystemContext(MessageSystemImpl messageSystem) {
+    public MessageSystemContext(MessageSystemImpl messageSystem, Address dbServiceAddress, Address frontendAddress) {
         this.messageSystem = messageSystem;
+        this.dbServiceAddress = dbServiceAddress;
+        this.frontendAddress = frontendAddress;
+        this.messageSystem.start();
+
+
     }
 
     public void setDBServiceAddress(Address dbServiceAddress) {

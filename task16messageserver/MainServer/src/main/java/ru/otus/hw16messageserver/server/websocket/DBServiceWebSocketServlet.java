@@ -3,7 +3,6 @@ package ru.otus.hw16messageserver.server.websocket;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import ru.otus.hw16messageserver.server.messageserver.MessageServer;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Message;
 
 import java.util.concurrent.TimeUnit;
 

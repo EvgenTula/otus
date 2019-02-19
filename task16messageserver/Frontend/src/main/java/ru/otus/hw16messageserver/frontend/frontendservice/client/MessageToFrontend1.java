@@ -1,8 +1,8 @@
 package ru.otus.hw16messageserver.frontend.frontendservice.client;
 
-public abstract class MessageToFrontend{}/* extends Message {
+public abstract class MessageToFrontend1 {}/* extends Message {
 
-    public MessageToFrontend(Address from, Address to) {
+    public MessageToFrontend1(Address from, Address to) {
         super(from, to);
     }
 

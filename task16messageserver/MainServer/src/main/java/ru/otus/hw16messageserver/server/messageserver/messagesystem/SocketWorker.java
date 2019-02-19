@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server;
+package ru.otus.hw16messageserver.server.messageserver.messagesystem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,12 +22,13 @@ public class SocketWorker {
     private final ExecutorService executor;
     private final Socket socket;
 
-    public SocketWorker(Socket socket/*, HashMap<String, DBServiceWebSocket> */) {
+    public SocketWorker(Socket socket) {
         this.socket = socket;
         this.executor = Executors.newFixedThreadPool(WORKERS_COUNT);
     }
 
     public void send(String data) {
+        logger.info("send data: " + data);
         output.add(data);
     }
 

@@ -1,15 +1,21 @@
-package main.java.ru.otus.hw16messageserver.dbserver;
+package ru.otus.hw16messageserver.dbserver;
 
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.DBService;
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.datasets.AddressDataSetHibernate;
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.datasets.PhoneDataSetHibernate;
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernate;
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
-import main.java.ru.otus.hw16messageserver.dbserver.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw16messageserver.dbserver.hibernate.DBService;
+import ru.otus.hw16messageserver.dbserver.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.hibernate.dbservice.DBServiceHibernateImpl;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 //import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
 //import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 
 public class DBHelper {
+
+    private static final int THREADS_NUMBER = 1;
 
     public static DBService createDBService(int port/*MessageSystemContext messageSystemContext, Address address*/) {
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate()/*, messageSystemContext, address*/);
