@@ -34,25 +34,30 @@ public class MessageServer {
     public MessageServer() {
         logger.info("MessageServer started");
 
+        /*
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("HOST",HOST);
         jsonObject.put("MESSAGESERVER_PORT",MESSAGESERVER_PORT);
         jsonObject.put("DBSERVER_PORT",DBSERVER_PORT);
-        jsonObject.put("FRONTEND_PORT",FRONTEND_PORT);
-        processRun(FRONTEND_START_COMMAND, jsonObject.toString());
-        processRun(DBSERVER_START_COMMAND, jsonObject.toString());
+        jsonObject.put("FRONTEND_PORT",FRONTEND_PORT);*/
+        processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT)/*jsonObject.toString()*/);
+        processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT)/*jsonObject.toString()*/);
 
         messageSystemContext = new MessageSystemContext(
                 new MessageSystemImpl(MESSAGESERVER_PORT),
                 new Address(HOST,DBSERVER_PORT),
                 new Address(HOST,FRONTEND_PORT));
 
+
+
+        /*
         try {
             socketWorkerFontend = new SocketWorker(new Socket(HOST,FRONTEND_PORT));
         } catch (IOException e) {
             e.printStackTrace();
         }
         socketWorkerFontend.init();
+        */
     }
 
     private void processRun(String cmd, String params) {

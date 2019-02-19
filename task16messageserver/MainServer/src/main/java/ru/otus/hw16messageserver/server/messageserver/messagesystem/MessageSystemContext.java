@@ -1,18 +1,20 @@
 package ru.otus.hw16messageserver.server.messageserver.messagesystem;
 
+import java.util.Map;
+
 public class MessageSystemContext  {
 
     private Address dbServiceAddress;
     private Address frontendAddress;
     private MessageSystem messageSystem;
 
+    private Map<Address, SocketWorker> messagesMap;
+
     public MessageSystemContext(MessageSystemImpl messageSystem, Address dbServiceAddress, Address frontendAddress) {
         this.messageSystem = messageSystem;
         this.dbServiceAddress = dbServiceAddress;
         this.frontendAddress = frontendAddress;
         this.messageSystem.start();
-
-
     }
 
     public void setDBServiceAddress(Address dbServiceAddress) {

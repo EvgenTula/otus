@@ -2,7 +2,9 @@ package ru.otus.hw16messageserver.server.messageserver.messagesystem;
 
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -37,17 +39,42 @@ public class MessageSystemImpl implements MessageSystem {
 
     public void start() {
         executor.submit(this::processing);
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            while (!executor.isShutdown()) {
-                Socket socket = serverSocket.accept(); //blocks
-                worker = new SocketWorker(socket);
-                worker.init();
-                logger.info("port:" + socket.getPort());
-                workers.add(worker);
+            executor.submit(() -> {
+                try (ServerSocket serverSocket = new ServerSocket(port)) {
+                    Socket socket = serverSocket.accept(); //blocks
+                    worker = new SocketWorker(socket);
+                    worker.init();
+                    logger.info("new worker! port: " + socket.getChannel());
+                    workers.add(worker);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+    }
+
+
+
+    private void receiveMessage(Socket socket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            String inputLine;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) { //blocks
+                //System.out.println("Message received: " + inputLine);
+                stringBuilder.append(inputLine);
+                if (inputLine.isEmpty()) { //empty line is the end of the message
+                    logger.info("MessageServer get message: " + stringBuilder.toString());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+            if (socket.isClosed())
+            {
+                //workers.remove();
+            }
+        } /*catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public void processing() {
@@ -88,8 +115,6 @@ public class MessageSystemImpl implements MessageSystem {
     }
 
     public void sendMessage(Message message) {
-        message.getTo();
-        message.getFrom();
         messagesMap.get(message.getTo()).add(message);
     }
 }
