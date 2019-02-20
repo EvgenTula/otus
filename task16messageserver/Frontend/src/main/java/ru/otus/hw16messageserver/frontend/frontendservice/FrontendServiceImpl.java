@@ -14,7 +14,9 @@ import com.google.gson.Gson;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToFrontend;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,17 +55,13 @@ public class FrontendServiceImpl implements FrontendService {
 
     private final ExecutorService executor;
 
+    private SocketWorker socketWorker = null;
     //private int
 
     public FrontendServiceImpl(int port) {
         this.port = port;
         this.clients = new ArrayList<>();
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
-        try {
-            logger.info(Class.forName(MessageToFrontend.class.getName()).toString());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         /*
         this.messageSystemContext = messageSystemContext;
         this.address = address;
@@ -73,37 +72,55 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void start() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-
-            while (true/*!executor.isShutdown()*/) {
-                Socket socket = serverSocket.accept(); //blocks
-                executor.execute(() -> receiveMessage(socket));
-                /*
-
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                    String inputLine;
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((inputLine = in.readLine()) != null) { //blocks
-                        logger.info("MessageServer started while");
-                        stringBuilder.append(inputLine);
-                        if (inputLine.isEmpty()) { //empty line is the end of the message
-                            logger.info("MessageServer get message: " + stringBuilder.toString());
-                        }
-                    }
-                }
-                ;
-                */
-
-                /*
-                SocketMsgWorker worker = newSocketMsgWorker(socket);
-                worker.init();
-                workers .add(worker);
-                */
-            }
-        }
+        logger.info("Frontend SocketWorker try start");
+        socketWorker = new SocketWorker(new Socket("localhost",8091));
+        logger.info("Frontend SocketWorker started");
+        socketWorker.init();
+        logger.info("Frontend SocketWorker init");
+        //executor.submit(this::processing);
     }
 
-    private void receiveMessage(Socket socket) {
+    public void processing() {
+        while (true) {
+
+            //for (Map.Entry<Address, SocketWorker> socketClient : socketWorker.()) {
+
+
+                String messageBody = socketWorker.pool();
+                //while (messageBody != null) {
+                    try {
+                        logger.info("Froneend processing");
+                        JSONParser jsonParser = new JSONParser();
+                        JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
+                        String className = (String) jsonObject.get("className");
+                        String gsonData = (String) jsonObject.get("data");
+                        Class<?> msgClass = Class.forName(className);
+                        var messageObj = new Gson().fromJson(gsonData, msgClass);
+                        if (messageObj instanceof MessageClientConnect) {
+                            MessageClientConnect message = (MessageClientConnect) messageObj;
+                            this.addClient(message.getData());
+                            Message messageLodaData = new MessageLoadData(message.getTo(),message.getTo(),message.getData());
+                            logger.info(messageLodaData.getJsonObject());
+                            socketWorker.send(messageLodaData.getJsonObject());
+                            logger.info("Froneend send data!");
+                        }
+                        /*if (messageObj instanceof MessageToClient) {
+                            sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
+                        }
+                        //socketClient.send(messageBody);*/
+                        //messageBody = socketWorker.take();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                //}
+            }
+        }
+
+
+
+        private void receiveMessage(Socket socket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             String inputLine;
             StringBuilder stringBuilder = new StringBuilder();

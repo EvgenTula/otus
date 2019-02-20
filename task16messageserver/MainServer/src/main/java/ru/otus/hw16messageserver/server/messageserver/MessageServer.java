@@ -1,15 +1,27 @@
 package ru.otus.hw16messageserver.server.messageserver;
 
-import org.json.simple.JSONObject;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemContext;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemImpl;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemSocketServer;
 import ru.otus.hw16messageserver.server.ProcessRunner;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
+
+/*
+
+Еще раз в контексте 2 адреса и ИНТЕРФЕЙС системы сообщений.
+Т.е. new MssageSystemContext(frontAdderss, dbAddress, new MessageSystemSocketClient())
+MessageSystemSocket messageSystemSocketClient = new MessageSystemSocketClient();
+new MssageSystemContext(frontAdderss, dbAddress, messageSystemSocketClient)
+И это делаем в каждом сервисе-jar.
+А в главном MessageSystemSocket messageSystemSocketServer = new MessageSystemSocketServer();
+
+Адреса остаются. Только за ними сокеты будут
+
+*/
 
 public class MessageServer {
 
@@ -28,7 +40,8 @@ public class MessageServer {
 
     public MessageSystemContext messageSystemContext;
 
-    public SocketWorker socketWorkerFontend;
+    //public SocketWorker socketWorkerFontend;
+    //public SocketWorker socketWorkerDBService;
 
 
     public MessageServer() {
@@ -40,14 +53,13 @@ public class MessageServer {
         jsonObject.put("MESSAGESERVER_PORT",MESSAGESERVER_PORT);
         jsonObject.put("DBSERVER_PORT",DBSERVER_PORT);
         jsonObject.put("FRONTEND_PORT",FRONTEND_PORT);*/
-        processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT)/*jsonObject.toString()*/);
-        processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT)/*jsonObject.toString()*/);
+
+
 
         messageSystemContext = new MessageSystemContext(
-                new MessageSystemImpl(MESSAGESERVER_PORT),
+                new MessageSystemSocketServer(MESSAGESERVER_PORT),
                 new Address(HOST,DBSERVER_PORT),
                 new Address(HOST,FRONTEND_PORT));
-
 
 
         /*
@@ -60,13 +72,4 @@ public class MessageServer {
         */
     }
 
-    private void processRun(String cmd, String params) {
-        try {
-            logger.info("Process starting...");
-            ProcessRunner processRunner = new ProcessRunner();
-            processRunner.start(cmd + " " + params);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

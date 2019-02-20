@@ -55,7 +55,7 @@ public class SocketWorker {
                 String data = output.take(); //blocks
                 out.println(data);
                 out.println();//line with json + an empty line
-                logger.info("ServerMain send data");
+                //logger.info("ServerMain send data");
             }
         } catch (InterruptedException | IOException e) {
             logger.log(Level.SEVERE, e.getMessage());
@@ -72,7 +72,7 @@ public class SocketWorker {
                     String data = stringBuilder.toString();
                     input.add(data);
                     //stringBuilder = new StringBuilder();
-                    logger.info("ServerMain get data: " + data);
+                    //logger.info("ServerMain get data: " + data);
                 }
             }
         } catch (IOException e) {
