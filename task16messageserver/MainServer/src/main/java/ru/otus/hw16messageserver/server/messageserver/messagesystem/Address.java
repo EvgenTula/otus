@@ -16,5 +16,4 @@ public class Address {
     public int getPort() {
         return this.port;
     }
-
 }

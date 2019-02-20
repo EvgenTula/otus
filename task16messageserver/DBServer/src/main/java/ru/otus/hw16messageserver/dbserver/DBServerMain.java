@@ -69,7 +69,7 @@ public class DBServerMain {
         logger.info("DBServerMain SocketWorker started");
         socketWorker.init();
         logger.info("DBServerMain SocketWorker init");
-        //executor.submit(this::processing);
+        executor.submit(this::processing);
 
     /*    try (ServerSocket serverSocket = new ServerSocket(port)) {
 

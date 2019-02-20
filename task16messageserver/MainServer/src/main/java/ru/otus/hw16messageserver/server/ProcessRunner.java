@@ -52,11 +52,13 @@ public class ProcessRunner {
                 BufferedReader br = new BufferedReader(isr);
                 String line;
                 while ((line = br.readLine()) != null) {
-                    out.append(type).append('>').append(line).append('\n');
-                    logger.log(Level.INFO, out.toString());
+                    //out.delete(0,out.length());
+                    //out.append(type).append('>').append(line).append('\n');
+                    //logger.info(type + ">" + line);
+                    System.out.println(type + ">" + line);
                 }
             } catch (IOException e) {
-                logger.log(Level.INFO, e.getMessage());
+                //logger.log(Level.INFO, e.getMessage());
             }
         }
     }

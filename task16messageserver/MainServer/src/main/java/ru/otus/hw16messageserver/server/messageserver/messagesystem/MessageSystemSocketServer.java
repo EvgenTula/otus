@@ -45,6 +45,7 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     public SocketWorker workerDBServer;
 
     public MessageSystemSocketServer(int port) {
+        this.clientsMap = new ConcurrentHashMap<>();
         this.messagesMap = new HashMap<>();
         this.socketClients = new ConcurrentHashMap<>();
         this.port = port;
@@ -52,7 +53,7 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     }
 
     public void start() {
-        executor.submit(this::processing);
+        //executor.submit(this::processing);
         /*
         ServerSocket serverSocket = null;
         try {
@@ -81,17 +82,19 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
         */
         executor.submit(() -> {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
-                Socket socket = serverSocket.accept(); //blocks
-                worker = new SocketWorker(socket);
-                worker.init();
-                logger.info("new worker : " + socket.toString());
-                if (!socketClients.containsKey(frontAddress))
-                {
-                    socketClients.put(frontAddress, worker);
-                }
-                else
-                {
-                    socketClients.put(dbServerAddress, worker);
+                while (!executor.isShutdown()) {
+                    Socket socket = serverSocket.accept(); //blocks
+                    worker = new SocketWorker(socket);
+                    logger.info("new worker : " + socket.toString());
+                    worker.init();
+                    logger.info("new worker : " + socket.toString() + " init()");
+                    if (!socketClients.containsKey(frontAddress)) {
+                        socketClients.put(frontAddress, worker);
+                        logger.info("new worker : is front!");
+                    } else {
+                        socketClients.put(dbServerAddress, worker);
+                        logger.info("new worker : is dbserver!");
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

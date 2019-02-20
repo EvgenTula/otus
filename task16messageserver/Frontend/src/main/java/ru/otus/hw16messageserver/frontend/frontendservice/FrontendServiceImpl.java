@@ -77,7 +77,7 @@ public class FrontendServiceImpl implements FrontendService {
         logger.info("Frontend SocketWorker started");
         socketWorker.init();
         logger.info("Frontend SocketWorker init");
-        //executor.submit(this::processing);
+        executor.submit(this::processing);
     }
 
     public void processing() {
