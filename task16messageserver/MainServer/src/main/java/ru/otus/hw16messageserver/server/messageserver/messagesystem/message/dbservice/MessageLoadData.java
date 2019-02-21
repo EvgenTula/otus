@@ -1,13 +1,8 @@
 package ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice;
 
-import com.google.gson.Gson;
-import org.json.simple.JSONObject;
+
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.DBServer;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageToDBServer;
-
-import java.util.List;
 
 public class MessageLoadData extends MessageToDBServer {
     private String uuid;
@@ -18,7 +13,8 @@ public class MessageLoadData extends MessageToDBServer {
 
     @Override
     public void exec(DBServer dbServer) {
-        dbServer.loadUserList();
+        String usersData = dbServer.loadUserList();
+        dbServer.sendDataToFrontend(getFrom(),uuid,usersData);
     }
 
 

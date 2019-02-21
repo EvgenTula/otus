@@ -19,6 +19,7 @@ import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendServ
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.*;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageLoadData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,22 +74,22 @@ public class FrontendServiceImpl implements FrontendService {
 
 
     @Override
-    public void start() throws IOException {
+    public void start() {
         logger.info("Frontend SocketWorker try start");
-        socketWorker = new SocketWorker(new Socket("localhost",8091));
-        logger.info("Frontend SocketWorker started");
-        socketWorker.init();
-        logger.info("Frontend SocketWorker init");
-        executor.submit(this::processing);
+        try {
+            socketWorker = new SocketWorker(new Socket("localhost",8091));
+            logger.info("Frontend SocketWorker started");
+            socketWorker.init();
+            logger.info("Frontend SocketWorker init");
+            executor.submit(this::processing);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void processing() {
         while (true) {
-
-            //for (Map.Entry<Address, SocketWorker> socketClient : socketWorker.()) {
-
-
-                logger.info("Frontend processing");
+            logger.info("Frontend processing");
             String messageBody = null;
             try {
                 messageBody = socketWorker.take();
@@ -179,7 +180,15 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public void addClient(String uuid) {
         clients.add(UUID.fromString(uuid));
-    };
+    }
+
+    @Override
+    public void sendMessageLoadData(Address dbServer, String uuid) {
+        MessageLoadData messageLoadData = new MessageLoadData(getAddress(),dbServer,uuid);
+        socketWorker.send(messageLoadData.getJsonObject());
+    }
+
+
     /*
     @Override
     public Address getAddress() {
@@ -195,6 +204,12 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void sendDataClient(String uuid, String data) {
+        MessageToWebsocket messageToWebsocket = new MessageToWebsocket();
+        messageToWebsocket.data = data;
+        messageToWebsocket.uuid = UUID.fromString(uuid);
+        socketWorker.send(messageToWebsocket.getJsonObject());
+
+        /*
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
         MessageToClient message = new MessageToClient();
@@ -218,11 +233,14 @@ public class FrontendServiceImpl implements FrontendService {
                 e.printStackTrace();
             }
         }
+        */
     }
+
+
 
     @Override
     public Address getAddress() {
-        return null;
+        return new Address("localhost",8093);
     }
 
 

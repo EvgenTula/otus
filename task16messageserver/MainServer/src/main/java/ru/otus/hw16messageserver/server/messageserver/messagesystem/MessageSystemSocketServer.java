@@ -5,8 +5,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.messageImpl.MessageClientConnect;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToClient;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageClientConnect;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToWebsocket;
 import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocket;
 
 import java.io.IOException;
@@ -147,8 +147,8 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
                             socketClients.get(message.getTo()).send(message.getJsonObject());
                             logger.info("Message from " + ((Message) messageObj).getFrom() + " to " + ((Message) messageObj).getTo());
                         }
-                        if (msgClass.getName().equals(MessageToClient.class.getName())) {
-                            sendDataClient(((MessageToClient) messageObj).uuid,((MessageToClient) messageObj).data);
+                        if (msgClass.getName().equals(MessageToWebsocket.class.getName())) {
+                            sendDataClient(((MessageToWebsocket) messageObj).uuid,((MessageToWebsocket) messageObj).data);
                         }
                         //socketClient.send(messageBody);
                         messageBody = socketClient.getValue().pool();

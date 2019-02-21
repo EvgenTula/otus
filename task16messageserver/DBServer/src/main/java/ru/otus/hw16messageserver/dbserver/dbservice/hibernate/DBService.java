@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.dbserver.hibernate;
+package ru.otus.hw16messageserver.dbserver.dbservice.hibernate;
 
 //import ru.otus.hw16messageserver.messageserver.messagesystem.Member;
 

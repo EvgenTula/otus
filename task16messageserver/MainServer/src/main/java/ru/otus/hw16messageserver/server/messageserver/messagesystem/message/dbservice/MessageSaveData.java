@@ -15,6 +15,6 @@ public class MessageSaveData extends MessageToDBServer {
     public void exec(DBServer dbServer) {
         int recordId = dbServer.saveData(getData());
         String userData = dbServer.loadUserByid(recordId);
-        dbServer.sendDataToFrontend("ALL_CLIENT", userData);
+        dbServer.sendDataToFrontend(getFrom(),"ALL_CLIENT", userData);
     }
 }

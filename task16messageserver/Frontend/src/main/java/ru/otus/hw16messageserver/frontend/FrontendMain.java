@@ -2,7 +2,6 @@ package ru.otus.hw16messageserver.frontend;
 
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageClientConnect;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -28,11 +27,7 @@ public class FrontendMain {
         logger.info(Arrays.toString(args));
         */
 
-/*
-        SocketWorker socketWorker = new SocketWorker(new Socket("localhost",8091));
-        socketWorker.init();
-        */
-/*
+        /*
         Address frontend = new Address("localhost",8093);
         Address dbserver = new Address("localhost",8092);
         Message msg = new MessageToFrontend(frontend,dbserver,"the force awakens");
@@ -42,16 +37,6 @@ public class FrontendMain {
         jsonObject.put("className", MessageToFrontend.class.getName());
         jsonObject.put("data",gson.toJson(msg));
         socketWorker.send(jsonObject.toString());
-*/
-
-
-        //messageServer.send();
-
-        //messageServer.socketWorkerFontend.send(jsonObject.toString());
-        /*
-        socketWorker.send("ping1");
-        socketWorker.send("ping2");
-        socketWorker.send("ping3");
         */
 
         int port = Integer.valueOf(args[0]);

@@ -5,7 +5,7 @@ import org.json.simple.JSONObject;
 
 import java.util.UUID;
 
-public class MessageToClient {
+public class MessageToWebsocket {
     public UUID uuid;
     public String data;
 

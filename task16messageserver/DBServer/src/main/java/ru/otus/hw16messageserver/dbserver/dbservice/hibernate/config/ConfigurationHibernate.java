@@ -1,9 +1,9 @@
-package ru.otus.hw16messageserver.dbserver.hibernate.config;
+package ru.otus.hw16messageserver.dbserver.dbservice.hibernate.config;
 
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.AddressDataSetHibernate;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.PhoneDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.AddressDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.PhoneDataSetHibernate;
 import org.hibernate.cfg.Configuration;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
 
 public class ConfigurationHibernate {
     private Configuration configuration;

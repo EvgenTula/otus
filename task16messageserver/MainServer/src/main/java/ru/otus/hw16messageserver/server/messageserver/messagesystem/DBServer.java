@@ -7,5 +7,5 @@ public interface DBServer extends Member {
     int saveData(String data);
     String loadUserByid(int id);
     String loadUserList();
-    void sendDataToFrontend(String uuid,String data);
+    void sendDataToFrontend(Address frontend,String uuid,String data);
 }

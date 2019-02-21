@@ -7,19 +7,18 @@ import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ru.otus.hw16messageserver.dbserver.hibernate.DBService;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
-import ru.otus.hw16messageserver.dbserver.hibernate.dbservice.DBServiceHibernateImpl;
+import ru.otus.hw16messageserver.dbserver.dbservice.DBHelper;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dbservice.DBServiceHibernateImpl;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.DBServer;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageLoadData;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToClient;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageToClient;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
+
+
 import java.net.Socket;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-public class DBServerMain {
+public class DBServerMain implements DBServer {
 
     private static final Logger logger = Logger.getLogger(DBServerMain.class.getName());
     private static final int THREADS_NUMBER = 1;
@@ -50,11 +49,6 @@ public class DBServerMain {
 
         DBServerMain dbServerMain =  new DBServerMain(port);
         dbServerMain.start();
-
-        /*
-        SocketWorker socketWorker = new SocketWorker(new Socket("localhost",8091));
-        socketWorker.init();
-        */
     }
 
     public DBServerMain(int port) {
@@ -63,43 +57,42 @@ public class DBServerMain {
         dbService = (DBServiceHibernateImpl) DBHelper.createDBService(port);
     }
 
-    private void start() throws IOException {
-        logger.info("DBServerMain SocketWorker try start");
-        socketWorker = new SocketWorker(new Socket("localhost",8091));
+    public void start() {
+        try {
+
+            logger.info("DBServerMain SocketWorker try start");
+            socketWorker = new SocketWorker(new Socket("localhost",8091));
         logger.info("DBServerMain SocketWorker started");
         socketWorker.init();
         logger.info("DBServerMain SocketWorker init");
         executor.submit(this::processing);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    /*    try (ServerSocket serverSocket = new ServerSocket(port)) {
+    @Override
+    public int saveData(String data) {
+        //dbService.save();
+        return 0;
+    }
 
-            while (true/*!executor.isShutdown()*//*) {
-                Socket socket = serverSocket.accept(); //blocks
-                System.out.println("MessageServer get message!");
-                executor.execute(() -> receiveMessage(socket));*/
-                /*
+    @Override
+    public String loadUserByid(int id) {
+        return null;
+    }
 
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                    String inputLine;
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((inputLine = in.readLine()) != null) { //blocks
-                        logger.info("MessageServer started while");
-                        stringBuilder.append(inputLine);
-                        if (inputLine.isEmpty()) { //empty line is the end of the message
-                            logger.info("MessageServer get message: " + stringBuilder.toString());
-                        }
-                    }
-                }
-                ;
-                */
+    @Override
+    public String loadUserList() {
+        Gson gson = createGsonWithFilter();
+        List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
+        return gson.toJson(dbUserList);
+    }
 
-                /*
-                SocketMsgWorker worker = newSocketMsgWorker(socket);
-                worker.init();
-                workers .add(worker);
-                */
-          //  }
-        //}
+    @Override
+    public void sendDataToFrontend(Address frontend,String uuid, String data) {
+        MessageToClient messageToClient = new MessageToClient(getAddress(),frontend, data, uuid);
+        socketWorker.send(messageToClient.getJsonObject());
     }
 
 
@@ -119,26 +112,21 @@ public class DBServerMain {
                 try {
                     logger.info("DBServer get message : " + messageBody);
                     JSONParser jsonParser = new JSONParser();
-                    JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody.toString());
                     String className = (String) jsonObject.get("className");
                     String gsonData = (String) jsonObject.get("data");
                     Class<?> msgClass = Class.forName(className);
-                    var messageObj = new Gson().fromJson(gsonData, msgClass);
-                    if (messageObj instanceof MessageLoadData) {
+                    Message message = (Message) new Gson().fromJson(gsonData, msgClass);
+                    message.exec(this);
+                    //logger.info("Class.forName :" + msgClass.getName());
+                    //logger.info("MessageToFrontend1.class.getName(): " + MessageToFrontend.class.getName());
+                    //MessageToFrontend message = (MessageToFrontend)new Gson().fromJson(gsonData, msgClass);
+                    //()new Gson().fromJson(gsonData, msgClass);
+                    //return (Msg) new Gson().fromJson(json, msgClass);
+                    //clients.add(UUID.fromString(stringBuilder.toString()));
+                    logger.info("FrontendServiceImpl get message: " + message.getData());
 
-                        Gson gson = createGsonWithFilter();
-                        List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
-                        MessageToClient message = new MessageToClient();
-                        message.data = gson.toJson(dbUserList);
-                        message.uuid = UUID.fromString(((MessageLoadData) messageObj).getData());
-                        socketWorker.send(message.getJsonObject());
 
-                        //this.addClient(message.());
-                        //Message messageLodaData = new MessageLoadData(message.getTo(),message.getTo(),message.getData());
-                        //logger.info(messageLodaData.getJsonObject());
-                        //socketWorker.send(messageLodaData.getJsonObject());
-                        //logger.info("Message from " + ((Message) messageObj).getFrom() + " to " + ((Message) messageObj).getTo());
-                    }
                         /*if (messageObj instanceof MessageToClient) {
                             sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
                         }
@@ -174,6 +162,11 @@ public class DBServerMain {
                 return false;
             }
         }).create();
+    }
+
+    @Override
+    public Address getAddress() {
+        return new Address("localhost",8092);
     }
 /*
     private void receiveMessage(Socket socket) {

@@ -17,7 +17,7 @@ public class MessageSystemContext  {
     private static final String DBSERVER_START_COMMAND = "java -jar ../DBServer/target/dbserver.jar";
 
     private static final int FRONTEND_PORT = 8093;
-    private static final String FRONTEND_START_COMMAND = "java -jar ../FrontendService/target/frontend.jar";
+    private static final String FRONTEND_START_COMMAND = "java -jar ../Frontend/target/frontend.jar";
 
     private Address dbServiceAddress;
     private Address frontendAddress;

@@ -1,8 +1,8 @@
-package ru.otus.hw16messageserver.dbserver.hibernate.dao;
+package ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dao;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

@@ -1,10 +1,10 @@
-package ru.otus.hw16messageserver.dbserver.hibernate.dbservice;
+package ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dbservice;
 
-import ru.otus.hw16messageserver.dbserver.hibernate.DBService;
-import ru.otus.hw16messageserver.dbserver.hibernate.DataSet;
-import ru.otus.hw16messageserver.dbserver.hibernate.config.ConfigurationHibernate;
-import ru.otus.hw16messageserver.dbserver.hibernate.dao.UsersDAO;
-import ru.otus.hw16messageserver.dbserver.hibernate.datasets.UserDataSetHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.DBService;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.DataSet;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.config.ConfigurationHibernate;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dao.UsersDAO;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

@@ -6,4 +6,5 @@ public interface FrontendService extends Member {
     void start();
     void addClient(String uuid);
     void sendDataClient(String uuid, String data);
+    void sendMessageLoadData(Address dbServer, String uuid);
 }
