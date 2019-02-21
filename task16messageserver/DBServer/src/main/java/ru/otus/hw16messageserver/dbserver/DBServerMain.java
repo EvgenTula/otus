@@ -60,7 +60,7 @@ public class DBServerMain {
     public DBServerMain(int port) {
         this.port = port;
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
-        //dbService = (DBServiceHibernateImpl) DBHelper.createDBService(port);
+        dbService = (DBServiceHibernateImpl) DBHelper.createDBService(port);
     }
 
     private void start() throws IOException {
@@ -107,10 +107,17 @@ public class DBServerMain {
         while (true) {
 
             //for (Map.Entry<Address, SocketWorker> socketClient : socketWorker.()) {
-            String messageBody = socketWorker.pool();
+            logger.info("DBServer processing");
+            String messageBody = null;
+            try {
+                messageBody = socketWorker.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            logger.info("DBServer processing : messageBody get");
             while (messageBody != null) {
                 try {
-                    //logger.info(messageBody);
+                    logger.info("DBServer get message : " + messageBody);
                     JSONParser jsonParser = new JSONParser();
                     JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
                     String className = (String) jsonObject.get("className");
@@ -135,10 +142,12 @@ public class DBServerMain {
                             sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
                         }
                         //socketClient.send(messageBody);*/
-                    messageBody = socketWorker.pool();
+                    messageBody = socketWorker.take();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

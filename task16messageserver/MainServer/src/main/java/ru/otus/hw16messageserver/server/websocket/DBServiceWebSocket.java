@@ -46,6 +46,7 @@ public class DBServiceWebSocket {
         setSession(session);
 
         uuid = this.messageServer.messageSystemContext.getMessageSystem().addClient(this);
+        /*
         clientsMap.put(uuid,this);
 
         Message message = new MessageClientConnect(
@@ -57,7 +58,7 @@ public class DBServiceWebSocket {
         //logger.info((MessageToFrontend.class.getName() + " => " + gson.toJson(message)));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_CLASS_NAME, MessageClientConnect.class.getName());
-        jsonObject.put(JSON_DATA,gson.toJson(message));
+        jsonObject.put(JSON_DATA,gson.toJson(message));*/
         //messageServer.send();
 
         //messageServer.socketWorkerFontend.send(jsonObject.toString());

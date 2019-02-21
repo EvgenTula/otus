@@ -86,11 +86,19 @@ public class FrontendServiceImpl implements FrontendService {
             //for (Map.Entry<Address, SocketWorker> socketClient : socketWorker.()) {
 
 
-                String messageBody = socketWorker.pool();
-                //while (messageBody != null) {
+                logger.info("Frontend processing");
+            String messageBody = null;
+            try {
+                messageBody = socketWorker.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            logger.info("Frontend processing : messageBody get");
+                while (messageBody != null) {
                     try {
-                        logger.info("Froneend processing");
+                        logger.info("Frontend get message :" + messageBody);
                         JSONParser jsonParser = new JSONParser();
+
                         JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
                         String className = (String) jsonObject.get("className");
                         String gsonData = (String) jsonObject.get("data");
@@ -99,7 +107,7 @@ public class FrontendServiceImpl implements FrontendService {
                         if (messageObj instanceof MessageClientConnect) {
                             MessageClientConnect message = (MessageClientConnect) messageObj;
                             this.addClient(message.getData());
-                            Message messageLodaData = new MessageLoadData(message.getTo(),message.getTo(),message.getData());
+                            Message messageLodaData = new MessageLoadData(message.getTo(),message.getFrom(),message.getData());
                             logger.info(messageLodaData.getJsonObject());
                             socketWorker.send(messageLodaData.getJsonObject());
                             logger.info("Froneend send data!");
@@ -108,13 +116,15 @@ public class FrontendServiceImpl implements FrontendService {
                             sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
                         }
                         //socketClient.send(messageBody);*/
-                        //messageBody = socketWorker.take();
-                    } catch (ParseException e) {
+                        messageBody = socketWorker.take();
+                   } catch (ParseException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                //}
+                }
             }
         }
 

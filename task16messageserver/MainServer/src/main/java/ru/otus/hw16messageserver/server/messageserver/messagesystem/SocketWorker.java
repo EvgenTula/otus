@@ -36,7 +36,7 @@ public class SocketWorker {
         return input.poll();
     }
 
-    public String  take() throws InterruptedException {
+    public String take() throws InterruptedException {
         return input.take();
     }
 
@@ -72,7 +72,7 @@ public class SocketWorker {
                     String data = stringBuilder.toString();
                     input.add(data);
                     //stringBuilder = new StringBuilder();
-                    //logger.info("ServerMain get data: " + data);
+                    logger.info("ServerMain get data: " + data);
                 }
             }
         } catch (IOException e) {

@@ -5,6 +5,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageClientConnect;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageLoadData;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToClient;
 import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocket;
 
@@ -53,7 +55,7 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     }
 
     public void start() {
-        //executor.submit(this::processing);
+        executor.submit(this::processing);
         /*
         ServerSocket serverSocket = null;
         try {
@@ -130,21 +132,25 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
         while (true) {
             for (Map.Entry<Address,SocketWorker> socketClient : socketClients.entrySet()) {
                 String messageBody = socketClient.getValue().pool();
+
                 while (messageBody != null) {
                     try {
-                        //logger.info(messageBody);
+                        logger.info("MessageServer get data :" + messageBody);
                         JSONParser jsonParser = new JSONParser();
                         JSONObject jsonObject = (JSONObject)jsonParser.parse(messageBody);
                         String className = (String) jsonObject.get("className");
                         String gsonData = (String) jsonObject.get("data");
                         Class<?> msgClass = Class.forName(className);
+
                         var messageObj = new Gson().fromJson(gsonData, msgClass);
-                        if (messageObj instanceof Message) {
+                        logger.info("MessageServer get gata > className  : " + messageObj.getClass().getName() + " ; data : " + gsonData);
+
+                        if (Message.class.isAssignableFrom(msgClass)) {
                             Message message = (Message) messageObj;
                             socketClients.get(message.getTo()).send(message.getJsonObject());
                             logger.info("Message from " + ((Message) messageObj).getFrom() + " to " + ((Message) messageObj).getTo());
                         }
-                        if (messageObj instanceof MessageToClient) {
+                        if (msgClass.getName().equals(MessageToClient.class.getName())) {
                             sendDataClient(((MessageToClient) messageObj).uuid,((MessageToClient) messageObj).data);
                         }
                         //socketClient.send(messageBody);
@@ -183,7 +189,8 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     }
 
     public void sendMessage(Message message) {
-        messagesMap.get(message.getTo()).add(message);
+        socketClients.get(message.getTo()).send(message.getJsonObject());
+        //messagesMap.get(message.getTo()).add(message);
     }
 
     public void sendDataClient(UUID uuid,String data) {
@@ -197,6 +204,12 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     public String addClient(DBServiceWebSocket webSocket) {
         UUID randomUUID = UUID.randomUUID();
         this.clientsMap.put(randomUUID,webSocket);
+        Message message = new MessageClientConnect(
+                dbServerAddress,
+                frontAddress,
+                randomUUID.toString());
+        sendMessage(message);
+
         return randomUUID.toString();
     }
 }
