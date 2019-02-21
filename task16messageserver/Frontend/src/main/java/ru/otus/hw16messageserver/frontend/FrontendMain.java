@@ -1,21 +1,11 @@
 package ru.otus.hw16messageserver.frontend;
 
-import com.google.gson.Gson;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import ru.otus.hw16messageserver.frontend.frontendservice.FrontendService;
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageClientConnect;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToFrontend;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 public class FrontendMain {
 

@@ -6,14 +6,10 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.json.simple.JSONObject;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.MessageServer;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageClientConnect;
 
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 @WebSocket
@@ -33,6 +29,7 @@ public class DBServiceWebSocket {
         this.clientsMap = clientMap;
         this.messageServer = messageServer;
         //this.socketWorker.init();
+        //this.messageServer.messageSystemContext.getMessageSystem().sendDataClient();
     }
 
     @OnWebSocketMessage

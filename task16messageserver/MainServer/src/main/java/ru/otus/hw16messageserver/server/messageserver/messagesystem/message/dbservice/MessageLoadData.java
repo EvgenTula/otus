@@ -1,19 +1,26 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem.message;
+package ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.json.simple.JSONObject;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.DBServer;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageToDBServer;
 
 import java.util.List;
 
-public class MessageLoadData extends MessageToDBService {
+public class MessageLoadData extends MessageToDBServer {
     private String uuid;
     public MessageLoadData(Address from, Address to, String uuid) {
         super(from, to, uuid);
         this.uuid = uuid;
     }
+
+    @Override
+    public void exec(DBServer dbServer) {
+        dbServer.loadUserList();
+    }
+
 
     /*
     @Override

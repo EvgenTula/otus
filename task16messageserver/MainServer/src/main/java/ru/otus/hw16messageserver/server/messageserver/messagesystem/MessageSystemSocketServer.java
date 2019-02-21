@@ -5,14 +5,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageClientConnect;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageLoadData;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.messageImpl.MessageClientConnect;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToClient;
 import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocket;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;

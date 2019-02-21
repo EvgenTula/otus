@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.*;
 
@@ -61,7 +63,7 @@ public class FrontendServiceImpl implements FrontendService {
     public FrontendServiceImpl(int port) {
         this.port = port;
         this.clients = new ArrayList<>();
-        executor = Executors.newFixedThreadPool(THREADS_NUMBER);
+        this.executor = Executors.newFixedThreadPool(THREADS_NUMBER);
         /*
         this.messageSystemContext = messageSystemContext;
         this.address = address;
@@ -104,14 +106,23 @@ public class FrontendServiceImpl implements FrontendService {
                         String gsonData = (String) jsonObject.get("data");
                         Class<?> msgClass = Class.forName(className);
                         var messageObj = new Gson().fromJson(gsonData, msgClass);
+                        if (messageObj instanceof Message) {
+                            ((Message) messageObj).exec(this);
+                        }
+                        /*
                         if (messageObj instanceof MessageClientConnect) {
                             MessageClientConnect message = (MessageClientConnect) messageObj;
                             this.addClient(message.getData());
+
                             Message messageLodaData = new MessageLoadData(message.getTo(),message.getFrom(),message.getData());
+
                             logger.info(messageLodaData.getJsonObject());
+
                             socketWorker.send(messageLodaData.getJsonObject());
+
                             logger.info("Froneend send data!");
                         }
+                        */
                         /*if (messageObj instanceof MessageToClient) {
                             sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
                         }
@@ -130,6 +141,8 @@ public class FrontendServiceImpl implements FrontendService {
 
 
 
+
+
         private void receiveMessage(Socket socket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             String inputLine;
@@ -143,9 +156,11 @@ public class FrontendServiceImpl implements FrontendService {
                     String className = (String) jsonObject.get("className");
                     String gsonData = (String) jsonObject.get("data");
                     Class<?> msgClass = Class.forName(className);
+                    Message message = (Message) new Gson().fromJson(gsonData, msgClass);
+                    message.exec(this);
                     //logger.info("Class.forName :" + msgClass.getName());
                     //logger.info("MessageToFrontend1.class.getName(): " + MessageToFrontend.class.getName());
-                    MessageToFrontend message = (MessageToFrontend)new Gson().fromJson(gsonData, msgClass);
+                    //MessageToFrontend message = (MessageToFrontend)new Gson().fromJson(gsonData, msgClass);
                     //()new Gson().fromJson(gsonData, msgClass);
                     //return (Msg) new Gson().fromJson(json, msgClass);
                     //clients.add(UUID.fromString(stringBuilder.toString()));
@@ -164,7 +179,7 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public void addClient(String uuid) {
         clients.add(UUID.fromString(uuid));
-    }
+    };
     /*
     @Override
     public Address getAddress() {
@@ -177,9 +192,17 @@ public class FrontendServiceImpl implements FrontendService {
         return messageSystemContext.getMessageSystem();
     }
 */
-    /*
+
     @Override
     public void sendDataClient(String uuid, String data) {
+        Gson gson = createGsonWithFilter();
+        List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
+        MessageToClient message = new MessageToClient();
+        message.data = gson.toJson(dbUserList);
+        message.uuid = UUID.fromString(((MessageLoadData) messageObj).getData());
+        socketWorker.send(message.getJsonObject());
+
+
         if (uuid.equals(ALL_CLIENT)) {
             for (DBServiceWebSocket item : clientsMap.values()) {
                 try {
@@ -197,7 +220,12 @@ public class FrontendServiceImpl implements FrontendService {
         }
     }
 
-*/
+    @Override
+    public Address getAddress() {
+        return null;
+    }
+
+
     /*
     @Override
     public void sendSaveUserMessage(String data) {

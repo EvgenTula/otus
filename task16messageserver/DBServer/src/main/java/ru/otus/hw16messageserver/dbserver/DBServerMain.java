@@ -132,6 +132,7 @@ public class DBServerMain {
                         message.data = gson.toJson(dbUserList);
                         message.uuid = UUID.fromString(((MessageLoadData) messageObj).getData());
                         socketWorker.send(message.getJsonObject());
+
                         //this.addClient(message.());
                         //Message messageLodaData = new MessageLoadData(message.getTo(),message.getTo(),message.getData());
                         //logger.info(messageLodaData.getJsonObject());

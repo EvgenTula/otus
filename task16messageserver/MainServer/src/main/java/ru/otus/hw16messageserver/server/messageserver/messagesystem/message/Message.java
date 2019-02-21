@@ -40,8 +40,8 @@ public abstract class Message {
     public String getJsonObject() {
         Gson gson = new Gson();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("className", this.getClass().getName());
-        jsonObject.put("data", gson.toJson(this));
+        jsonObject.put(CLASS_NAME, this.getClass().getName());
+        jsonObject.put(DATA, gson.toJson(this));
         return jsonObject.toString();
     }
 }
