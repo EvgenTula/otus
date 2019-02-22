@@ -8,7 +8,6 @@ import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Mess
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageSaveData;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageClientConnect;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToWebsocket;
-import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,14 +21,14 @@ import java.util.logging.Logger;
 
 
 
-public class MessageSystemSocketServer implements MessageSystemSocket {
+public class MessageSystemSocketServer {
 
     private final Logger logger = Logger.getLogger(MessageSystemSocketServer.class.getName());
 
     private static final int THREADS_NUMBER = 2;
 
     private final Map<Socket, LinkedBlockingQueue<Message>> messagesMap;
-    private ConcurrentHashMap<UUID, DBServiceWebSocket> clientsMap;
+    //private ConcurrentHashMap<UUID, DBServiceWebSocket> clientsMap;
     public final ConcurrentHashMap<Address, SocketWorker> socketClients;
 
     private int port;
@@ -45,7 +44,7 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     public SocketWorker workerDBServer;
 
     public MessageSystemSocketServer(int port) {
-        this.clientsMap = new ConcurrentHashMap<>();
+        //this.clientsMap = new ConcurrentHashMap<>();
         this.messagesMap = new HashMap<>();
         this.socketClients = new ConcurrentHashMap<>();
         this.port = port;
@@ -53,23 +52,19 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     }
 
     public void start() {
-        executor.submit(this::processing);
-        /*
+
+        //executor.submit(this::processing);
+
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
-            if (!serverSocket.isClosed())
-            {
-                try {
-                    serverSocket.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
         }
-
+        Socket socket = serverSocket.accept(); //blocks
+        worker = new SocketWorker(socket);
+        worker.init();
+        /*
         SocketWorker frontendWorker = new SocketWorker(new Socket("localhost",frontendAddress.getPort()));
             frontendWorker.init();
             this.messageSystem.socketClients.put(frontendAddress,frontendWorker);
@@ -192,13 +187,14 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
     }
 
     public void sendDataClient(UUID uuid,String data) {
+        /*
         try {
             this.clientsMap.get(uuid).getSession().getRemote().sendString(data);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
-
+/*
     public String addClient(DBServiceWebSocket webSocket) {
         UUID randomUUID = UUID.randomUUID();
         this.clientsMap.put(randomUUID,webSocket);
@@ -209,10 +205,10 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
         sendMessage(message);
 
         return randomUUID.toString();
-    }
+    }*/
 
     public void removeClient(String uuid) {
-        this.clientsMap.remove(UUID.fromString(uuid));
+        //this.clientsMap.remove(UUID.fromString(uuid));
     }
 
     public void saveData(String data) {

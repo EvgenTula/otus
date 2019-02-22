@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server.websocket;
+package ru.otus.hw16messageserver.frontend.websocket;
 
 import com.google.gson.*;
 import org.eclipse.jetty.websocket.api.Session;
@@ -6,6 +6,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.MessageServer;
 
@@ -13,29 +15,30 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 @WebSocket
-public class DBServiceWebSocket {
+public class ServiceWebSocket {
 
-    private static final Logger logger = Logger.getLogger(DBServiceWebSocket.class.getName());
+    private static final Logger logger = Logger.getLogger(ServiceWebSocket.class.getName());
     private static final String JSON_CLASS_NAME = "className";
     private static final String JSON_DATA = "data";
 
     private Session session;
-    private HashMap<String, DBServiceWebSocket> clientsMap;
+    private HashMap<String, ServiceWebSocket> clientsMap;
     private String uuid;
 
-    private MessageServer messageServer;
+    private FrontendServiceImpl frontendService;
 
-    public DBServiceWebSocket(HashMap<String, DBServiceWebSocket> clientMap, MessageServer messageServer) {
+    public ServiceWebSocket(HashMap<String, ServiceWebSocket> clientMap, FrontendServiceImpl frontendService) {
         this.clientsMap = clientMap;
-        this.messageServer = messageServer;
+        this.frontendService = frontendService;
         //this.socketWorker.init();
         //this.messageServer.messageSystemContext.getMessageSystem().sendDataClient();
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
+        //this.frontendService.se
         /*this.socketWorker.send(data);*/
-        this.messageServer.messageSystemContext.getMessageSystem().saveData(data);
+        //this.messageServer.messageSystemContext.getMessageSystem().saveData(data);
     }
 
     @OnWebSocketConnect
@@ -43,7 +46,7 @@ public class DBServiceWebSocket {
         logger.info("Client connected");
         setSession(session);
 
-        uuid = this.messageServer.messageSystemContext.getMessageSystem().addClient(this);
+        uuid = this.frontendService.addClient(this);
         /*
         clientsMap.put(uuid,this);
 
@@ -70,7 +73,7 @@ public class DBServiceWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         clientsMap.remove(uuid);
-        this.messageServer.messageSystemContext.getMessageSystem().removeClient(uuid);
+        //this.messageServer.messageSystemContext.getMessageSystem().removeClient(uuid);
         logger.info("Client disconnected");
     }
 

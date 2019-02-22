@@ -22,13 +22,6 @@
             <artifactId>task16messageserver.mainserver</artifactId>
             <version>1.0</version>
         </dependency>
-<!--
-        <dependency>
-            <groupId>ru.otus</groupId>
-            <artifactId>task16messageserver.mainserver</artifactId>
-            <version>1.0</version>
-        </dependency>
--->
 
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>

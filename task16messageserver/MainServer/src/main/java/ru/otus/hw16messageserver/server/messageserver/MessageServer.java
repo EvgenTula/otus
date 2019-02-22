@@ -22,10 +22,35 @@ new MssageSystemContext(frontAdderss, dbAddress, messageSystemSocketClient)
 
 Адреса остаются. Только за ними сокеты будут
 
+
+
+MessageServer
+1. Поднимаем messageServer
+2. Создем серверный сокет
+3. Слушаем
+
+FrontServer
+1. Поднимаем сервер
+2. Создаем сокетный канал на messageServer с очередями in/out
+3. Даем его FrontendService-у
+4. Посылаем сообщение "Я фронт с таким-то адресом". Т.е. кладем в очередь out
+
+MessageServer
+1. Получаем подключение
+2. Создаем канал
+3. Кладем канал куда-нибудь в MessageSystem. Пока без адреса
+4. Канал получает сообщение. Смотрит. Это сообщение о регистрации?
+5. Если да то задает себе адрес.
+6. Если нет - ищет адрес получателя, достает его канал и кладет в него сообщение
+
+DBServer - по аналогии с FrontServer
+Канал это 2 очереди in/out и два потока, которые эти очереди обрабатывают.
+
+
 */
 
 public class MessageServer {
-
+//WEB-SERVER 8090
     private static final String HOST = "localhost";
 
     private static final int MESSAGESERVER_PORT = 8091;
@@ -37,6 +62,8 @@ public class MessageServer {
     private static final int FRONTEND_PORT = 8093;
     private static final String FRONTEND_START_COMMAND = "java -jar ../FrontendService/target/frontend.jar";
 
+private static final int WEBSERVER_PORT = 8090;
+
     private static final Logger logger = Logger.getLogger(MessageServer.class.getName());
 
     public MessageSystemContext messageSystemContext;
@@ -44,6 +71,9 @@ public class MessageServer {
     //public SocketWorker socketWorkerFontend;
     //public SocketWorker socketWorkerDBService;
 
+    public static void main(String[] args) {
+        new MessageServer();
+    }
 
     public MessageServer() {
         logger.info("MessageServer started");
@@ -56,20 +86,13 @@ public class MessageServer {
         jsonObject.put("FRONTEND_PORT",FRONTEND_PORT);*/
 
 
-
+        MessageSystemSocketServer messageSystemSocketServer = new MessageSystemSocketServer(MESSAGESERVER_PORT);
+        messageSystemSocketServer.start();
+        /*
         messageSystemContext = new MessageSystemContext(
                 new MessageSystemSocketServer(MESSAGESERVER_PORT),
                 new Address(HOST,DBSERVER_PORT),
                 new Address(HOST,FRONTEND_PORT));
-
-
-        /*
-        try {
-            socketWorkerFontend = new SocketWorker(new Socket(HOST,FRONTEND_PORT));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        socketWorkerFontend.init();
         */
     }
 

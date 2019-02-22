@@ -14,9 +14,9 @@ import com.google.gson.Gson;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import ru.otus.hw16messageserver.frontend.websocket.ServiceWebSocket;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.*;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageLoadData;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -44,9 +45,9 @@ public class FrontendServiceImpl implements FrontendService {
     private final static String ALL_CLIENT = "ALL_CLIENT";
     private Address address;
     private MessageSystemContext messageSystemContext;
-    private ConcurrentHashMap<UUID, DBServiceWebSocket> clientsMap;
+    private ConcurrentHashMap<UUID, ServiceWebSocket> clientsMap;
     */
-    List<UUID> clients;
+    private ConcurrentHashMap<UUID, ServiceWebSocket> clientsMap;
     /*
     public FrontendServiceImpl(MessageSystemContext messageSystemContext,Address address) {
         this.messageSystemContext = messageSystemContext;
@@ -63,7 +64,7 @@ public class FrontendServiceImpl implements FrontendService {
 
     public FrontendServiceImpl(int port) {
         this.port = port;
-        this.clients = new ArrayList<>();
+        this.clientsMap = new ConcurrentHashMap<>();
         this.executor = Executors.newFixedThreadPool(THREADS_NUMBER);
         /*
         this.messageSystemContext = messageSystemContext;
@@ -112,24 +113,6 @@ public class FrontendServiceImpl implements FrontendService {
                             logger.info("Frontend get message :" + messageObj + " exec");
                             ((Message) messageObj).exec(this);
                         }
-                        /*
-                        if (messageObj instanceof MessageClientConnect) {
-                            MessageClientConnect message = (MessageClientConnect) messageObj;
-                            this.addClient(message.getData());
-
-                            Message messageLodaData = new MessageLoadData(message.getTo(),message.getFrom(),message.getData());
-
-                            logger.info(messageLodaData.getJsonObject());
-
-                            socketWorker.send(messageLodaData.getJsonObject());
-
-                            logger.info("Froneend send data!");
-                        }
-                        */
-                        /*if (messageObj instanceof MessageToClient) {
-                            sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
-                        }
-                        //socketClient.send(messageBody);*/
                         messageBody = socketWorker.take();
                    } catch (ParseException e) {
                         e.printStackTrace();
@@ -143,16 +126,21 @@ public class FrontendServiceImpl implements FrontendService {
             }
         }
 
-    @Override
-    public void addClient(String uuid) {
-        //clients.add(UUID.fromString(uuid));
-        logger.info("Frontend addClient " + uuid);
+    public String addClient(ServiceWebSocket webSocket) {
+        UUID randomUUID = UUID.randomUUID();
+        this.clientsMap.put(randomUUID,webSocket);
+        return randomUUID.toString();
     }
 
     @Override
     public void sendMessageLoadData(Address dbServer, String uuid) {
         MessageLoadData messageLoadData = new MessageLoadData(getAddress(),dbServer,uuid);
         socketWorker.send(messageLoadData.getJsonObject());
+    }
+
+    @Override
+    public void sendSaveData(String data) {
+
     }
 
 
@@ -188,7 +176,7 @@ public class FrontendServiceImpl implements FrontendService {
 
 
         if (uuid.equals(ALL_CLIENT)) {
-            for (DBServiceWebSocket item : clientsMap.values()) {
+            for (ServiceWebSocket item : clientsMap.values()) {
                 try {
                     item.getSession().getRemote().sendString(data);
                 } catch (IOException e1) {
@@ -231,7 +219,7 @@ public class FrontendServiceImpl implements FrontendService {
 */
     /*
     @Override
-    public String addClient(DBServiceWebSocket webSocket) {
+    public String addClient(ServiceWebSocket webSocket) {
         UUID randomUUID = UUID.randomUUID();
         this.clientsMap.put(randomUUID,webSocket);
         return randomUUID.toString();
