@@ -69,6 +69,7 @@ public class DBServiceWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         clientsMap.remove(uuid);
+        this.messageServer.messageSystemContext.getMessageSystem().removeClient(uuid);
         logger.info("Client disconnected");
     }
 

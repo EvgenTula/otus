@@ -107,7 +107,9 @@ public class FrontendServiceImpl implements FrontendService {
                         String gsonData = (String) jsonObject.get("data");
                         Class<?> msgClass = Class.forName(className);
                         var messageObj = new Gson().fromJson(gsonData, msgClass);
+                        logger.info("Frontend get message :" + messageObj);
                         if (messageObj instanceof Message) {
+                            logger.info("Frontend get message :" + messageObj + " exec");
                             ((Message) messageObj).exec(this);
                         }
                         /*
@@ -131,6 +133,7 @@ public class FrontendServiceImpl implements FrontendService {
                         messageBody = socketWorker.take();
                    } catch (ParseException e) {
                         e.printStackTrace();
+                        logger.info("Frontend ParseException: " +messageBody);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -140,46 +143,10 @@ public class FrontendServiceImpl implements FrontendService {
             }
         }
 
-
-
-
-
-        private void receiveMessage(Socket socket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            String inputLine;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) { //blocks
-                //System.out.println("Message received: " + inputLine);
-                stringBuilder.append(inputLine);
-                if (inputLine.isEmpty()) { //empty line is the end of the message
-                    JSONParser jsonParser = new JSONParser();
-                    JSONObject jsonObject = (JSONObject) jsonParser.parse(stringBuilder.toString());
-                    String className = (String) jsonObject.get("className");
-                    String gsonData = (String) jsonObject.get("data");
-                    Class<?> msgClass = Class.forName(className);
-                    Message message = (Message) new Gson().fromJson(gsonData, msgClass);
-                    message.exec(this);
-                    //logger.info("Class.forName :" + msgClass.getName());
-                    //logger.info("MessageToFrontend1.class.getName(): " + MessageToFrontend.class.getName());
-                    //MessageToFrontend message = (MessageToFrontend)new Gson().fromJson(gsonData, msgClass);
-                    //()new Gson().fromJson(gsonData, msgClass);
-                    //return (Msg) new Gson().fromJson(json, msgClass);
-                    //clients.add(UUID.fromString(stringBuilder.toString()));
-                    logger.info("FrontendServiceImpl get message: " + message.getData());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void addClient(String uuid) {
-        clients.add(UUID.fromString(uuid));
+        //clients.add(UUID.fromString(uuid));
+        logger.info("Frontend addClient " + uuid);
     }
 
     @Override
@@ -204,9 +171,11 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void sendDataClient(String uuid, String data) {
+        logger.info("sendDataClient begin");
         MessageToWebsocket messageToWebsocket = new MessageToWebsocket();
         messageToWebsocket.data = data;
         messageToWebsocket.uuid = UUID.fromString(uuid);
+        logger.info("sendDataClient " + messageToWebsocket.getJsonObject());
         socketWorker.send(messageToWebsocket.getJsonObject());
 
         /*

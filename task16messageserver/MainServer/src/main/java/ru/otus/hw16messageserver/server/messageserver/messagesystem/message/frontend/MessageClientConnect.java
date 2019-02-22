@@ -20,6 +20,6 @@ public class MessageClientConnect extends Message {
 
     public void exec(FrontendService frontend) {
         frontend.addClient(this.getData());
-        frontend.sendMessageLoadData(getTo(),this.getData());
+        frontend.sendMessageLoadData(getFrom(),this.getData());
     }
 }

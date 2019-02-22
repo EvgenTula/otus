@@ -13,7 +13,7 @@ public class MessageToClient extends MessageToFrontend {
     @Override
     public void exec(Member sender) {
         if (sender instanceof FrontendService) {
-
+            exec((FrontendService)sender);
         }
     }
     public void exec(FrontendService frontendService) {

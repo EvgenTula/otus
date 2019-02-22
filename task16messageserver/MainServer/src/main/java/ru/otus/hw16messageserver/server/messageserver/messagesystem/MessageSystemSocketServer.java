@@ -147,7 +147,7 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
                             socketClients.get(message.getTo()).send(message.getJsonObject());
                             logger.info("Message from " + ((Message) messageObj).getFrom() + " to " + ((Message) messageObj).getTo());
                         }
-                        if (msgClass.getName().equals(MessageToWebsocket.class.getName())) {
+                        if (MessageToWebsocket.class.isAssignableFrom(msgClass)) {
                             sendDataClient(((MessageToWebsocket) messageObj).uuid,((MessageToWebsocket) messageObj).data);
                         }
                         //socketClient.send(messageBody);
@@ -208,5 +208,9 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
         sendMessage(message);
 
         return randomUUID.toString();
+    }
+
+    public void removeClient(String uuid) {
+        this.clientsMap.remove(UUID.fromString(uuid));
     }
 }

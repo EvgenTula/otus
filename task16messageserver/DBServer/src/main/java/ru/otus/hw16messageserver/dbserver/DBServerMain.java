@@ -86,6 +86,7 @@ public class DBServerMain implements DBServer {
     public String loadUserList() {
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
+        logger.info("loadUserList" + gson.toJson(dbUserList));
         return gson.toJson(dbUserList);
     }
 
@@ -124,7 +125,7 @@ public class DBServerMain implements DBServer {
                     //()new Gson().fromJson(gsonData, msgClass);
                     //return (Msg) new Gson().fromJson(json, msgClass);
                     //clients.add(UUID.fromString(stringBuilder.toString()));
-                    logger.info("FrontendServiceImpl get message: " + message.getData());
+                    //logger.info("FrontendServiceImpl get message: " + message.getData());
 
 
                         /*if (messageObj instanceof MessageToClient) {
