@@ -35,6 +35,7 @@ public class DBServiceWebSocket {
     @OnWebSocketMessage
     public void onMessage(String data) {
         /*this.socketWorker.send(data);*/
+        this.messageServer.messageSystemContext.getMessageSystem().saveData(data);
     }
 
     @OnWebSocketConnect

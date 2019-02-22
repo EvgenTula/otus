@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageSaveData;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageClientConnect;
 import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToWebsocket;
 import ru.otus.hw16messageserver.server.websocket.DBServiceWebSocket;
@@ -212,5 +213,11 @@ public class MessageSystemSocketServer implements MessageSystemSocket {
 
     public void removeClient(String uuid) {
         this.clientsMap.remove(UUID.fromString(uuid));
+    }
+
+    public void saveData(String data) {
+        //TODO: доделать!!!
+        Message message = new MessageSaveData(dbServerAddress, frontAddress, data);
+        sendMessage(message);
     }
 }

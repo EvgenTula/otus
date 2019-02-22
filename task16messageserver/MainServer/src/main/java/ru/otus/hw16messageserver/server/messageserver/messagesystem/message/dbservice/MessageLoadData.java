@@ -16,29 +16,4 @@ public class MessageLoadData extends MessageToDBServer {
         String usersData = dbServer.loadUserList();
         dbServer.sendDataToFrontend(getFrom(),uuid,usersData);
     }
-
-
-    /*
-    @Override
-    public void exec(DBService dbService) {
-        Gson gson = createGsonWithFilter();
-        List<UserDataSetHibernate> dbUserList = ((DBServiceHibernateImpl)dbService).userGetAllList();
-        dbService.getMessageSystem().sendMessage(new MessageGetDataClient(getTo(), getFrom(), gson.toJson(dbUserList), uuid));
-    }
-
-    private Gson createGsonWithFilter() {
-        return new GsonBuilder().addSerializationExclusionStrategy(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                boolean shouldSkipField = fieldAttributes.getDeclaredClass().equals(UserDataSetHibernate.class);
-                return shouldSkipField;
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return false;
-            }
-        }).create();
-    }
-    */
 }
