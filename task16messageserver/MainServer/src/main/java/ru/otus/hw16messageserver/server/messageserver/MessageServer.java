@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 /*
+Фронт это веб сервер + вебсокет + фронендсервайс
 
 Еще раз в контексте 2 адреса и ИНТЕРФЕЙС системы сообщений.
 Т.е. new MssageSystemContext(frontAdderss, dbAddress, new MessageSystemSocketClient())
