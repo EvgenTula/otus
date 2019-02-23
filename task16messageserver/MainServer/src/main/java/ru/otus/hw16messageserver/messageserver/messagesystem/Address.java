@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem;
+package ru.otus.hw16messageserver.messageserver.messagesystem;
 
 public class Address {
 

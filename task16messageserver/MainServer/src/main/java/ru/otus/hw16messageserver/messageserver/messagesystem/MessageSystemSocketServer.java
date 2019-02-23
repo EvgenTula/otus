@@ -1,13 +1,13 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem;
+package ru.otus.hw16messageserver.messageserver.messagesystem;
 
 import com.google.gson.Gson;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageSaveData;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageClientConnect;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.MessageToWebsocket;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToRegisterSocketClient;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageSaveData;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToWebsocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -36,8 +36,6 @@ public class MessageSystemSocketServer {
     private final ExecutorService executor;
     private SocketWorker worker;
 
-    public SocketWorker workerFront;
-
     public Address frontAddress;
     public Address dbServerAddress;
 
@@ -53,45 +51,45 @@ public class MessageSystemSocketServer {
 
     public void start() {
 
-        //executor.submit(this::processing);
+        executor.submit(this::processing);
 
-        ServerSocket serverSocket = null;
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Socket socket = serverSocket.accept(); //blocks
-        worker = new SocketWorker(socket);
-        worker.init();
-        /*
-        SocketWorker frontendWorker = new SocketWorker(new Socket("localhost",frontendAddress.getPort()));
-            frontendWorker.init();
-            this.messageSystem.socketClients.put(frontendAddress,frontendWorker);
-
-            SocketWorker dbserverWorker = new SocketWorker(new Socket("localhost",dbServiceAddress.getPort()));
-            dbserverWorker.init();
-            this.messageSystem.socketClients.put(dbServiceAddress,dbserverWorker);
-
-
-        */
         executor.submit(() -> {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 while (!executor.isShutdown()) {
                     Socket socket = serverSocket.accept(); //blocks
                     worker = new SocketWorker(socket);
-                    logger.info("new worker : " + socket.toString());
                     worker.init();
-                    logger.info("new worker : " + socket.toString() + " init()");
-                    if (!socketClients.containsKey(frontAddress)) {
-                        socketClients.put(frontAddress, worker);
-                        logger.info("new worker : is front!");
-                    } else {
-                        socketClients.put(dbServerAddress, worker);
-                        logger.info("new worker : is dbserver!");
+                    String messageBody = worker.take();
+                    if (messageBody != null) {
+                        try {
+                            JSONParser jsonParser = new JSONParser();
+                            JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
+                            String className = (String) jsonObject.get("className");
+                            String gsonData = (String) jsonObject.get("data");
+                            Class<?> msgClass = Class.forName(className);
+                            var messageObj = new Gson().fromJson(gsonData, msgClass);
+                            if (MessageToRegisterSocketClient.class.isAssignableFrom(msgClass)) {
+                                MessageToRegisterSocketClient message = (MessageToRegisterSocketClient) messageObj;
+                                if (!socketClients.containsKey(message.getFrom())) {
+                                    socketClients.put(message.getFrom(), worker);
+                                    logger.info("new worker : is " + message.getFrom().getPort());
+                                }
+                            } else {
+                                worker.close();
+                            }
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                            worker.close();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            worker.close();
+                        }
                     }
+                    worker.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });

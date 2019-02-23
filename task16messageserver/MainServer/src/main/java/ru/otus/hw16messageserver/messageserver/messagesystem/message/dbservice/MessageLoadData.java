@@ -1,8 +1,8 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice;
+package ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice;
 
 
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.DBServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.DBServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
 
 public class MessageLoadData extends MessageToDBServer {
     private String uuid;
@@ -14,6 +14,6 @@ public class MessageLoadData extends MessageToDBServer {
     @Override
     public void exec(DBServer dbServer) {
         String usersData = dbServer.loadUserList();
-        dbServer.sendDataToFrontend(getFrom(),uuid,usersData);
+        dbServer.sendDataToFrontend(uuid,usersData);
     }
 }

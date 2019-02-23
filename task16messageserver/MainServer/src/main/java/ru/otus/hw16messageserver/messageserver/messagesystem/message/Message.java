@@ -1,12 +1,9 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem.message;
+package ru.otus.hw16messageserver.messageserver.messagesystem.message;
 
 import com.google.gson.Gson;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
-
-import javax.xml.crypto.Data;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Member;
 
 public abstract class Message {
 

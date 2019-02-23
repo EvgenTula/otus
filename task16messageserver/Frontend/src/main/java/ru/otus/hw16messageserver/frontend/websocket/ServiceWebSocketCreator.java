@@ -4,8 +4,8 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
-import ru.otus.hw16messageserver.server.messageserver.MessageServer;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.messageserver.MessageServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem.message;
+package ru.otus.hw16messageserver.messageserver.messagesystem.message;
 
 import com.google.gson.Gson;
 import org.json.simple.JSONObject;

@@ -1,13 +1,9 @@
-package ru.otus.hw16messageserver.server.messageserver;
+package ru.otus.hw16messageserver.messageserver;
 
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemContext;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.MessageSystemSocketServer;
-import ru.otus.hw16messageserver.server.ProcessRunner;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemSocketServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.logging.Logger;
 
 /*
@@ -50,19 +46,17 @@ DBServer - по аналогии с FrontServer
 */
 
 public class MessageServer {
-//WEB-SERVER 8090
-    private static final String HOST = "localhost";
 
+    private static final String HOST = "localhost";
     private static final int MESSAGESERVER_PORT = 8091;
-    private static final String MESSAGESERVER_START_COMMAND = "java -jar ../MessageServer/target/messageserver-1.0.jar";
 
     private static final int DBSERVER_PORT = 8092;
     private static final String DBSERVER_START_COMMAND = "java -jar ../DBServer/target/dbserver.jar";
 
     private static final int FRONTEND_PORT = 8093;
-    private static final String FRONTEND_START_COMMAND = "java -jar ../FrontendService/target/frontend.jar";
+    private static final String FRONTEND_START_COMMAND = "java -jar ../Frontend/target/frontend.jar";
 
-private static final int WEBSERVER_PORT = 8090;
+    private static final int WEBSERVER_PORT = 8090;
 
     private static final Logger logger = Logger.getLogger(MessageServer.class.getName());
 
@@ -88,12 +82,27 @@ private static final int WEBSERVER_PORT = 8090;
 
         MessageSystemSocketServer messageSystemSocketServer = new MessageSystemSocketServer(MESSAGESERVER_PORT);
         messageSystemSocketServer.start();
+
+        processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT)/*,socketWorkerFontend*//*jsonObject.toString()*/);
+        processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT)/*,socketWorkerDBService*//*jsonObject.toString()*/);
         /*
         messageSystemContext = new MessageSystemContext(
                 new MessageSystemSocketServer(MESSAGESERVER_PORT),
                 new Address(HOST,DBSERVER_PORT),
                 new Address(HOST,FRONTEND_PORT));
         */
+    }
+
+    private void processRun(String cmd, String params/*, SocketWorker worker*/) {
+        try {
+            //logger.info("Process starting...");
+            ProcessRunner processRunner = new ProcessRunner();
+            processRunner.start(cmd + " " + params);
+            //worker = new SocketWorker(new Socket(HOST, Integer.valueOf(params)));
+            //worker.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

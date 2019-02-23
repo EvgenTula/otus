@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem;
+package ru.otus.hw16messageserver.messageserver.messagesystem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +41,8 @@ public class SocketWorker {
     }
 
     public void close() {
-        executor.shutdown();
+        if (!executor.isShutdown())
+            executor.shutdown();
     }
 
     public void init() {
@@ -55,7 +56,6 @@ public class SocketWorker {
                 String data = output.take(); //blocks
                 out.println(data);
                 out.println();//line with json + an empty line
-                //logger.info("ServerMain send data");
             }
         } catch (InterruptedException | IOException e) {
             logger.log(Level.SEVERE, e.getMessage());

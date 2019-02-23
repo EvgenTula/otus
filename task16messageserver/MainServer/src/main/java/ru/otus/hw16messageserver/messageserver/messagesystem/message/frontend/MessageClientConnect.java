@@ -1,9 +1,9 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend;
+package ru.otus.hw16messageserver.messageserver.messagesystem.message.frontend;
 
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Member;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Member;
 
 public class MessageClientConnect extends Message {
 

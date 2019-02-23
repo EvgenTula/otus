@@ -1,9 +1,5 @@
-package ru.otus.hw16messageserver.server.messageserver.messagesystem;
+package ru.otus.hw16messageserver.messageserver.messagesystem;
 
-import ru.otus.hw16messageserver.server.ProcessRunner;
-
-import java.io.IOException;
-import java.net.Socket;
 import java.util.Map;
 
 public class MessageSystemContext  {
@@ -37,8 +33,8 @@ public class MessageSystemContext  {
 
 
         //try {
-            processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT)/*,socketWorkerFontend*//*jsonObject.toString()*/);
-            processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT)/*,socketWorkerDBService*//*jsonObject.toString()*/);
+            //processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT)/*,socketWorkerFontend*//*jsonObject.toString()*/);
+            //processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT)/*,socketWorkerDBService*//*jsonObject.toString()*/);
 /*
             SocketWorker frontendWorker = new SocketWorker(new Socket("localhost",frontendAddress.getPort()));
             frontendWorker.init();
@@ -56,17 +52,7 @@ public class MessageSystemContext  {
     }
 
 
-    private void processRun(String cmd, String params/*, SocketWorker worker*/) {
-        try {
-            //logger.info("Process starting...");
-            ProcessRunner processRunner = new ProcessRunner();
-            processRunner.start(cmd + " " + params);
-            //worker = new SocketWorker(new Socket(HOST, Integer.valueOf(params)));
-            //worker.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void setDBServiceAddress(Address dbServiceAddress) {
         this.dbServiceAddress = dbServiceAddress;

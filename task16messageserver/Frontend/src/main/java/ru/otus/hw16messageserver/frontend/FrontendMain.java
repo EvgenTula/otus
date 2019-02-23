@@ -4,7 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class FrontendMain {
     private static final int WEBSERVER_PORT = 8090;
 
     public static void main(String[] args) throws Exception {
-
+/*
         JSONParser jsonParser = new JSONParser();
 
         JSONObject params = (JSONObject) jsonParser.parse(Arrays.toString(args));
@@ -40,21 +40,21 @@ public class FrontendMain {
         params.put("FRONTEND_PORT",FRONTEND_PORT);
         params.put("WEBSERVER_PORT",WEBSERVER_PORT);
         logger.info(Arrays.toString(args));
-
+*/
 
         /*
         Address frontend = new Address("localhost",8093);
         Address dbserver = new Address("localhost",8092);
         */
-/*
+
         int port = Integer.valueOf(args[0]);
         logger.info("Frontend started on port " + port);
         FrontendServiceImpl frontendService = new FrontendServiceImpl(port);
         frontendService.start();
 
-        Server server = ServerHelper.createServer(port8090, frontendService);
+        Server server = ServerHelper.createServer(/*port*/8090, frontendService);
         server.start();
         server.join();
-*/
+
     }
 }

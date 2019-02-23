@@ -15,20 +15,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.frontend.websocket.ServiceWebSocket;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.*;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.dbservice.MessageLoadData;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.*;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageLoadData;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -39,7 +33,11 @@ public class FrontendServiceImpl implements FrontendService {
 
     private static final Logger logger = Logger.getLogger(FrontendServiceImpl.class.getName());
 
+    private final static String ALL_CLIENT = "ALL_CLIENT";
+
     private int port;
+    private Address currentAddress;
+    private Address dbServerAddress;
 
     /*
     private final static String ALL_CLIENT = "ALL_CLIENT";
@@ -63,6 +61,8 @@ public class FrontendServiceImpl implements FrontendService {
     //private int
 
     public FrontendServiceImpl(int port) {
+        this.dbServerAddress = new Address("localhost",8092);
+        this.currentAddress = new Address("localhost", port);
         this.port = port;
         this.clientsMap = new ConcurrentHashMap<>();
         this.executor = Executors.newFixedThreadPool(THREADS_NUMBER);
@@ -79,8 +79,9 @@ public class FrontendServiceImpl implements FrontendService {
         logger.info("Frontend SocketWorker try start");
         try {
             socketWorker = new SocketWorker(new Socket("localhost",8091));
-            logger.info("Frontend SocketWorker started");
             socketWorker.init();
+            MessageToRegisterSocketClient messageToRegister = new MessageToRegisterSocketClient(this.getAddress(), null, "");
+            socketWorker.send(messageToRegister.getJsonObject());
             logger.info("Frontend SocketWorker init");
             executor.submit(this::processing);
         } catch (IOException e) {
@@ -159,22 +160,6 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void sendDataClient(String uuid, String data) {
-        logger.info("sendDataClient begin");
-        MessageToWebsocket messageToWebsocket = new MessageToWebsocket();
-        messageToWebsocket.data = data;
-        messageToWebsocket.uuid = UUID.fromString(uuid);
-        logger.info("sendDataClient " + messageToWebsocket.getJsonObject());
-        socketWorker.send(messageToWebsocket.getJsonObject());
-
-        /*
-        Gson gson = createGsonWithFilter();
-        List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
-        MessageToClient message = new MessageToClient();
-        message.data = gson.toJson(dbUserList);
-        message.uuid = UUID.fromString(((MessageLoadData) messageObj).getData());
-        socketWorker.send(message.getJsonObject());
-
-
         if (uuid.equals(ALL_CLIENT)) {
             for (ServiceWebSocket item : clientsMap.values()) {
                 try {
@@ -190,14 +175,19 @@ public class FrontendServiceImpl implements FrontendService {
                 e.printStackTrace();
             }
         }
-        */
     }
 
 
 
     @Override
     public Address getAddress() {
-        return new Address("localhost",8093);
+        return this.currentAddress;
+    }
+
+
+    public void sendUserList(String uuid) {
+        MessageLoadData messageLoadData = new MessageLoadData(this.getAddress(), dbServerAddress, uuid);
+        socketWorker.send(messageLoadData.getJsonObject());
     }
 
 

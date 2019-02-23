@@ -10,11 +10,12 @@ import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.dbserver.dbservice.DBHelper;
 import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dbservice.DBServiceHibernateImpl;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.Address;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.DBServer;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.Message;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.message.frontend.MessageToClient;
+import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
+import ru.otus.hw16messageserver.messageserver.messagesystem.DBServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.Message;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToRegisterSocketClient;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.frontend.MessageToClient;
 
 import java.io.IOException;
 
@@ -33,9 +34,11 @@ public class DBServerMain implements DBServer {
     private final ExecutorService executor;
     private SocketWorker socketWorker = null;
     private DBServiceHibernateImpl dbService;
+    private Address currentAddress;
+    private Address frontendAddress;
 
     private int port;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         /*
         Address frontend = new Address("localhost",8093);
@@ -47,7 +50,7 @@ public class DBServerMain implements DBServer {
         //DBService dbService = DBHelper.createDBService(port);
         //logger.info("DBServerMain started on port: " + port);
 
-        DBServerMain dbServerMain =  new DBServerMain(port);
+        DBServerMain dbServerMain = new DBServerMain(port);
         dbServerMain.start();
     }
 
@@ -55,17 +58,19 @@ public class DBServerMain implements DBServer {
         this.port = port;
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
         dbService = (DBServiceHibernateImpl) DBHelper.createDBService(port);
+        this.currentAddress = new Address("localhost", port);
+        this.frontendAddress = new Address("localhost",8093);
     }
 
     public void start() {
+        logger.info("DBServerMain SocketWorker try start");
         try {
-
-            logger.info("DBServerMain SocketWorker try start");
             socketWorker = new SocketWorker(new Socket("localhost",8091));
-        logger.info("DBServerMain SocketWorker started");
-        socketWorker.init();
-        logger.info("DBServerMain SocketWorker init");
-        executor.submit(this::processing);
+            socketWorker.init();
+            MessageToRegisterSocketClient messageToRegister = new MessageToRegisterSocketClient(this.getAddress(), null, "");
+            socketWorker.send(messageToRegister.getJsonObject());
+            logger.info("DBServerMain SocketWorker init");
+            executor.submit(this::processing);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,8 +96,8 @@ public class DBServerMain implements DBServer {
     }
 
     @Override
-    public void sendDataToFrontend(Address frontend,String uuid, String data) {
-        MessageToClient messageToClient = new MessageToClient(getAddress(),frontend, data, uuid);
+    public void sendDataToFrontend(String uuid, String data) {
+        MessageToClient messageToClient = new MessageToClient(getAddress(), frontendAddress, data, uuid);
         socketWorker.send(messageToClient.getJsonObject());
     }
 
@@ -167,7 +172,7 @@ public class DBServerMain implements DBServer {
 
     @Override
     public Address getAddress() {
-        return new Address("localhost",8092);
+        return this.currentAddress;
     }
 /*
     private void receiveMessage(Socket socket) {

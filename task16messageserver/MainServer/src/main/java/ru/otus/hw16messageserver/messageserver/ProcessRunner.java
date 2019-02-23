@@ -1,4 +1,4 @@
-package ru.otus.hw16messageserver.server;
+package ru.otus.hw16messageserver.messageserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

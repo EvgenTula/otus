@@ -7,9 +7,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.server.messageserver.messagesystem.SocketWorker;
-import ru.otus.hw16messageserver.server.messageserver.MessageServer;
+import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
+import ru.otus.hw16messageserver.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.messageserver.MessageServer;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -47,6 +47,7 @@ public class ServiceWebSocket {
         setSession(session);
 
         uuid = this.frontendService.addClient(this);
+        this.frontendService.sendUserList(uuid);
         /*
         clientsMap.put(uuid,this);
 
