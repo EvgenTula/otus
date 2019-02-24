@@ -19,15 +19,4 @@ public abstract class MessageToFrontend extends Message {
     }
 
     public abstract void exec(FrontendService dbServer);
-
-    /*
-    @Override
-    public void exec(Member sender) {
-        if (sender instanceof FrontendService) {
-            exec((FrontendService)sender);
-        }
-    }
-
-    public abstract void exec(FrontendService frontendService);
-    */
 }

@@ -9,7 +9,7 @@ public class MessageLoadData extends MessageToDBServer {
     public MessageLoadData(Address from, Address to, String uuid) {
         super(from, to, uuid);
         this.uuid = uuid;
-    }
+}
 
     @Override
     public void exec(DBServer dbServer) {

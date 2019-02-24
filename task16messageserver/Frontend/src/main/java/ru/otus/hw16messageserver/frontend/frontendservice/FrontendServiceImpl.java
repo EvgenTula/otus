@@ -20,6 +20,7 @@ import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
 import ru.otus.hw16messageserver.messageserver.messagesystem.SocketWorker;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.*;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageLoadData;
+import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageSaveData;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -141,7 +142,8 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void sendSaveData(String data) {
-
+        MessageSaveData messageSaveData = new MessageSaveData(this.getAddress(), dbServerAddress, data);
+        socketWorker.send(messageSaveData.getJsonObject());
     }
 
 
@@ -215,10 +217,9 @@ public class FrontendServiceImpl implements FrontendService {
         return randomUUID.toString();
     }
 */
-    /*
-    @Override
+
     public void removeClient(String uuid) {
         this.clientsMap.remove(uuid);
     }
-    */
+
 }

@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.dbserver.dbservice.DBHelper;
+import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.PhoneDataSetHibernate;
 import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.datasets.UserDataSetHibernate;
 import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dbservice.DBServiceHibernateImpl;
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
@@ -21,8 +22,8 @@ import java.io.IOException;
 
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -30,6 +31,8 @@ import java.util.logging.Logger;
 public class DBServerMain implements DBServer {
 
     private static final Logger logger = Logger.getLogger(DBServerMain.class.getName());
+
+    private static final String ALL_CLIENT = "ALL_CLIENT";
     private static final int THREADS_NUMBER = 1;
     private final ExecutorService executor;
     private SocketWorker socketWorker = null;
@@ -77,21 +80,34 @@ public class DBServerMain implements DBServer {
     }
 
     @Override
-    public int saveData(String data) {
-        //dbService.save();
-        return 0;
+    public String saveData(String data) {
+        Gson gson = createGsonWithFilter();
+        UserDataSetHibernate newUser = gson.fromJson(data, UserDataSetHibernate.class);
+        for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
+            phone.setUserDataSet(newUser);
+        }
+        dbService.saveUser(newUser);
+        List<UserDataSetHibernate> listData = new ArrayList<>();
+        listData.add(newUser);
+        return gson.toJson(listData);
     }
 
+    //TODO: remove!
     @Override
-    public String loadUserByid(int id) {
-        return null;
+    public String loadUserByid(long id) {
+        logger.info("loadUserByid(long id) : " + id);
+        Gson gson = createGsonWithFilter();
+        UserDataSetHibernate userDataSetHibernate = dbService.load(id,UserDataSetHibernate.class);
+        List<UserDataSetHibernate> listData = new ArrayList<>();
+        listData.add(userDataSetHibernate);
+        logger.info("listData.add(userDataSetHibernate) : " + gson.toJson(listData));
+        return gson.toJson(listData);
     }
 
     @Override
     public String loadUserList() {
         Gson gson = createGsonWithFilter();
         List<UserDataSetHibernate> dbUserList = dbService.userGetAllList();
-        logger.info("loadUserList" + gson.toJson(dbUserList));
         return gson.toJson(dbUserList);
     }
 
@@ -99,6 +115,11 @@ public class DBServerMain implements DBServer {
     public void sendDataToFrontend(String uuid, String data) {
         MessageToClient messageToClient = new MessageToClient(getAddress(), frontendAddress, data, uuid);
         socketWorker.send(messageToClient.getJsonObject());
+    }
+
+    @Override
+    public void sendDataToFrontend(String data) {
+        sendDataToFrontend(ALL_CLIENT, data);
     }
 
 
