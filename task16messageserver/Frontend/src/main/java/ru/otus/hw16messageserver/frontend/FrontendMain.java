@@ -27,7 +27,7 @@ public class FrontendMain {
         FrontendServiceImpl frontendService = new FrontendServiceImpl(messageSystemContext);
         frontendService.start();
 
-        Server server = ServerHelper.createServer(8090, frontendService);
+        Server server = ServerHelper.createServer(8080, frontendService);
         server.start();
         server.join();
 

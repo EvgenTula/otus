@@ -5,7 +5,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import java.util.HashMap;
 
 import ru.otus.hw16messageserver.frontend.frontendservice.FrontendServiceImpl;
 

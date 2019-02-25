@@ -11,7 +11,7 @@ import ru.otus.hw16messageserver.frontend.websocket.ServiceWebSocketServlet;
 public class ServerHelper {
 
     public static Server createServer(int port, FrontendServiceImpl frontendService) {
-        final String PUBLIC_HTML = "public_html";
+        final String PUBLIC_HTML = "../Frontend/public_html";
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(PUBLIC_HTML);
 

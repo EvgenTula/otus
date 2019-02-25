@@ -10,9 +10,7 @@ import ru.otus.hw16messageserver.dbserver.dbservice.hibernate.dbservice.DBServic
 
 public class DBHelper {
 
-    private static final int THREADS_NUMBER = 1;
-
-    public static DBService createDBService(int port/*MessageSystemContext messageSystemContext, Address address*/) {
+    public static DBService createDBService() {
         DBService dbService = new DBServiceHibernateImpl(new ConfigurationHibernate()/*, messageSystemContext, address*/);
 
         AddressDataSetHibernate user1Address = new AddressDataSetHibernate();

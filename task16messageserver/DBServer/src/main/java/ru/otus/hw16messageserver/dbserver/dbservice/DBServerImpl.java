@@ -33,7 +33,7 @@ public class DBServerImpl implements DBServer {
     public DBServerImpl(MessageSystemContext messageSystemContext) {
         this.messageSystemContext = messageSystemContext;
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
-        dbService = (DBServiceHibernateImpl) DBHelper.createDBService(8090);
+        dbService = (DBServiceHibernateImpl) DBHelper.createDBService();
     }
 
 
@@ -78,14 +78,9 @@ public class DBServerImpl implements DBServer {
 
     public void processing() {
         while (true) {
-            String messageBody = null;
+            String messageBody;
             try {
-                messageBody = messageSystemContext.getWorker().take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (messageBody != null) {
-                try {
+                while ((messageBody = messageSystemContext.getWorker().take()) != null){
                     JSONParser jsonParser = new JSONParser();
                     JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
                     String className = (String) jsonObject.get("className");
@@ -93,14 +88,13 @@ public class DBServerImpl implements DBServer {
                     Class<?> msgClass = Class.forName(className);
                     Message message = (Message) new Gson().fromJson(gsonData, msgClass);
                     message.exec(this);
-                    messageBody = messageSystemContext.getWorker().take();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -44,15 +44,8 @@ public class FrontendServiceImpl implements FrontendService {
         while (true) {
             String messageBody = null;
             try {
-                messageBody =  messageSystemContext.getWorker().take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            while (messageBody != null) {
-                try {
+                while ((messageBody =  messageSystemContext.getWorker().take()) != null) {
                     JSONParser jsonParser = new JSONParser();
-
                     JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
                     String className = (String) jsonObject.get("className");
                     String gsonData = (String) jsonObject.get("data");
@@ -61,17 +54,16 @@ public class FrontendServiceImpl implements FrontendService {
                     if (messageObj instanceof Message) {
                         ((Message) messageObj).exec(this);
                     }
-                    messageBody =  messageSystemContext.getWorker().take();
-               } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-
     }
 
     public String addClient(ServiceWebSocket webSocket) {
