@@ -2,25 +2,20 @@ package ru.otus.hw16messageserver.messageserver.messagesystem;
 
 public class Address {
 
-    private String host;
-    private int port;
+    private String address;
 
-    public Address(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public Address(String address) {
+        this.address = address;
     }
 
-    public String getHost() {
-        return this.host;
-    }
-    public int getPort() {
-        return this.port;
+    public String getAddress() {
+        return this.address;
     }
 
     @Override
     public boolean equals(Object obj) {
         Address objAddress = (Address)obj;
-        if ((this.getPort() == objAddress.getPort()) && (this.getHost().equals(objAddress.getHost()))) {
+        if (this.getAddress().equals(objAddress.getAddress())) {
             return true;
         }
         return false;
@@ -28,6 +23,6 @@ public class Address {
 
     @Override
     public int hashCode() {
-        return (this.host.hashCode() + this.getPort());
+        return (this.getAddress().hashCode());
     }
 }

@@ -7,13 +7,12 @@ import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.frontend.websocket.ServiceWebSocket;
 import ru.otus.hw16messageserver.messageserver.messagesystem.Address;
 import ru.otus.hw16messageserver.messageserver.messagesystem.FrontendService;
-import ru.otus.hw16messageserver.messageserver.messagesystem.SocketWorker;
+import ru.otus.hw16messageserver.messageserver.messagesystem.MessageSystemContext;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.*;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageLoadData;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageSaveData;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -22,44 +21,30 @@ import java.util.concurrent.Executors;
 public class FrontendServiceImpl implements FrontendService {
 
     private final static String ALL_CLIENT = "ALL_CLIENT";
-
-    private int port;
-    private Address currentAddress;
-    private Address dbServerAddress;
-
-    private ConcurrentHashMap<UUID, ServiceWebSocket> clientsMap;
-
     private static final int THREADS_NUMBER = 1;
 
+    private ConcurrentHashMap<UUID, ServiceWebSocket> clientsMap;
     private final ExecutorService executor;
+    private MessageSystemContext messageSystemContext;
 
-    private SocketWorker socketWorker = null;
-
-    public FrontendServiceImpl(int port) {
-        this.dbServerAddress = new Address("localhost",8092);
-        this.currentAddress = new Address("localhost", port);
-        this.port = port;
+    public FrontendServiceImpl(MessageSystemContext messageSystemContext) {
+        this.messageSystemContext = messageSystemContext;
         this.clientsMap = new ConcurrentHashMap<>();
         this.executor = Executors.newFixedThreadPool(THREADS_NUMBER);
     }
 
     public void start() {
-        try {
-            socketWorker = new SocketWorker(new Socket("localhost",8091));
-            socketWorker.init();
-            MessageToRegisterSocketClient messageToRegister = new MessageToRegisterSocketClient(this.getAddress(), null, "");
-            socketWorker.send(messageToRegister.getJsonObject());
-            executor.submit(this::processing);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        messageSystemContext.getWorker().init();
+        MessageToRegisterSocketClient messageToRegister = new MessageToRegisterSocketClient(this.getAddress(), null, "");
+        messageSystemContext.getWorker().send(messageToRegister.getJsonObject());
+        executor.submit(this::processing);
     }
 
     public void processing() {
         while (true) {
             String messageBody = null;
             try {
-                messageBody = socketWorker.take();
+                messageBody =  messageSystemContext.getWorker().take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -76,7 +61,7 @@ public class FrontendServiceImpl implements FrontendService {
                     if (messageObj instanceof Message) {
                         ((Message) messageObj).exec(this);
                     }
-                    messageBody = socketWorker.take();
+                    messageBody =  messageSystemContext.getWorker().take();
                } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -98,12 +83,12 @@ public class FrontendServiceImpl implements FrontendService {
     @Override
     public void sendMessageLoadData(Address dbServer, String uuid) {
         MessageLoadData messageLoadData = new MessageLoadData(getAddress(),dbServer,uuid);
-        socketWorker.send(messageLoadData.getJsonObject());
+        messageSystemContext.getWorker().send(messageLoadData.getJsonObject());
     }
 
     public void sendSaveData(String data) {
-        MessageSaveData messageSaveData = new MessageSaveData(this.getAddress(), dbServerAddress, data);
-        socketWorker.send(messageSaveData.getJsonObject());
+        MessageSaveData messageSaveData = new MessageSaveData(this.getAddress(),  messageSystemContext.getDbServerAddress(), data);
+        messageSystemContext.getWorker().send(messageSaveData.getJsonObject());
     }
 
     @Override
@@ -131,12 +116,12 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public Address getAddress() {
-        return this.currentAddress;
+        return  messageSystemContext.getFrontendAddress();
     }
 
     public void sendUserList(String uuid) {
-        MessageLoadData messageLoadData = new MessageLoadData(this.getAddress(), dbServerAddress, uuid);
-        socketWorker.send(messageLoadData.getJsonObject());
+        MessageLoadData messageLoadData = new MessageLoadData(this.getAddress(),  messageSystemContext.getDbServerAddress(), uuid);
+        messageSystemContext.getWorker().send(messageLoadData.getJsonObject());
     }
 
     public void removeClient(String uuid) {

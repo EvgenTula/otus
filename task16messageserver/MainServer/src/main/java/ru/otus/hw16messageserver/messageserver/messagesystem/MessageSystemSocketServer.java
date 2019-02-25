@@ -58,7 +58,7 @@ public class MessageSystemSocketServer {
                                 MessageToRegisterSocketClient message = (MessageToRegisterSocketClient) messageObj;
                                 if (!socketClients.containsKey(message.getFrom())) {
                                     socketClients.put(message.getFrom(), worker);
-                                    logger.info("new worker : is " + message.getFrom().getPort());
+                                    logger.info("new worker : is " + message.getFrom().getAddress());
                                 }
                             } else {
                                 worker.close();

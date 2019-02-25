@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class MessageServer {
 
-    //private static final String HOST = "localhost";
+    private static final String HOST = "localhost";
     private static final int MESSAGESERVER_PORT = 8091;
 
     private static final int DBSERVER_PORT = 8092;
@@ -30,8 +30,8 @@ public class MessageServer {
         MessageSystemSocketServer messageSystemSocketServer = new MessageSystemSocketServer(MESSAGESERVER_PORT);
         messageSystemSocketServer.start();
 
-        processRun(FRONTEND_START_COMMAND, String.valueOf(FRONTEND_PORT));
-        processRun(DBSERVER_START_COMMAND, String.valueOf(DBSERVER_PORT));
+        processRun(FRONTEND_START_COMMAND, HOST + " " + MESSAGESERVER_PORT);
+        processRun(DBSERVER_START_COMMAND, HOST + " " + MESSAGESERVER_PORT);
     }
 
     private void processRun(String cmd, String params) {
