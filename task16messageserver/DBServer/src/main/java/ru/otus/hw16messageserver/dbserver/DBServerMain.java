@@ -1,5 +1,11 @@
 package ru.otus.hw16messageserver.dbserver;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -18,19 +24,8 @@ import ru.otus.hw16messageserver.messageserver.messagesystem.message.Message;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToRegisterSocketClient;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.frontend.MessageToClient;
 
-import java.io.IOException;
-
-
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 public class DBServerMain implements DBServer {
-
-    private static final Logger logger = Logger.getLogger(DBServerMain.class.getName());
 
     private static final String ALL_CLIENT = "ALL_CLIENT";
     private static final int THREADS_NUMBER = 1;
@@ -43,16 +38,7 @@ public class DBServerMain implements DBServer {
     private int port;
     public static void main(String[] args) {
 
-        /*
-        Address frontend = new Address("localhost",8093);
-        Address dbserver = new Address("localhost",8092);
-        Message msg = new MessageToFrontend(frontend,dbserver,"the force awakens");
-        */
-
         int port = Integer.parseInt(args[0]);
-        //DBService dbService = DBHelper.createDBService(port);
-        //logger.info("DBServerMain started on port: " + port);
-
         DBServerMain dbServerMain = new DBServerMain(port);
         dbServerMain.start();
     }
@@ -66,13 +52,11 @@ public class DBServerMain implements DBServer {
     }
 
     public void start() {
-        logger.info("DBServerMain SocketWorker try start");
         try {
             socketWorker = new SocketWorker(new Socket("localhost",8091));
             socketWorker.init();
             MessageToRegisterSocketClient messageToRegister = new MessageToRegisterSocketClient(this.getAddress(), null, "");
             socketWorker.send(messageToRegister.getJsonObject());
-            logger.info("DBServerMain SocketWorker init");
             executor.submit(this::processing);
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,21 +70,9 @@ public class DBServerMain implements DBServer {
         for (PhoneDataSetHibernate phone : newUser.getPhoneList()) {
             phone.setUserDataSet(newUser);
         }
-        dbService.saveUser(newUser);
+        dbService.save(newUser);
         List<UserDataSetHibernate> listData = new ArrayList<>();
         listData.add(newUser);
-        return gson.toJson(listData);
-    }
-
-    //TODO: remove!
-    @Override
-    public String loadUserByid(long id) {
-        logger.info("loadUserByid(long id) : " + id);
-        Gson gson = createGsonWithFilter();
-        UserDataSetHibernate userDataSetHibernate = dbService.load(id,UserDataSetHibernate.class);
-        List<UserDataSetHibernate> listData = new ArrayList<>();
-        listData.add(userDataSetHibernate);
-        logger.info("listData.add(userDataSetHibernate) : " + gson.toJson(listData));
         return gson.toJson(listData);
     }
 
@@ -125,39 +97,21 @@ public class DBServerMain implements DBServer {
 
     public void processing() {
         while (true) {
-
-            //for (Map.Entry<Address, SocketWorker> socketClient : socketWorker.()) {
-            logger.info("DBServer processing");
             String messageBody = null;
             try {
                 messageBody = socketWorker.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            logger.info("DBServer processing : messageBody get");
             while (messageBody != null) {
                 try {
-                    logger.info("DBServer get message : " + messageBody);
                     JSONParser jsonParser = new JSONParser();
-                    JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody.toString());
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(messageBody);
                     String className = (String) jsonObject.get("className");
                     String gsonData = (String) jsonObject.get("data");
                     Class<?> msgClass = Class.forName(className);
                     Message message = (Message) new Gson().fromJson(gsonData, msgClass);
                     message.exec(this);
-                    //logger.info("Class.forName :" + msgClass.getName());
-                    //logger.info("MessageToFrontend1.class.getName(): " + MessageToFrontend.class.getName());
-                    //MessageToFrontend message = (MessageToFrontend)new Gson().fromJson(gsonData, msgClass);
-                    //()new Gson().fromJson(gsonData, msgClass);
-                    //return (Msg) new Gson().fromJson(json, msgClass);
-                    //clients.add(UUID.fromString(stringBuilder.toString()));
-                    //logger.info("FrontendServiceImpl get message: " + message.getData());
-
-
-                        /*if (messageObj instanceof MessageToClient) {
-                            sendDataClient(((MessageToClient) messageObj).uuid, ((MessageToClient) messageObj).data);
-                        }
-                        //socketClient.send(messageBody);*/
                     messageBody = socketWorker.take();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -168,12 +122,6 @@ public class DBServerMain implements DBServer {
                 }
             }
         }
-        /*
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                logger.info(e.toString());
-            }*/
     }
 
     private Gson createGsonWithFilter() {
@@ -195,27 +143,4 @@ public class DBServerMain implements DBServer {
     public Address getAddress() {
         return this.currentAddress;
     }
-/*
-    private void receiveMessage(Socket socket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            String inputLine;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) { //blocks
-                //System.out.println("Message received: " + inputLine);
-                stringBuilder.append(inputLine);
-                if (inputLine.isEmpty()) { //empty line is the end of the message
-
-                    String json = stringBuilder.toString();
-                    Msg msg = getMsgFromJSON(json);
-                    input.add(msg);
-                    stringBuilder = new StringBuilder();
-                    //clients.add(UUID.fromString(stringBuilder.toString()));
-                    logger.info("FrontendServiceImpl get message: " + stringBuilder.toString());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
 }

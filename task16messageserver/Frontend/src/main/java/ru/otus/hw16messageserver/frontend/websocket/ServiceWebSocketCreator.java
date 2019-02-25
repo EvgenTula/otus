@@ -11,16 +11,14 @@ import java.util.HashMap;
 
 public class ServiceWebSocketCreator implements WebSocketCreator {
 
-    private HashMap<String, ServiceWebSocket> clientsMap;
     private FrontendServiceImpl frontendService;
     public ServiceWebSocketCreator(FrontendServiceImpl frontendService) {
-        clientsMap = new HashMap<>();
         this.frontendService = frontendService;
     }
 
     @Override
     public Object createWebSocket(ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) {
-        ServiceWebSocket webSocket = new ServiceWebSocket(clientsMap,frontendService);
+        ServiceWebSocket webSocket = new ServiceWebSocket(frontendService);
         return webSocket;
     }
 }

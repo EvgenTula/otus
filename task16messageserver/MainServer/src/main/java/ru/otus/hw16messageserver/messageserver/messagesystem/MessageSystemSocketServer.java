@@ -6,8 +6,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.Message;
 import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToRegisterSocketClient;
-import ru.otus.hw16messageserver.messageserver.messagesystem.message.dbservice.MessageSaveData;
-import ru.otus.hw16messageserver.messageserver.messagesystem.message.MessageToWebsocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,34 +14,22 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 
 
 public class MessageSystemSocketServer {
 
-    private final Logger logger = Logger.getLogger(MessageSystemSocketServer.class.getName());
-
     private static final int THREADS_NUMBER = 2;
 
-    private final Map<Socket, LinkedBlockingQueue<Message>> messagesMap;
-    //private ConcurrentHashMap<UUID, DBServiceWebSocket> clientsMap;
+    private final Logger logger = Logger.getLogger(MessageSystemSocketServer.class.getName());
     public final ConcurrentHashMap<Address, SocketWorker> socketClients;
+    private final ExecutorService executor;
 
     private int port;
-
-    private final ExecutorService executor;
     private SocketWorker worker;
 
-    public Address frontAddress;
-    public Address dbServerAddress;
-
-    public SocketWorker workerDBServer;
-
     public MessageSystemSocketServer(int port) {
-        //this.clientsMap = new ConcurrentHashMap<>();
-        this.messagesMap = new HashMap<>();
         this.socketClients = new ConcurrentHashMap<>();
         this.port = port;
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
@@ -97,28 +83,6 @@ public class MessageSystemSocketServer {
     }
 
 
-/*
-    private void receiveMessage(Socket socket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            String inputLine;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) { //blocks
-                //System.out.println("Message received: " + inputLine);
-                stringBuilder.append(inputLine);
-                if (inputLine.isEmpty()) { //empty line is the end of the message
-                    logger.info("MessageServer get message: " + stringBuilder.toString());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (socket.isClosed())
-            {
-                //socketClients.remove();
-            }
-        }
-    }
-*/
-
     public void processing()  {
         while (true) {
             for (Map.Entry<Address,SocketWorker> socketClient : socketClients.entrySet()) {
@@ -126,25 +90,16 @@ public class MessageSystemSocketServer {
 
                 while (messageBody != null) {
                     try {
-                        logger.info("MessageServer get data :" + messageBody);
                         JSONParser jsonParser = new JSONParser();
                         JSONObject jsonObject = (JSONObject)jsonParser.parse(messageBody);
                         String className = (String) jsonObject.get("className");
                         String gsonData = (String) jsonObject.get("data");
                         Class<?> msgClass = Class.forName(className);
-
                         var messageObj = new Gson().fromJson(gsonData, msgClass);
-                        logger.info("MessageServer get gata > className  : " + messageObj.getClass().getName() + " ; data : " + gsonData);
-
                         if (Message.class.isAssignableFrom(msgClass)) {
                             Message message = (Message) messageObj;
                             socketClients.get(message.getTo()).send(message.getJsonObject());
-                            logger.info("Message from " + ((Message) messageObj).getFrom() + " to " + ((Message) messageObj).getTo());
                         }
-                        if (MessageToWebsocket.class.isAssignableFrom(msgClass)) {
-                            sendDataClient(((MessageToWebsocket) messageObj).uuid,((MessageToWebsocket) messageObj).data);
-                        }
-                        //socketClient.send(messageBody);
                         messageBody = socketClient.getValue().pool();
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -159,59 +114,5 @@ public class MessageSystemSocketServer {
                 logger.info(e.toString());
             }
         }
-
-
-        /*
-        this.messagesMap.put(sender.getAddress(), new LinkedBlockingQueue<>());
-        Thread thread = new Thread(() -> {
-            while (true) {
-                LinkedBlockingQueue<Message> queue = messagesMap.get(sender.getAddress());
-                try {
-                    Message message = queue.take();
-                    message.exec(sender);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-        });
-        thread.setName(String.valueOf(sender.getAddress().getPort()));
-        thread.start();
-        socketClients.add(thread);*/
-    }
-
-    public void sendMessage(Message message) {
-        socketClients.get(message.getTo()).send(message.getJsonObject());
-        //messagesMap.get(message.getTo()).add(message);
-    }
-
-    public void sendDataClient(UUID uuid,String data) {
-        /*
-        try {
-            this.clientsMap.get(uuid).getSession().getRemote().sendString(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-    }
-/*
-    public String addClient(DBServiceWebSocket webSocket) {
-        UUID randomUUID = UUID.randomUUID();
-        this.clientsMap.put(randomUUID,webSocket);
-        Message message = new MessageClientConnect(
-                dbServerAddress,
-                frontAddress,
-                randomUUID.toString());
-        sendMessage(message);
-
-        return randomUUID.toString();
-    }*/
-
-    public void removeClient(String uuid) {
-        //this.clientsMap.remove(UUID.fromString(uuid));
-    }
-
-    public void saveData(String data) {
-        //TODO: доделать!!!
-        Message message = new MessageSaveData(dbServerAddress, frontAddress, data);
-        sendMessage(message);
     }
 }

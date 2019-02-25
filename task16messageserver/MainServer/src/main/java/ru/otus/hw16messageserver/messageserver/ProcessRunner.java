@@ -52,7 +52,6 @@ public class ProcessRunner {
                 BufferedReader br = new BufferedReader(isr);
                 String line;
                 while ((line = br.readLine()) != null) {
-                    //out.append(type).append('>').append(line).append('\n');
                     System.out.println(type + ">" + line);
                 }
             } catch (IOException e) {

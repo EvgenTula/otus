@@ -28,7 +28,6 @@ public class SocketWorker {
     }
 
     public void send(String data) {
-        logger.info("send data: " + data);
         output.add(data);
     }
 
@@ -71,7 +70,6 @@ public class SocketWorker {
                 if (inputLine.isEmpty()) { //empty line is the end of the message
                     String data = stringBuilder.toString();
                     input.add(data);
-                    logger.info("ServerMain get data: " + data);
                     stringBuilder = new StringBuilder();
                 }
             }
